@@ -83,6 +83,5 @@ Estudiante de la Lic. en Ciencias de la Computación
 Servicio Social
 Universidad de Sonora
 Email: jss.263.fsc@gmail.com
----
 
 *Desarrollado para la comunidad científica*
