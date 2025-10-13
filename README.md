@@ -80,8 +80,11 @@ Este proyecto está bajo la Licencia MIT. Ver `LICENSE` para más detalles.
 **Jesus Flores Lacarra**
 
 Estudiante de la Lic. en Ciencias de la Computación
+
 Servicio Social
+
 Universidad de Sonora
+
 Email: jss.263.fsc@gmail.com
 
 *Desarrollado para la comunidad científica*
