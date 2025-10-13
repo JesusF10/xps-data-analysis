@@ -62,7 +62,7 @@ xps-data-analysis/
 ├── setup.py                    # Configuración del paquete
 └── .gitignore                  # Archivos a ignorar
 ```
-    
+
 ## Contexto Académico
 
 Este proyecto forma parte de un proyecto de **servicio social** en el área de **química y metalurgia**, con el objetivo de:
@@ -77,7 +77,8 @@ Este proyecto está bajo la Licencia MIT. Ver `LICENSE` para más detalles.
 
 ## Autor
 
-**Jesus Flores Lacarra**  
+**Jesus Flores Lacarra**
+
 Estudiante de la Lic. en Ciencias de la Computación
 Servicio Social
 Universidad de Sonora
