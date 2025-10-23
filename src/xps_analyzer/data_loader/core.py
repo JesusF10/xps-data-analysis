@@ -72,6 +72,23 @@ def parse_metadata(lines: Union[list, str],
     -------
     Dict[str, str]
         Diccionario con pares clave-valor de metadatos.
+    -------
+    Examples
+    --------
+    >>> lines = ["Sample Name Sample1; Date 2023-10-01; Operator John Doe;",
+    ...          "C 1s O 1s N 1s;",
+    ...          "284.8 531.0 399.0;"]
+    >>> metadata = parse_metadata(lines, header=True)
+    >>> print(metadata)
+    {'Sample_Name': 'Sample1', 'Date': '2023-10-01', 'Operator': 'John Doe',
+     'elements': {'C': {'orbital': '1s', 'mean_energy': '284.8'},
+                  'O': {'orbital': '1s', 'mean_energy': '531.0'},
+                  'N': {'orbital': '1s', 'mean_energy': '399.0'}}}
+    >>> lines = "Element C 1s; Region 1; Depth Cycle 1 of 3; Time Per Step 50; Sweeps 5; Anode Al Kα; Photon energy 1486.6;"
+    >>> metadata = parse_metadata(lines, header=False)
+    >>> print(metadata)
+    {'element': 'C 1s', 'region': 1, 'depth_cycle': (1, 3), 'time_per_step': 50,
+     'sweeps': 5, 'anode': 'Al Kα', 'photon_energy': 1486.6}
     """
     metadata = {}
 
