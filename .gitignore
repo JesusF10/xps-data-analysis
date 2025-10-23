@@ -208,3 +208,8 @@ __marimo__/
 
 # Drafts
 .drafts/
+
+# Optional directories
+/config
+/docs 
+/research

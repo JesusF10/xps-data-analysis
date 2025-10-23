@@ -1,0 +1,2 @@
+[console_scripts]
+xps-analyzer = xps_analyzer.cli.main:main
