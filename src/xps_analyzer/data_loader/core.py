@@ -1,34 +1,35 @@
 """
 Funciones principales de carga de datos XPS.
 """
+
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Any, Dict, Union
+from typing import Any, Dict, List, Union
 
-import numpy as np
 import pandas as pd
 
 
 @dataclass
 class XPSSpectrum:
     """Representa un espectro XPS individual."""
+
     region_name: str
-    binding_energy: np.ndarray
-    intensity: np.ndarray
+    binding_energy: List[float]
+    intensity: List[float]
     metadata: Dict[str, Any]
 
     @property
     def data(self) -> pd.DataFrame:
         """Retorna los datos como DataFrame."""
-        return pd.DataFrame({
-            'binding_energy': self.binding_energy,
-            'intensity': self.intensity
-        })
+        return pd.DataFrame(
+            {"binding_energy": self.binding_energy, "intensity": self.intensity}
+        )
 
 
 @dataclass
 class XPSDataset:
     """Representa un archivo XPS completo."""
+
     filename: str
     header: Dict[str, Any]
     spectra: Dict[str, XPSSpectrum]
@@ -45,6 +46,7 @@ class XPSDataset:
 @dataclass
 class XPSSample:
     """Representa una muestra XPS que puede contener múltiples archivos."""
+
     sample_name: str
     datasets: Dict[str, XPSDataset]
 
@@ -57,11 +59,11 @@ class XPSSample:
         return list(self.datasets.keys())
 
 
-def parse_metadata(lines: Union[list, str],
-                   header: bool = False) -> Dict[str, Any]:
+def parse_metadata(lines: Union[list, str], header: bool = False) -> Dict[str, Any]:
     """
     Parsea las líneas de metadatos y retorna un diccionario.
-    Parameters
+    ----------
+    Parametersx
     ----------
     lines : [list, str]
         Líneas de texto que contienen metadatos.
@@ -93,7 +95,7 @@ def parse_metadata(lines: Union[list, str],
     metadata = {}
 
     if header:
-        for meta_line in lines[0].split(';')[:-2]:
+        for meta_line in lines[0].split(";")[:-2]:
             key = "_".join(meta_line.split()[:-1])
             value = meta_line.split()[-1].strip()
             metadata[key] = value
@@ -101,7 +103,9 @@ def parse_metadata(lines: Union[list, str],
         elements = {}
         elements_config = lines[1].split()
 
-        for elem, orbital, energy in zip(elements_config[::2], elements_config[1::2], lines[2].split()):
+        for elem, orbital, energy in zip(
+            elements_config[::2], elements_config[1::2], lines[2].split()
+        ):
             elements[elem] = {"orbital": orbital, "mean_energy": energy}
         metadata["elements"] = elements
         return metadata
@@ -127,6 +131,7 @@ def parse_metadata(lines: Union[list, str],
 
     return metadata
 
+
 def get_spectrum_data(data_lines: list) -> XPSSpectrum:
     """
     Extrae los datos del espectro de las líneas proporcionadas.
@@ -148,14 +153,11 @@ def get_spectrum_data(data_lines: list) -> XPSSpectrum:
         binding_energy.append(float(parts[0]))
         intensity.append(float(parts[1]))
 
-    binding_energy = np.array(binding_energy)
-    intensity = np.array(intensity)
-
     spectrum = XPSSpectrum(
         region_name=metadata.get("element", "unknown"),
         binding_energy=binding_energy,
         intensity=intensity,
-        metadata=metadata
+        metadata=metadata,
     )
 
     return spectrum
@@ -186,15 +188,13 @@ def load_single_file(filepath: Union[str, Path]) -> XPSDataset:
         if "multiplex" in filepath.name.lower():
             survey = False
             print("Archivo multiplex detectado")
-            header = (parse_metadata(data[:3], header=True))
+            header = parse_metadata(data[:3], header=True)
             data = data[3:]
 
         if survey:
             spectrum = get_spectrum_data(data)
             dataset = XPSDataset(
-                filename=filepath.name,
-                header=header,
-                spectra={"survey": spectrum}
+                filename=filepath.name, header=header, spectra={"survey": spectrum}
             )
         else:
             # Procesar múltiples regiones
@@ -203,32 +203,31 @@ def load_single_file(filepath: Union[str, Path]) -> XPSDataset:
             while i < len(data):
                 if data[i].startswith("Element"):
                     region_lines = []
-                    while i < len(data) and not data[i].startswith("Element") or len(region_lines) == 0:
+                    while (
+                        i < len(data)
+                        and not data[i].startswith("Element")
+                        or len(region_lines) == 0
+                    ):
                         region_lines.append(data[i])
                         i += 1
                     spectrum = get_spectrum_data(region_lines)
                     spectra[spectrum.region_name] = spectrum
                 else:
                     i += 1
-            dataset = XPSDataset(
-                filename=filepath.name,
-                header=header,
-                spectra=spectra
-            )
+            dataset = XPSDataset(filename=filepath.name, header=header, spectra=spectra)
 
     return dataset
 
-def load_all_data(data_path: Union[str, Path],
-                  file_pattern: str = "*.txt",
-                  recursive: bool = True) -> Dict[str, Any]:
+
+def load_all_data(
+    data_path: Union[str, Path], recursive: bool = True
+) -> Dict[str, Any]:
     """
     Carga todos los archivos de datos XPS desde un directorio.
     Parameters
     ----------
     data_path : str or Path
         Ruta al directorio que contiene los datos XPS.
-    file_pattern : str, default="*.txt"
-        Patrón de archivos a buscar (ej: "*.txt", "*.csv", "*.vms").
     recursive : bool, default=True
         Si True, busca archivos recursivamente en subdirectorios.
     Returns
@@ -245,9 +244,6 @@ def load_all_data(data_path: Union[str, Path],
     """
     # Falta implementar
     pass
-
-
-
 
 
 def detect_file_format(filepath: Union[str, Path]) -> str:

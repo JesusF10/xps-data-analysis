@@ -24,7 +24,7 @@ dependencies:
   - tqdm>=4.60.0
   - pathlib  # Usually included in Python 3.4+
 
-  # Jupyter ecosystem (optional but recommended for scientists)
+  # Jupyter ecosystem (optional)
   - jupyterlab>=3.0.0
   - ipywidgets>=7.6.0
   - plotly>=5.0.0
