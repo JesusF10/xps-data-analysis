@@ -56,10 +56,11 @@ xps-data-analysis/
 │
 ├── config/                     # Configuraciones (Por determinar)
 │
-├── reports/                    # Reportes del servicio social
-│
 ├── pyproject.toml              # Configuración del proyecto
+├── README.md                   # Documentación principal
+├── environment.yml              # Entorno Conda para desarrollo
 ├── setup.py                    # Configuración del paquete
+├── verify_installation.py      # Script para verificar instalación
 └── .gitignore                  # Archivos a ignorar
 ```
 
@@ -69,93 +70,209 @@ xps-data-analysis/
 
 - **Python**: 3.8 o superior
 - **Sistema operativo**: Linux, macOS, Windows
-- **Gestor de paquetes**: Se recomienda `uv` (más rápido) o `pip`
+- **Gestores de paquetes recomendados**: 
+  - [`uv`](https://docs.astral.sh/uv/) (más rápido, recomendado)
+  - [`conda`](https://docs.conda.io/) (para gestión de entornos científicos)
+  - `pip` (estándar de Python)
 
-### Instalación rápida
+---
 
-#### Para usuarios finales:
+## Instalación para Usuarios Finales
+
+### Con uv (Recomendado)
 
 ```bash
+# Instalación básica
 uv pip install git+https://github.com/JesusF10/xps-data-analysis.git
+
+# Con soporte para Jupyter notebooks
+uv pip install "git+https://github.com/JesusF10/xps-data-analysis.git[jupyter]"
+
+# Con todas las dependencias opcionales
+uv pip install "git+https://github.com/JesusF10/xps-data-analysis.git[jupyter,docs]"
 ```
 
-#### Para interactivo con Jupyter:
+### Con conda
 
 ```bash
-# Incluye soporte para notebooks de Jupyter
-uv pip install "git+https://github.com/JesusF10/xps-data-analysis.git[jupyter]"
+# Crear entorno conda con Python científico
+conda create -n xps-analysis python=3.11 numpy pandas matplotlib scipy -c conda-forge
+conda activate xps-analysis
+
+# Instalar el paquete
+pip install git+https://github.com/JesusF10/xps-data-analysis.git
+
+# O con dependencias opcionales
+pip install "git+https://github.com/JesusF10/xps-data-analysis.git[jupyter]"
 ```
 
-### Instalación para desarrollo
+### Con pip estándar
+
+```bash
+# Crear entorno virtual (recomendado)
+python -m venv venv
+source venv/bin/activate  # En Windows: venv\Scripts\activate
+
+# Instalar el paquete
+pip install git+https://github.com/JesusF10/xps-data-analysis.git
+```
+
+---
+
+## Instalación para Desarrollo
+
+### Con uv (Método rápido)
 
 ```bash
 # 1. Clonar el repositorio
 git clone https://github.com/JesusF10/xps-data-analysis.git
 cd xps-data-analysis
 
-# 2. Instalar en modo desarrollo con todas las dependencias
-uv pip install -e ".[dev,docs,jupyter]"
+# 2. Instalar todas las dependencias de desarrollo
+uv sync --group dev --group docs --group jupyter
 
-# 3. Configurar hooks de pre-commit (opcional)
+# 3. Verificar instalación
+uv run xps-analyzer --help
+uv run verify_installation.py
+```
+
+### Con conda
+
+```bash
+# 1. Clonar repositorio
+git clone https://github.com/JesusF10/xps-data-analysis.git
+cd xps-data-analysis
+
+# 2. Crear entorno conda con dependencias científicas
+conda env create -f environment.yml  # Si existe
+# O manualmente:
+conda create -n xps-dev python=3.11 numpy pandas matplotlib scipy jupyter pytest -c conda-forge
+conda activate xps-dev
+
+# 3. Instalar en modo desarrollo
+pip install -e ".[dev,docs,jupyter]"
+
+# 4. Configurar pre-commit hooks
 pre-commit install
 ```
 
-### 📋 Grupos de dependencias disponibles
-
-| Grupo | Comando | Incluye | Cuándo usar |
-|-------|---------|---------|-------------|
-| **Base** | `uv pip install xps-analyzer` | Funcionalidad básica | Uso normal, scripts automatizados |
-| **Jupyter** | `.[jupyter]` | Notebooks, widgets interactivos | Análisis exploratorio, visualización |
-| **Desarrollo** | `.[dev]` | Testing, linting, type checking | Contribuir al código |
-| **Documentación** | `.[docs]` | Sphinx, temas, generadores | Generar/editar documentación |
-
-### Verificar la instalación
+### Con pip + venv
 
 ```bash
-# Verificar que el paquete se instaló correctamente
-xps-analyzer --help
-
-# Verificar en Python
-python -c "import xps_analyzer; print(xps_analyzer.__version__)"
-```
-
-### Herramientas de desarrollo adicionales
-
-Si instalaste con `[dev]`, tienes acceso a:
-
-```bash
-# Ejecutar tests
-pytest
-
-# Linting y formateo de código
-ruff check .
-ruff format .
-
-# Type checking
-mypy src/
-
-# Limpiar archivos generados
-make clean  # o python -c "import shutil; shutil.rmtree('__pycache__', ignore_errors=True)"
-```
-
-### Con pip
-
-```bash
-# Instalación básica
-pip install git+https://github.com/JesusF10/xps-data-analysis.git
-
-# Con dependencias opcionales
-pip install "git+https://github.com/JesusF10/xps-data-analysis.git[jupyter]"
-
-# Desarrollo
+# 1. Clonar y crear entorno
 git clone https://github.com/JesusF10/xps-data-analysis.git
 cd xps-data-analysis
+python -m venv .venv
+source .venv/bin/activate  # Windows: .venv\Scripts\activate
+
+# 2. Actualizar pip y instalar
+pip install --upgrade pip
 pip install -e ".[dev,docs,jupyter]"
+
+# 3. Configurar desarrollo
+pre-commit install
 ```
+
+---
+
+## Grupos de Dependencias
+
+| Grupo | Instalación | Incluye | Cuándo usar |
+|-------|-------------|---------|-------------|
+| **Base** | `xps-analyzer` | numpy, pandas, matplotlib, scipy | Uso básico, análisis automatizado |
+| **jupyter** | `[jupyter]` | jupyterlab, widgets, plotly | Análisis interactivo, exploración |
+| **dev** | `[dev]` | pytest, ruff, mypy, pre-commit | Desarrollo, testing, linting |
+| **docs** | `[docs]` | sphinx, furo, myst-parser | Generar documentación |
+
+### Comandos de instalación por uso:
+
+```bash
+# Usuario final básico
+uv pip install xps-analyzer
+
+# Análisis interactivo con notebooks
+uv pip install "xps-analyzer[jupyter]"
+
+# Desarrollo completo
+uv sync --group dev --group docs --group jupyter
+
+# Conda + desarrollo
+conda create -n xps-dev python=3.11 -c conda-forge
+conda activate xps-dev
+pip install -e ".[dev,jupyter,docs]"
+```
+
+---
+
+## Verificación de Instalación
+
+```bash
+# Verificar comando CLI
+xps-analyzer --help
+xps-analyzer reference
+
+# Verificar en Python
+python -c "import xps_analyzer; print(f'Versión: {xps_analyzer.__version__}')"
+
+# Verificar dependencias opcionales
+python -c "import matplotlib, pandas, numpy; print('Dependencias básicas OK')"
+
+# Si instalaste jupyter
+python -c "import jupyter; print('Jupyter disponible')"
+```
+
+### Script de Verificación Completa
+
+Incluimos un script que verifica automáticamente toda la instalación:
+
+```bash
+# Ejecutar verificación completa
+python verify_installation.py
+
+# O con uv
+uv run python verify_installation.py
+```
+
+Este script verifica:
+- Versión de Python compatible
+- Dependencias principales instaladas
+- XPS Analyzer funcionando correctamente  
+- CLI disponible y funcional
+- Dependencias opcionales (Jupyter, herramientas de desarrollo)
+
+---
+
+## Herramientas de Desarrollo
+
+Si instalaste con dependencias de desarrollo (`[dev]` o `--group dev`):
+
+```bash
+# Testing
+uv run pytest                    # Con uv
+pytest                          # Directo
+
+# Linting y formateo
+uv run ruff check src/          # Verificar código
+uv run ruff format src/         # Formatear código
+
+# Type checking
+uv run mypy src/
+
+# Pre-commit (verificaciones automáticas)
+pre-commit run --all-files
+
+# Generar documentación
+cd docs/
+make html                       # O: sphinx-build -b html . _build/html
+```
+
+---
 
 ### Uso básico
 
 ***Pendiente***
+
+---
 
 ## Contexto Académico
 
