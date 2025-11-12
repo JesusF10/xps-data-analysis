@@ -84,12 +84,6 @@ xps-data-analysis/
 ```bash
 # Instalación básica
 uv pip install git+https://github.com/JesusF10/xps-data-analysis.git
-
-# Con soporte para Jupyter notebooks
-uv pip install "git+https://github.com/JesusF10/xps-data-analysis.git[jupyter]"
-
-# Con todas las dependencias opcionales
-uv pip install "git+https://github.com/JesusF10/xps-data-analysis.git[jupyter,docs]"
 ```
 
 ### Con conda
@@ -121,7 +115,7 @@ pip install git+https://github.com/JesusF10/xps-data-analysis.git
 
 ## Instalación para Desarrollo
 
-### Con uv (Método rápido)
+### Con uv (Preferido)
 
 ```bash
 # 1. Clonar el repositorio
@@ -182,7 +176,7 @@ pre-commit install
 | **Base** | `xps-analyzer` | numpy, pandas, matplotlib, scipy | Uso básico, análisis automatizado |
 | **jupyter** | `[jupyter]` | jupyterlab, widgets, plotly | Análisis interactivo, exploración |
 | **dev** | `[dev]` | pytest, ruff, mypy, pre-commit | Desarrollo, testing, linting |
-| **docs** | `[docs]` | sphinx, furo, myst-parser | Generar documentación |
+| **docs** | `[docs]` | *Por definir* | Generar documentación |
 
 ### Comandos de instalación por uso:
 
@@ -190,11 +184,9 @@ pre-commit install
 # Usuario final básico
 uv pip install xps-analyzer
 
-# Análisis interactivo con notebooks
-uv pip install "xps-analyzer[jupyter]"
-
-# Desarrollo completo
+# Desarrollo completo (selecciona el grupo o grupos a usar)
 uv sync --group dev --group docs --group jupyter
+
 
 # Conda + desarrollo
 conda create -n xps-dev python=3.11 -c conda-forge
@@ -205,23 +197,6 @@ pip install -e ".[dev,jupyter,docs]"
 ---
 
 ## Verificación de Instalación
-
-```bash
-# Verificar comando CLI
-xps-analyzer --help
-xps-analyzer reference
-
-# Verificar en Python
-python -c "import xps_analyzer; print(f'Versión: {xps_analyzer.__version__}')"
-
-# Verificar dependencias opcionales
-python -c "import matplotlib, pandas, numpy; print('Dependencias básicas OK')"
-
-# Si instalaste jupyter
-python -c "import jupyter; print('Jupyter disponible')"
-```
-
-### Script de Verificación Completa
 
 Incluimos un script que verifica automáticamente toda la instalación:
 
@@ -262,8 +237,7 @@ uv run mypy src/
 pre-commit run --all-files
 
 # Generar documentación
-cd docs/
-make html                       # O: sphinx-build -b html . _build/html
+# Pendiente por definir
 ```
 
 ---
@@ -274,7 +248,7 @@ make html                       # O: sphinx-build -b html . _build/html
 
 ---
 
-## Contexto Académico
+## Contexto
 
 Este proyecto forma parte de un proyecto de **servicio social** en el área de **química y metalurgia**, con el objetivo de:
 - Automatizar el análisis de datos XPS para investigación en materiales
@@ -297,5 +271,3 @@ Servicio Social
 Universidad de Sonora
 
 Email: jss.263.fsc@gmail.com
-
-*Desarrollado para la comunidad científica*

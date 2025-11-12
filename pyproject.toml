@@ -26,7 +26,7 @@ classifiers = [
     "Topic :: Scientific/Engineering :: Chemistry",
     "Topic :: Scientific/Engineering :: Physics",
 ]
-keywords = ["XPS", "spectroscopy", "data-analysis", "materials-science"]
+keywords = ["XPS", "data-analysis", "materials-science"]
 dependencies = [
     "numpy>=1.21.0",
     "pandas>=1.3.0",
@@ -64,8 +64,8 @@ jupyter = [
 [project.urls]
 Homepage = "https://github.com/JesusF10/xps-data-analysis"
 Repository = "https://github.com/JesusF10/xps-data-analysis"
-Documentation = "https://xps-data-analysis.readthedocs.io/"
-"Bug Reports" = "https://github.com/JesusF10/xps-data-analysis/issues"
+# Documentation = "https://xps-data-analysis.readthedocs.io/"
+# "Bug Reports" = "https://github.com/JesusF10/xps-data-analysis/issues"
 
 [project.scripts]
 xps-analyzer = "xps_analyzer.cli.main:main"

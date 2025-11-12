@@ -19,9 +19,9 @@ class XPSSpectrum:
     metadata: Dict[str, Any]
 
     @property
-    def data(self) -> pd.DataFrame:
+    def data(self) -> pd.Series:
         """Retorna los datos como DataFrame."""
-        return pd.DataFrame(
+        return pd.Series(
             {"binding_energy": self.binding_energy, "intensity": self.intensity}
         )
 
@@ -221,7 +221,7 @@ def load_single_file(filepath: Union[str, Path]) -> XPSDataset:
 
 def load_all_data(
     data_path: Union[str, Path], recursive: bool = True
-) -> Dict[str, Any]:
+) -> Union[Dict[str, XPSSample], XPSSample, None]:
     """
     Carga todos los archivos de datos XPS desde un directorio.
     Parameters
