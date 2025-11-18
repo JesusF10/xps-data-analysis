@@ -12,8 +12,8 @@ def check_python_version():
     """Verifica la versión de Python."""
     print(f"Python: {sys.version}")
 
-    if sys.version_info < (3, 8):
-        print("ERROR: Se requiere Python 3.8 o superior")
+    if sys.version_info < (3, 10):
+        print("ERROR: Se requiere Python 3.10 o superior")
         return False
     else:
         print("Versión de Python compatible")

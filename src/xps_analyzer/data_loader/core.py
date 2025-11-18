@@ -4,8 +4,9 @@ Funciones principales de carga de datos XPS.
 
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Any, Dict, List, Union
+from typing import Any, Dict, Union
 
+import numpy as np
 import pandas as pd
 
 
@@ -14,15 +15,24 @@ class XPSSpectrum:
     """Representa un espectro XPS individual."""
 
     region_name: str
-    binding_energy: List[float]
-    intensity: List[float]
+    binding_energy: np.ndarray
+    intensity: np.ndarray
     metadata: Dict[str, Any]
 
     @property
-    def data(self) -> pd.Series:
+    def data(self) -> pd.DataFrame:
         """Retorna los datos como DataFrame."""
-        return pd.Series(
+        return pd.DataFrame(
             {"binding_energy": self.binding_energy, "intensity": self.intensity}
+        ).set_index("binding_energy")
+
+    def copy(self) -> "XPSSpectrum":
+        """Retorna una copia del espectro."""
+        return XPSSpectrum(
+            region_name=self.region_name,
+            binding_energy=self.binding_energy.copy(),
+            intensity=self.intensity.copy(),
+            metadata=self.metadata.copy(),
         )
 
 
@@ -42,6 +52,14 @@ class XPSDataset:
         """Lista todas las regiones disponibles."""
         return list(self.spectra.keys())
 
+    def copy(self) -> "XPSDataset":
+        """Retorna una copia del dataset."""
+        return XPSDataset(
+            filename=self.filename,
+            header=self.header.copy(),
+            spectra={name: spec.copy() for name, spec in self.spectra.items()},
+        )
+
 
 @dataclass
 class XPSSample:
@@ -57,6 +75,13 @@ class XPSSample:
     def list_datasets(self) -> list:
         """Lista todos los datasets disponibles."""
         return list(self.datasets.keys())
+
+    def copy(self) -> "XPSSample":
+        """Retorna una copia de la muestra."""
+        return XPSSample(
+            sample_name=self.sample_name,
+            datasets={name: ds.copy() for name, ds in self.datasets.items()},
+        )
 
 
 def parse_metadata(lines: Union[list, str], header: bool = False) -> Dict[str, Any]:
@@ -155,8 +180,8 @@ def get_spectrum_data(data_lines: list) -> XPSSpectrum:
 
     spectrum = XPSSpectrum(
         region_name=metadata.get("element", "unknown"),
-        binding_energy=binding_energy,
-        intensity=intensity,
+        binding_energy=np.array(binding_energy),
+        intensity=np.array(intensity),
         metadata=metadata,
     )
 

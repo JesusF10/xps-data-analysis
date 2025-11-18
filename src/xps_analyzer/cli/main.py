@@ -9,6 +9,7 @@ from xps_analyzer.reference_data import load_reference_database
 
 import click
 
+
 @click.group()
 @click.version_option()
 def cli():
