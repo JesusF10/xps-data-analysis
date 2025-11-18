@@ -1,0 +1,1754 @@
+{
+    "version": "1.0",
+    "source": "Handbook of X-ray Photoelectron Spectroscopy",
+    "elements": {
+        "Li": {
+            "element": "Lithium",
+            "symbol": "Li",
+            "atomic_number": 3,
+            "binding_energy_of_most_useful_line_eV": 55.6,
+            "spin_orbit_splitting_eV": null,
+            "line_positions":    {
+                "photoelectron_lines_Al_Ka": [
+                    { "line": "1s", "binding_energy_eV": 56 }
+                ],
+                "auger_lines_Al_Ka_kinetic_energy": [
+                    { "line": "KLL", "kinetic_energy_eV": 43 }
+                ],
+                "photoelectron_lines_Mg_Ka": [
+                    { "line": "1s", "binding_energy_eV": 56 }
+                ],
+                "auger_lines_Mg_Ka_kinetic_energy": [
+                    { "line": "KLL", "kinetic_energy_eV": 43 }
+                ]
+            },
+            "chemical_state_data": [
+                { "compound_type": "Li", "orbital": "1s", "binding_energy_eV": 54.7 },
+                { "compound_type": "LiBr", "orbital": "1s", "binding_energy_eV": 56.8 },
+                { "compound_type": "LiCl", "orbital": "1s", "binding_energy_eV": 56.0 },
+                { "compound_type": "LiF", "orbital": "1s", "binding_energy_eV": 55.7 },
+                { "compound_type": "Li2O", "orbital": "1s", "binding_energy_eV": 55.6 },
+                { "compound_type": "LiOH", "orbital": "1s", "binding_energy_eV": 54.9 },
+                { "compound_type": "Li2CO3", "orbital": "1s", "binding_energy_eV": 55.2 },
+                { "compound_type": "Li3PO4", "orbital": "1s", "binding_energy_eV": 55.4 },
+                { "compound_type": "Li4P2O7", "orbital": "1s", "binding_energy_eV": 55.6 },
+                { "compound_type": "LiNbO3", "orbital": "1s", "binding_energy_eV": 54.8 }
+            ],
+            "atomic_sensitivity_factors": {
+                "Al_Ka_90_deg": { "line": "1s", "ASF": 0.025 },
+                "Al_Ka_54_7_deg": { "line": "1s", "ASF": 0.025 }
+            }
+        },
+        "Be": {
+            "element": "Beryllium",
+            "symbol": "Be",
+            "atomic_number": 4,
+            "binding_energy_of_most_useful_line_eV": 111.8,
+            "spin_orbit_splitting_eV": null,
+            "line_positions": {
+                "photoelectron_lines_Al_Ka": [
+                    { "line": "1s", "binding_energy_eV": 112 }
+                ],
+                "auger_lines_Al_Ka_kinetic_energy": [
+                    { "line": "KVV", "kinetic_energy_eV": 1384 }
+                ],
+                "photoelectron_lines_Mg_Ka": [
+                    { "line": "1s", "binding_energy_eV": 112 }
+                ],
+                "auger_lines_Mg_Ka_kinetic_energy": [
+                    { "line": "KVV", "kinetic_energy_eV": 1151 }
+                ]
+            },
+            "chemical_state_data": [
+                { "compound_type": "Be", "orbital": "1s", "binding_energy_eV": 111.7 },
+                { "compound_type": "BeO", "orbital": "1s", "binding_energy_eV": 113.8 },
+                { "compound_type": "BeMoO4", "orbital": "1s", "binding_energy_eV": 113.7 },
+                { "compound_type": "BeRh2O4", "orbital": "1s", "binding_energy_eV": 113.8 },
+                { "compound_type": "BeF2", "orbital": "1s", "binding_energy_eV": 115.3 },
+                { "compound_type": "NaBeF3", "orbital": "1s", "binding_energy_eV": 115.3 },
+                { "compound_type": "Na2BeF4", "orbital": "1s", "binding_energy_eV": 114.7 }
+            ],
+            "atomic_sensitivity_factors": {
+                "Al_Ka_90_deg": { "line": "1s", "ASF": 0.074 },
+                "Al_Ka_54_7_deg": { "line": "1s", "ASF": 0.074 }
+            }
+        },
+        "B": {
+            "element": "Boron",
+            "symbol": "B",
+            "atomic_number": 5,
+            "binding_energy_of_most_useful_line_eV": 189.4,
+            "spin_orbit_splitting_eV": null,
+            "line_positions": {
+                "photoelectron_lines_Al_Ka": [
+                    { "line": "1s", "binding_energy_eV": 189 }
+                ],
+                "auger_lines_Al_Ka_kinetic_energy": [
+                    { "line": "KVV", "kinetic_energy_eV": 1310 }
+                ],
+                "photoelectron_lines_Mg_Ka": [
+                    { "line": "1s", "binding_energy_eV": 189 }
+                ],
+                "auger_lines_Mg_Ka_kinetic_energy": [
+                    { "line": "KVV", "kinetic_energy_eV": 1077 }
+                ]
+            },
+            "chemical_state_data": [
+                { "compound_type": "B", "orbital": "1s", "binding_energy_eV": 187.3 },
+                { "compound_type": "Boride", "orbital": "1s", "binding_energy_eV": 186.5 },
+                { "compound_type": "BN", "orbital": "1s", "binding_energy_eV": 190.5 },
+                { "compound_type": "B2O3", "orbital": "1s", "binding_energy_eV": 192.0 },
+                { "compound_type": "NaBF4", "orbital": "1s", "binding_energy_eV": 194.9 },
+                { "compound_type": "NaBH4", "orbital": "1s", "binding_energy_eV": 187.2 },
+                { "compound_type": "H3BO3", "orbital": "1s", "binding_energy_eV": 193.0 },
+                { "compound_type": "Na2B4O7-10H2O", "orbital": "1s", "binding_energy_eV": 192.6 },
+                { "compound_type": "B10H14", "orbital": "1s", "binding_energy_eV": 187.8 }
+            ],
+            "atomic_sensitivity_factors": {
+                "Al_Ka_90_deg": { "line": "1s", "ASF": 0.159 },
+                "Al_Ka_54_7_deg": { "line": "1s", "ASF": 0.159 }
+            }
+        },
+        "C": {
+            "element": "Carbon",
+            "symbol": "C",
+            "atomic_number": 6,
+            "binding_energy_of_most_useful_line_eV": 284.5,
+            "spin_orbit_splitting_eV": null,
+            "line_positions": {
+                "photoelectron_lines_Al_Ka": [
+                    { "line": "1s", "binding_energy_eV": 285 }
+                ],
+                "auger_lines_Al_Ka_kinetic_energy": [
+                    { "line": "KVV", "kinetic_energy_eV": 1223 }
+                ],
+                "photoelectron_lines_Mg_Ka": [
+                    { "line": "1s", "binding_energy_eV": 285 }
+                ],
+                "auger_lines_Mg_Ka_kinetic_energy": [
+                    { "line": "KVV", "kinetic_energy_eV": 990 }
+                ]
+            },
+            "chemical_state_data": [
+                { "compound_type": "Carbide", "orbital":"1s", "binding_energy_eV": 283.9 },
+                { "compound_type": "Carbon", "orbital":"1s", "binding_energy_eV": 284.7 },
+                { "compound_type": "C with N", "orbital":"1s", "binding_energy_eV": 286.3 },
+                { "compound_type": "C with S", "orbital":"1s", "binding_energy_eV": 286.3 },
+                { "compound_type": "C with O (Alcohol)", "orbital":"1s", "binding_energy_eV": 286.3 },
+                { "compound_type": "C with O (Ether)", "orbital":"1s", "binding_energy_eV": 286.5 },
+                { "compound_type": "C with O (Ketone/Aldehyde)", "orbital":"1s", "binding_energy_eV": 287.6 },
+                { "compound_type": "C with O (Carboxyl)", "orbital":"1s", "binding_energy_eV": 288.9 },
+                { "compound_type": "Carbonate", "orbital":"1s", "binding_energy_eV": 289.4 },
+                { "compound_type": "C with Cl", "orbital": "1s", "binding_energy_eV": 286.1 },
+                { "compound_type": "C with F (-CHF-)", "orbital": "1s", "binding_energy_eV": 288.0 },
+                { "compound_type": "C with F (-CF2-)", "orbital": "1s", "binding_energy_eV": 290.8 },
+                { "compound_type": "C with F (-CF3)", "orbital": "1s", "binding_energy_eV": 292.1 }
+            ],
+            "atomic_sensitivity_factors": {
+                "Al_Ka_90_deg": { "line": "1s", "ASF": 0.296 },
+                "Al_Ka_54_7_deg": { "line": "1s", "ASF": 0.296 }
+            }
+        },
+        "N": {
+            "element": "Nitrogen",
+            "symbol": "N",
+            "atomic_number": 7,
+            "binding_energy_of_most_useful_line_eV": 398.1,
+            "spin_orbit_splitting_eV": null,
+            "line_positions": {
+                "photoelectron_lines_Al_Ka": [
+                    { "line": "1s", "binding_energy_eV": 398 }
+                ],
+                "auger_lines_Al_Ka_kinetic_energy": [
+                    { "line": "KLL", "kinetic_energy_eV": 1107 }
+                ],
+                "photoelectron_lines_Mg_Ka": [
+                    { "line": "1s", "binding_energy_eV": 398 }
+                ],
+                "auger_lines_Mg_Ka_kinetic_energy": [
+                    { "line": "KLL", "kinetic_energy_eV": 874 }
+                ]
+            },
+            "chemical_state_data": [
+                { "compound_type": "NH3", "orbital":"1s", "binding_energy_eV": 398.9 },
+                { "compound_type": "Nitride", "orbital":"1s", "binding_energy_eV": 398.9 },
+                { "compound_type": "BN", "orbital":"1s", "binding_energy_eV": 399.1 },
+                { "compound_type": "Si3N4", "orbital":"1s", "binding_energy_eV": 401.8 },
+                { "compound_type": "Cyanides", "orbital":"1s", "binding_energy_eV": 401.4 },
+                { "compound_type": "Nitrites", "orbital":"1s", "binding_energy_eV": 404.5 },
+                { "compound_type": "Ammonium Salt", "orbital":"1s", "binding_energy_eV": 401.5 },
+                { "compound_type": "Azide (N*NN*)", "orbital":"1s", "binding_energy_eV": 401.2 },
+                { "compound_type": "Azide (NN*N)", "orbital":"1s", "binding_energy_eV": 399.2 },
+                { "compound_type": "Nitrates", "orbital":"1s", "binding_energy_eV": 407.4 },
+                { "compound_type": "Organic Matrix", "orbital":"1s", "binding_energy_eV": 399.4 }
+            ],
+            "atomic_sensitivity_factors": {
+                "Al_Ka_90_deg": { "line": "1s", "ASF": 0.477 },
+                "Al_Ka_54_7_deg": { "line": "1s", "ASF": 0.477 }
+            }
+        },
+        "O": {
+            "element": "Oxygen",
+            "symbol": "O",
+            "atomic_number": 8,
+            "binding_energy_of_most_useful_line_eV": 531.0,
+            "spin_orbit_splitting_eV": null,
+            "line_positions": {
+                "photoelectron_lines_Al_Ka": [
+                    { "line": "1s", "binding_energy_eV": 531 },
+                    { "line": "2s", "binding_energy_eV": 23 }
+                ],
+                "auger_lines_Al_Ka_kinetic_energy": [
+                    { "line": "KL1L1", "kinetic_energy_eV": 1013 },
+                    { "line": "KL1L23", "kinetic_energy_eV": 999 },
+                    { "line": "KL23L23", "kinetic_energy_eV": 978 }
+                ],
+                "photoelectron_lines_Mg_Ka": [
+                    { "line": "1s", "binding_energy_eV": 531 },
+                    { "line": "2s", "binding_energy_eV": 23 }
+                ],
+                "auger_lines_Mg_Ka_kinetic_energy": [
+                    { "line": "KL1L1", "kinetic_energy_eV": 780 },
+                    { "line": "KL1L23", "kinetic_energy_eV": 766 },
+                    { "line": "KL23L23", "kinetic_energy_eV": 745 }
+                ]
+            },
+            "chemical_state_data": [
+                { "compound_type": "Metal Oxides", "orbital": "1s", "binding_energy_eV": 530.1 },
+                { "compound_type": "Fe2O3", "orbital": "1s", "binding_energy_eV": 530.2 },
+                { "compound_type": "SiO2", "orbital": "1s", "binding_energy_eV": 533.0 },
+                { "compound_type": "Hydroxides", "orbital": "1s", "binding_energy_eV": 531.2 },
+                { "compound_type": "Phosphates", "orbital": "1s", "binding_energy_eV": 530.4 },
+                { "compound_type": "Nitrates", "orbital": "1s", "binding_energy_eV": 532.7 },
+                { "compound_type": "Sulfates", "orbital": "1s", "binding_energy_eV": 532.0 },
+                { "compound_type": "Carbonates", "orbital": "1s", "binding_energy_eV": 531.4 },
+                { "compound_type": "Chlorates", "orbital": "1s", "binding_energy_eV": 532.3 },
+                { "compound_type": "Al2O3 (sapphire)", "orbital": "1s", "binding_energy_eV": 531.0 },
+                { "compound_type": "Silicones", "orbital": "1s", "binding_energy_eV": 532.5 }
+            ],
+            "atomic_sensitivity_factors": {
+                "Al_Ka_90_deg": { "line": "1s", "ASF": 0.711 },
+                "Al_Ka_54_7_deg": { "line": "1s", "ASF": 0.711 }
+            }
+        },
+        "F": {
+            "element": "Fluorine",
+            "symbol": "F",
+            "atomic_number": 9,
+            "binding_energy_of_most_useful_line_eV": 684.9,
+            "spin_orbit_splitting_eV": null,
+            "line_positions": {
+                "photoelectron_lines_Al_Ka": [
+                    { "line": "1s", "binding_energy_eV": 685 },
+                    { "line": "2s", "binding_energy_eV": 30 }
+                ],
+                "auger_lines_Al_Ka_kinetic_energy": [
+                    { "line": "KL1L1", "kinetic_energy_eV": 877 },
+                    { "line": "KL1L23", "kinetic_energy_eV": 858 },
+                    { "line": "KL23L23", "kinetic_energy_eV": 832 }
+                ],
+                "photoelectron_lines_Mg_Ka": [
+                    { "line": "1s", "binding_energy_eV": 685 },
+                    { "line": "2s", "binding_energy_eV": 30 }
+                ],
+                "auger_lines_Mg_Ka_kinetic_energy": [
+                    { "line": "KL1L1", "kinetic_energy_eV": 644 },
+                    { "line": "KL1L23", "kinetic_energy_eV": 625 },
+                    { "line": "KL23L23", "kinetic_energy_eV": 599 }
+                ]
+            },
+            "chemical_state_data": [
+                { "compound_type": "KF", "orbital": "1s", "binding_energy_eV": 683.9 },
+                { "compound_type": "LiF", "orbital": "1s", "binding_energy_eV": 685.1 },
+                { "compound_type": "NaF", "orbital": "1s", "binding_energy_eV": 684.5 },
+                { "compound_type": "BaF2", "orbital": "1s", "binding_energy_eV": 683.7 },
+                { "compound_type": "MgF2", "orbital": "1s", "binding_energy_eV": 685.8 },
+                { "compound_type": "AlF3·3H2O", "orbital": "1s", "binding_energy_eV": 686.3 },
+                { "compound_type": "NaBF4", "orbital": "1s", "binding_energy_eV": 687.0 },
+                { "compound_type": "Na2SiF6", "orbital": "1s", "binding_energy_eV": 686.0 },
+                { "compound_type": "p-(CF2=CF2)", "orbital": "1s", "binding_energy_eV": 689.0 },
+                { "compound_type": "EtNH2BF3", "orbital": "1s", "binding_energy_eV": 686.6 },
+                { "compound_type": "Ph3PBF3", "orbital": "1s", "binding_energy_eV": 685.7 }
+            ],
+            "atomic_sensitivity_factors": {
+                "Al_Ka_90_deg": { "line": "1s", "ASF": 1.000 },
+                "Al_Ka_54_7_deg": { "line": "1s", "ASF": 1.000 }
+            }
+        },
+        "Ne": {
+            "element": "Neon",
+            "symbol": "Ne",
+            "atomic_number": 10,
+            "binding_energy_of_most_useful_line_eV": 863.1,
+            "spin_orbit_splitting_eV": null,
+            "line_positions": {
+                "photoelectron_lines_Al_Ka": [
+                    { "line": "1s", "binding_energy_eV": 863 },
+                    { "line": "2s", "binding_energy_eV": 41 },
+                    { "line": "2p", "binding_energy_eV": 14 }
+                ],
+                "auger_lines_Al_Ka_kinetic_energy": [
+                    { "line": "KL1L1", "kinetic_energy_eV": 725 },
+                    { "line": "KL1L23", "kinetic_energy_eV": 702 },
+                    { "line": "KL23L23", "kinetic_energy_eV": 669 }
+                ],
+                "photoelectron_lines_Mg_Ka": [
+                    { "line": "1s", "binding_energy_eV": 863 },
+                    { "line": "2s", "binding_energy_eV": 41 },
+                    { "line": "2p", "binding_energy_eV": 14 }
+                ],
+                "auger_lines_Mg_Ka_kinetic_energy": [
+                    { "line": "KL1L1", "kinetic_energy_eV": 492 },
+                    { "line": "KL1L23", "kinetic_energy_eV": 469 },
+                    { "line": "KL23L23", "kinetic_energy_eV": 436 }
+                ]
+            },
+            "chemical_state_data": [
+                { "compound_type": "Ne in Ag", "orbital": "1s", "binding_energy_eV": 862.4 },
+                { "compound_type": "Ne in Au", "orbital": "1s", "binding_energy_eV": 861.6 },
+                { "compound_type": "Ne in Cu", "orbital": "1s", "binding_energy_eV": 862.2 },
+                { "compound_type": "Ne in Fe", "orbital": "1s", "binding_energy_eV": 863.4 },
+                { "compound_type": "Ne in graphite", "orbital": "1s", "binding_energy_eV": 863.1 }
+            ],
+            "atomic_sensitivity_factors": {
+                "Al_Ka_90_deg": { "line": "1s", "ASF": 1.340 },
+                "Al_Ka_54_7_deg": { "line": "1s", "ASF": 1.340 }
+            }
+        },
+        "Na": {
+            "element": "Sodium",
+            "symbol": "Na",
+            "atomic_number": 11,
+            "binding_energy_of_most_useful_line_eV": 1071.8,
+            "spin_orbit_splitting_eV": null,
+            "line_positions": {
+                "photoelectron_lines_Al_Ka": [
+                    { "line": "1s", "binding_energy_eV": 1072 },
+                    { "line": "2s", "binding_energy_eV": 64 },
+                    { "line": "2p", "binding_energy_eV": 31 }
+                ],
+                "auger_lines_Al_Ka_kinetic_energy": [
+                    { "line": "KL1L1", "kinetic_energy_eV": 561 },
+                    { "line": "KL1L23", "kinetic_energy_eV": 532 },
+                    { "line": "KL23L23", "kinetic_energy_eV": 493 }
+                ],
+                "photoelectron_lines_Mg_Ka": [
+                    { "line": "1s", "binding_energy_eV": 1072 },
+                    { "line": "2s", "binding_energy_eV": 64 },
+                    { "line": "2p", "binding_energy_eV": 31 }
+                ],
+                "auger_lines_Mg_Ka_kinetic_energy": [
+                    { "line": "KL1L1", "kinetic_energy_eV": 328 },
+                    { "line": "KL1L23", "kinetic_energy_eV": 299 },
+                    { "line": "KL23L23", "kinetic_energy_eV": 260 }
+                ]
+            },
+            "chemical_state_data": [
+                { "compound_type": "Na", "orbital": "1s", "binding_energy_eV": 1071.8 },
+                { "compound_type": "NaI", "orbital": "1s", "binding_energy_eV": 1071.7 },
+                { "compound_type": "NaBr", "orbital": "1s", "binding_energy_eV": 1071.7 },
+                { "compound_type": "NaCl", "orbital": "1s", "binding_energy_eV": 1071.8 },
+                { "compound_type": "NaF", "orbital": "1s", "binding_energy_eV": 1071.2 },
+                { "compound_type": "Na2CO3", "orbital": "1s", "binding_energy_eV": 1071.5 },
+                { "compound_type": "Na2S2O3", "orbital": "1s", "binding_energy_eV": 1071.6 },
+                { "compound_type": "Na2SO4", "orbital": "1s", "binding_energy_eV": 1071.2 },
+                { "compound_type": "Na4P2O7", "orbital": "1s", "binding_energy_eV": 1070.8 },
+                { "compound_type": "NaH2PO4", "orbital": "1s", "binding_energy_eV": 1072.0 },
+                { "compound_type": "Mol Sieve Y", "orbital": "1s", "binding_energy_eV": 1072.6 }
+            ],
+            "auger_parameter_data": [
+                { "compound_type": "Na2SeO3", "orbital": "1s", "binding_energy_eV": 1070.8, "KLL_kinetic_energy_eV": 991.0 },
+                { "compound_type": "NaF", "orbital": "1s", "binding_energy_eV": 1071.0, "KLL_kinetic_energy_eV": 998.6 },
+                { "compound_type": "Na", "orbital": "1s", "binding_energy_eV": 1071.8, "KLL_kinetic_energy_eV": 994.3 },
+                { "compound_type": "NaCl", "orbital": "1s", "binding_energy_eV": 1071.8, "KLL_kinetic_energy_eV": 990.1 },
+                { "compound_type": "Mol Sieve Y", "orbital": "1s", "binding_energy_eV": 1072.6, "KLL_kinetic_energy_eV": 987.8 }
+            ],
+            "atomic_sensitivity_factors": {
+                "Al_Ka_90_deg": { "line": "1s", "ASF": 1.685 },
+                "Al_Ka_54_7_deg": { "line": "1s", "ASF": 1.685 }
+            }
+        },
+        "Mg": {
+            "element": "Magnesium",
+            "symbol": "Mg",
+            "atomic_number": 12,
+            "binding_energy_of_most_useful_line_eV": 49.8,
+            "spin_orbit_splitting_eV": null,
+            "line_positions": {
+                "photoelectron_lines_Al_Ka": [
+                    { "line": "1s", "binding_energy_eV": 1303 },
+                    { "line": "2s", "binding_energy_eV": 89 },
+                    { "line": "2p", "binding_energy_eV": 50 }
+                ],
+                "auger_lines_Al_Ka_kinetic_energy": [
+                    { "line": "KL1L1", "kinetic_energy_eV": 561 },
+                    { "line": "KL1L23", "kinetic_energy_eV": 532 },
+                    { "line": "KL23L23", "kinetic_energy_eV": 493 }
+                ],
+                "photoelectron_lines_Mg_Ka": [
+                    { "line": "1s", "binding_energy_eV": 1303 },
+                    { "line": "2s", "binding_energy_eV": 89 },
+                    { "line": "2p", "binding_energy_eV": 50 }
+                ],
+                "auger_lines_Mg_Ka_kinetic_energy": [
+                    { "line": "KL1L1", "kinetic_energy_eV": 148 },
+                    { "line": "KL1L23", "kinetic_energy_eV": 114 },
+                    { "line": "KL23L23", "kinetic_energy_eV": 68 }
+                ]
+            },
+            "chemical_state_data": [
+                { "compound_type": "Mg", "orbital": "2p", "binding_energy_eV": 49.6 },
+                { "compound_type": "Mg2Cu", "orbital": "2p", "binding_energy_eV": 49.8 },
+                { "compound_type": "Mg3Bi2", "orbital": "2p", "binding_energy_eV": 50.6 },
+                { "compound_type": "MgF2", "orbital": "2p", "binding_energy_eV": 51.0 },
+                { "compound_type": "Mg(OH)2", "orbital": "2p", "binding_energy_eV": 49.5 },
+                { "compound_type": "MgAl2O4", "orbital": "2p", "binding_energy_eV": 50.4 }
+            ],
+            "atomic_sensitivity_factors": {
+                "Al_Ka_90_deg": { "line": "2s", "ASF": 0.252 },
+                "Al_Ka_54_7_deg": { "line": "2s", "ASF": 0.252 }
+            }
+        },
+        "Al": {
+            "element": "Aluminum",
+            "symbol": "Al",
+            "atomic_number": 13,
+            "binding_energy_of_most_useful_line_eV": 72.9,
+            "spin_orbit_splitting_eV": null,
+            "line_positions": {
+                "photoelectron_lines_Al_Ka": [
+                    { "line": "2s", "binding_energy_eV": 118 },
+                    { "line": "2p", "binding_energy_eV": 73 }
+                ],
+                "auger_lines_Al_Ka_kinetic_energy": [
+                    { "line": "L23M1M23", "kinetic_energy_eV": 1419 }
+                ],
+                "photoelectron_lines_Mg_Ka": [
+                    { "line": "2s", "binding_energy_eV": 118 },
+                    { "line": "2p", "binding_energy_eV": 73 }
+                ],
+                "auger_lines_Mg_Ka_kinetic_energy": [
+                    { "line": "L23M1M23", "kinetic_energy_eV": 1186 }
+                ]
+            },
+            "chemical_state_data": [
+                { "compound_type": "Al", "orbital": "2p", "binding_energy_eV": 72.8 },
+                { "compound_type": "AlAs", "orbital": "2p", "binding_energy_eV": 73.6 },
+                { "compound_type": "AlGaAs", "orbital": "2p", "binding_energy_eV": 73.6 },
+                { "compound_type": "LiAlH4", "orbital": "2p", "binding_energy_eV": 75.6 },
+                { "compound_type": "Halides", "orbital": "2p", "binding_energy_eV": 74.7 },
+                { "compound_type": "AlF3", "orbital": "2p", "binding_energy_eV": 76.3 },
+                { "compound_type": "Al2O3 (sapphire)", "orbital": "2p", "binding_energy_eV": 74.4 },
+                { "compound_type": "Al2O3 (alpha)", "orbital": "2p", "binding_energy_eV": 73.9 },
+                { "compound_type": "Al2O3 (gamma)", "orbital": "2p", "binding_energy_eV": 73.7 },
+                { "compound_type": "AlOOH (boehmite)", "orbital": "2p", "binding_energy_eV": 74.2 }
+            ],
+            "auger_parameter_data": [
+                { "compound_type": "Al", "orbital": "2p", "binding_energy_eV": 72.8, "KLL_kinetic_energy_eV": 1393.3 },
+                { "compound_type": "AlAs", "orbital": "2p", "binding_energy_eV": 73.6, "KLL_kinetic_energy_eV": 1391.2 },
+                { "compound_type": "AlN", "orbital": "2p", "binding_energy_eV": 74.4, "KLL_kinetic_energy_eV": 1389.0 },
+                { "compound_type": "Al2O3 (sapphire)", "orbital": "2p", "binding_energy_eV": 74.2, "KLL_kinetic_energy_eV": 1387.8 }
+            ],
+            "atomic_sensitivity_factors": {
+                "Al_Ka_90_deg": { "line": "2p", "ASF": 0.193 },
+                "Al_Ka_54_7_deg": { "line": "2p", "ASF": 0.234 }
+            }
+        },
+        "Si": {
+            "element": "Silicon",
+            "symbol": "Si",
+            "atomic_number": 14,
+            "binding_energy_of_most_useful_line_eV": 99.3,
+            "spin_orbit_splitting_eV": null,
+            "line_positions": {
+                "photoelectron_lines_Al_Ka": [
+                    { "line": "2s", "binding_energy_eV": 151 },
+                    { "line": "2p", "binding_energy_eV": 99 }
+                ],
+                "auger_lines_Al_Ka_kinetic_energy": [
+                    { "line": "L23M23M23", "kinetic_energy_eV": 1394 }
+                ],
+                "photoelectron_lines_Mg_Ka": [
+                    { "line": "2s", "binding_energy_eV": 151 },
+                    { "line": "2p", "binding_energy_eV": 99 }
+                ],
+                "auger_lines_Mg_Ka_kinetic_energy": [
+                    { "line": "L23M23M23", "kinetic_energy_eV": 1161 }
+                ]
+            },
+            "chemical_state_data": [
+                { "compound_type": "Silicides", "orbital": "2p", "binding_energy_eV": 99.5 },
+                { "compound_type": "Silicon", "orbital": "2p", "binding_energy_eV": 99.3 },
+                { "compound_type": "Carbides", "orbital": "2p", "binding_energy_eV": 98.4 },
+                { "compound_type": "Nitrides", "orbital": "2p", "binding_energy_eV": 101.8 },
+                { "compound_type": "Silicones (Silanes)", "orbital": "2p", "binding_energy_eV": 100.9 },
+                { "compound_type": "Silicates", "orbital": "2p", "binding_energy_eV": 102.4 },
+                { "compound_type": "Silica", "orbital": "2p", "binding_energy_eV": 103.5 }
+            ],
+            "auger_parameter_data": [
+                { "compound_type": "Si", "orbital": "2p", "binding_energy_eV": 99.5, "KLL_kinetic_energy_eV": 1616.6 },
+                { "compound_type": "Si3N4", "orbital": "2p", "binding_energy_eV": 101.8, "KLL_kinetic_energy_eV": 1612.6 },
+                { "compound_type": "SiO2, gel", "orbital": "2p", "binding_energy_eV": 103.4, "KLL_kinetic_energy_eV": 1608.3 },
+                { "compound_type": "SiO2, quartz", "orbital": "2p", "binding_energy_eV": 103.7, "KLL_kinetic_energy_eV": 1608.6 }
+            ],
+            "atomic_sensitivity_factors": {
+                "Al_Ka_90_deg": { "line": "2p", "ASF": 0.283 },
+                "Al_Ka_54_7_deg": { "line": "2p", "ASF": 0.339 }
+            }
+        },
+        "P": {
+            "element": "Phosphorus",
+            "symbol": "P",
+            "atomic_number": 15,
+            "binding_energy_of_most_useful_line_eV": 129.9,
+            "spin_orbit_splitting_eV": 0.84,
+            "line_positions": {
+                "photoelectron_lines_Al_Ka": [
+                    { "line": "2s", "binding_energy_eV": 188 },
+                    { "line": "2p1/2", "binding_energy_eV": 131 },
+                    { "line": "2p3/2", "binding_energy_eV": 130 },
+                    { "line": "3s", "binding_energy_eV": 14 }
+                ],
+                "auger_lines_Al_Ka_kinetic_energy": [
+                    { "line": "L23M23M23", "kinetic_energy_eV": 1367 }
+                ],
+                "photoelectron_lines_Mg_Ka": [
+                    { "line": "2s", "binding_energy_eV": 188 },
+                    { "line": "2p1/2", "binding_energy_eV": 131 },
+                    { "line": "2p3/2", "binding_energy_eV": 130 },
+                    { "line": "3s", "binding_energy_eV": 14 }
+                ],
+                "auger_lines_Mg_Ka_kinetic_energy": [
+                    { "line": "L23M23M23", "kinetic_energy_eV": 1134 }
+                ]
+            },
+            "chemical_state_data": [
+                { "compound_type": "P (red)", "orbital": "2p3/2", "binding_energy_eV": 130.0 },
+                { "compound_type": "GaP", "orbital": "2p3/2", "binding_energy_eV": 128.8 },
+                { "compound_type": "InP", "orbital": "2p3/2", "binding_energy_eV": 128.3 },
+                { "compound_type": "Phosphate", "orbital": "2p3/2", "binding_energy_eV": 132.4 },
+                { "compound_type": "Pyrophosphate", "orbital": "2p3/2", "binding_energy_eV": 133.2 },
+                { "compound_type": "Metaphosphate", "orbital": "2p3/2", "binding_energy_eV": 134.2 },
+                { "compound_type": "P4O10", "orbital": "2p3/2", "binding_energy_eV": 135.3 },
+                { "compound_type": "Ph3P", "orbital": "2p3/2", "binding_energy_eV": 130.9 },
+                { "compound_type": "Ph2PSH", "orbital": "2p3/2", "binding_energy_eV": 132.3 },
+                { "compound_type": "(PhO)3PO", "orbital": "2p3/2", "binding_energy_eV": 134.8 }
+            ],
+            "atomic_sensitivity_factors": {
+                "Al_Ka_90_deg": { "line": "2p", "ASF": 0.412 },
+                "Al_Ka_54_7_deg": { "line": "2p", "ASF": 0.486 }
+            }
+        },
+        "S": {
+            "element": "Sulfur",
+            "symbol": "S",
+            "atomic_number": 16,
+            "binding_energy_of_most_useful_line_eV": 164.0,
+            "spin_orbit_splitting_eV": 1.18,
+            "line_positions": {
+                "photoelectron_lines_Al_Ka": [
+                    { "line": "2s", "binding_energy_eV": 228 },
+                    { "line": "2p1/2", "binding_energy_eV": 165 },
+                    { "line": "2p3/2", "binding_energy_eV": 164 },
+                    { "line": "3s", "binding_energy_eV": 18 }
+                ],
+                "auger_lines_Al_Ka_kinetic_energy": [
+                    { "line": "L23M23M23", "kinetic_energy_eV": 1336 }
+                ],
+                "photoelectron_lines_Mg_Ka": [
+                    { "line": "2s", "binding_energy_eV": 228 },
+                    { "line": "2p1/2", "binding_energy_eV": 165 },
+                    { "line": "2p3/2", "binding_energy_eV": 164 },
+                    { "line": "3s", "binding_energy_eV": 18 }
+                ],
+                "auger_lines_Mg_Ka_kinetic_energy": [
+                    { "line": "L23M23M23", "kinetic_energy_eV": 1103 }
+                ]
+            },
+            "chemical_state_data": [
+                { "compound_type": "S", "orbital": "2p3/2", "binding_energy_eV": 164.1 },
+                { "compound_type": "Sulfide", "orbital": "2p3/2", "binding_energy_eV": 161.7 },
+                { "compound_type": "Sulfite", "orbital": "2p3/2", "binding_energy_eV": 166.6 },
+                { "compound_type": "Sulfate", "orbital": "2p3/2", "binding_energy_eV": 168.8 },
+                { "compound_type": "SF6", "orbital": "2p3/2", "binding_energy_eV": 174.4 },
+                { "compound_type": "SO2", "orbital": "2p3/2", "binding_energy_eV": 167.4 },
+                { "compound_type": "Thiophene", "orbital": "2p3/2", "binding_energy_eV": 164.3 },
+                { "compound_type": "Mercaptan", "orbital": "2p3/2", "binding_energy_eV": 163.1 },
+                { "compound_type": "Cysteine", "orbital": "2p3/2", "binding_energy_eV": 163.2 },
+                { "compound_type": "Sulfone", "orbital": "2p3/2", "binding_energy_eV": 169.0 }
+            ],
+            "auger_parameter_data": [
+                { "compound_type": "NiS", "orbital": "2p", "binding_energy_eV": 162.2, "KLL_kinetic_energy_eV": 2116.1 },
+                { "compound_type": "Na2SO3", "orbital": "2p", "binding_energy_eV": 166.6, "KLL_kinetic_energy_eV": 2108.5 },
+                { "compound_type": "SO2", "orbital": "2p", "binding_energy_eV": 167.4, "KLL_kinetic_energy_eV": 2106.2 },
+                { "compound_type": "CuSO4", "orbital": "2p", "binding_energy_eV": 169.3, "KLL_kinetic_energy_eV": 2108.0 }
+            ],
+            "atomic_sensitivity_factors": {
+                "Al_Ka_90_deg": { "line": "2p", "ASF": 0.570 },
+                "Al_Ka_54_7_deg": { "line": "2p", "ASF": 0.666 }
+            }
+        },
+        "Cl": {
+            "element": "Chlorine",
+            "symbol": "Cl",
+            "atomic_number": 17,
+            "binding_energy_of_most_useful_line_eV": 198.5,
+            "spin_orbit_splitting_eV": 1.60,
+            "line_positions": {
+                "photoelectron_lines_Al_Ka": [
+                    { "line": "2s", "binding_energy_eV": 271 },
+                    { "line": "2p1/2", "binding_energy_eV": 201 },
+                    { "line": "2p3/2", "binding_energy_eV": 199 },
+                    { "line": "3s", "binding_energy_eV": 17 },
+                    { "line": "3p", "binding_energy_eV": 6 }
+                ],
+                "auger_lines_Al_Ka_kinetic_energy": [
+                    { "line": "L23M23M23", "kinetic_energy_eV": 1304 }
+                ],
+                "photoelectron_lines_Mg_Ka": [
+                    { "line": "2s", "binding_energy_eV": 271 },
+                    { "line": "2p1/2", "binding_energy_eV": 201 },
+                    { "line": "2p3/2", "binding_energy_eV": 199 },
+                    { "line": "3s", "binding_energy_eV": 17 },
+                    { "line": "3p", "binding_energy_eV": 6 }
+                ],
+                "auger_lines_Mg_Ka_kinetic_energy": [
+                    { "line": "L23M23M23", "kinetic_energy_eV": 1071 }
+                ]
+            },
+            "chemical_state_data": [
+                { "compound_type": "Alkali Chloride", "orbital": "2p3/2", "binding_energy_eV": 198.2 },
+                { "compound_type": "CuCl2", "orbital": "2p3/2", "binding_energy_eV": 200.0 },
+                { "compound_type": "NiCl2", "orbital": "2p3/2", "binding_energy_eV": 199.4 },
+                { "compound_type": "PdCl2", "orbital": "2p3/2", "binding_energy_eV": 198.9 },
+                { "compound_type": "K2IrCl6", "orbital": "2p3/2", "binding_energy_eV": 198.6 },
+                { "compound_type": "Pt(NH3)2Cl2", "orbital": "2p3/2", "binding_energy_eV": 198.8 },
+                { "compound_type": "Perchlorate", "orbital": "2p3/2", "binding_energy_eV": 208.2 },
+                { "compound_type": "KClO3", "orbital": "2p3/2", "binding_energy_eV": 206.5 },
+                { "compound_type": "NaClO4", "orbital": "2p3/2", "binding_energy_eV": 208.5 },
+                { "compound_type": "C6H5Cl", "orbital": "2p3/2", "binding_energy_eV": 200.1 },
+                { "compound_type": "p(CH2=CHCl)", "orbital": "2p3/2", "binding_energy_eV": 200.0 }
+            ],
+            "atomic_sensitivity_factors": {
+                "Al_Ka_90_deg": { "line": "2p", "ASF": 0.770 },
+                "Al_Ka_54_7_deg": { "line": "2p", "ASF": 0.891 }
+            }
+        },
+        "Ar": {
+            "element": "Argon",
+            "symbol": "Ar",
+            "atomic_number": 18,
+            "binding_energy_of_most_useful_line_eV": 241.9,
+            "spin_orbit_splitting_eV": 2.12,
+            "line_positions": {
+                "photoelectron_lines_Al_Ka": [
+                    { "line": "2s", "binding_energy_eV": 320 },
+                    { "line": "2p1/2", "binding_energy_eV": 244 },
+                    { "line": "2p3/2", "binding_energy_eV": 242 }
+                ],
+                "auger_lines_Al_Ka_kinetic_energy": [
+                    { "line": "L23M23M23", "kinetic_energy_eV": 1272 }
+                ],
+                "photoelectron_lines_Mg_Ka": [
+                    { "line": "2s", "binding_energy_eV": 320 },
+                    { "line": "2p1/2", "binding_energy_eV": 244 },
+                    { "line": "2p3/2", "binding_energy_eV": 242 }
+                ],
+                "auger_lines_Mg_Ka_kinetic_energy": [
+                    { "line": "L23M23M23", "kinetic_energy_eV": 1039 }
+                ]
+            },
+            "chemical_state_data": [
+                { "compound_type": "Ar in Ag", "orbital": "2p3/2", "binding_energy_eV": 241.2 },
+                { "compound_type": "Ar in Au", "orbital": "2p3/2", "binding_energy_eV": 240.7 },
+                { "compound_type": "Ar in Cu", "orbital": "2p3/2", "binding_energy_eV": 241.1 },
+                { "compound_type": "Ar in Pt", "orbital": "2p3/2", "binding_energy_eV": 240.4 },
+                { "compound_type": "Ar in graphite", "orbital": "2p3/2", "binding_energy_eV": 241.5 },
+                { "compound_type": "Ar in Si", "orbital": "2p3/2", "binding_energy_eV": 241.9 }
+            ],
+            "atomic_sensitivity_factors": {
+                "Al_Ka_90_deg": { "line": "2p", "ASF": 1.011 },
+                "Al_Ka_54_7_deg": { "line": "2p", "ASF": 1.155 }
+            }
+        },
+        "K": {
+            "element": "Potassium",
+            "symbol": "K",
+            "atomic_number": 19,
+            "binding_energy_of_most_useful_line_eV": 294.4,
+            "spin_orbit_splitting_eV": 2.80,
+            "line_positions": {
+                "photoelectron_lines_Al_Ka": [
+                    { "line": "2s", "binding_energy_eV": 380 },
+                    { "line": "2p1/2", "binding_energy_eV": 297 },
+                    { "line": "2p3/2", "binding_energy_eV": 294 },
+                    { "line": "3s", "binding_energy_eV": 35 },
+                    { "line": "3p", "binding_energy_eV": 19 }
+                ],
+                "auger_lines_Al_Ka_kinetic_energy": [
+                    { "line": "L23M23M23", "kinetic_energy_eV": 1239 }
+                ],
+                "photoelectron_lines_Mg_Ka": [
+                    { "line": "2s", "binding_energy_eV": 380 },
+                    { "line": "2p1/2", "binding_energy_eV": 297 },
+                    { "line": "2p3/2", "binding_energy_eV": 294 },
+                    { "line": "3s", "binding_energy_eV": 35 },
+                    { "line": "3p", "binding_energy_eV": 19 }
+                ],
+                "auger_lines_Mg_Ka_kinetic_energy": [
+                    { "line": "L23M23M23", "kinetic_energy_eV": 1006 }
+                ]
+            },
+            "chemical_state_data": [
+                { "compound_type": "K", "orbital": "2p3/2", "binding_energy_eV": 294.6 },
+                { "compound_type": "Halides", "orbital": "2p3/2", "binding_energy_eV": 292.8 },
+                { "compound_type": "KCN", "orbital": "2p3/2", "binding_energy_eV": 294.7 },
+                { "compound_type": "KNO3", "orbital": "2p3/2", "binding_energy_eV": 292.9 },
+                { "compound_type": "KClO3", "orbital": "2p3/2", "binding_energy_eV": 293.2 },
+                { "compound_type": "KClO4", "orbital": "2p3/2", "binding_energy_eV": 293.4 },
+                { "compound_type": "K3PO4", "orbital": "2p3/2", "binding_energy_eV": 293.5 },
+                { "compound_type": "K4P2O7", "orbital": "2p3/2", "binding_energy_eV": 292.2 },
+                { "compound_type": "K2CrO4", "orbital": "2p3/2", "binding_energy_eV": 292.6 },
+                { "compound_type": "K2Cr2O7", "orbital": "2p3/2", "binding_energy_eV": 292.1 }
+            ],
+            "atomic_sensitivity_factors": {
+                "Al_Ka_90_deg": { "line": "2p", "ASF": 1.300 },
+                "Al_Ka_54_7_deg": { "line": "2p", "ASF": 1.466 }
+            }
+        },
+        "Ca": {
+            "element": "Calcium",
+            "symbol": "Ca",
+            "atomic_number": 20,
+            "binding_energy_of_most_useful_line_eV": 346.7,
+            "spin_orbit_splitting_eV": 3.60,
+            "line_positions": {
+                "photoelectron_lines_Al_Ka": [
+                    { "line": "2s", "binding_energy_eV": 440 },
+                    { "line": "2p1/2", "binding_energy_eV": 351 },
+                    { "line": "2p3/2", "binding_energy_eV": 347 },
+                    { "line": "3s", "binding_energy_eV": 45 },
+                    { "line": "3p", "binding_energy_eV": 26 }
+                ],
+                "auger_lines_Al_Ka_kinetic_energy": [
+                    { "line": "L23M23M23", "kinetic_energy_eV": 1197 }
+                ],
+                "photoelectron_lines_Mg_Ka": [
+                    { "line": "2s", "binding_energy_eV": 440 },
+                    { "line": "2p1/2", "binding_energy_eV": 351 },
+                    { "line": "2p3/2", "binding_energy_eV": 347 },
+                    { "line": "3s", "binding_energy_eV": 45 },
+                    { "line": "3p", "binding_energy_eV": 26 }
+                ],
+                "auger_lines_Mg_Ka_kinetic_energy": [
+                    { "line": "L23M23M23", "kinetic_energy_eV": 964 }
+                ]
+            },
+            "chemical_state_data": [
+                { "compound_type": "Ca", "orbital": "2p3/2", "binding_energy_eV": 346.8 },
+                { "compound_type": "CaS", "orbital": "2p3/2", "binding_energy_eV": 346.5 },
+                { "compound_type": "CaCl2", "orbital": "2p3/2", "binding_energy_eV": 348.3 },
+                { "compound_type": "CaF2", "orbital": "2p3/2", "binding_energy_eV": 347.8 },
+                { "compound_type": "CaO", "orbital": "2p3/2", "binding_energy_eV": 346.7 },
+                { "compound_type": "CaCO3", "orbital": "2p3/2", "binding_energy_eV": 346.9 },
+                { "compound_type": "Ca(NO3)2", "orbital": "2p3/2", "binding_energy_eV": 348.7 },
+                { "compound_type": "CaCrO4", "orbital": "2p3/2", "binding_energy_eV": 346.3 },
+                { "compound_type": "CaMoO4", "orbital": "2p3/2", "binding_energy_eV": 347.2 },
+                { "compound_type": "CaSO4", "orbital": "2p3/2", "binding_energy_eV": 348.0 },
+                { "compound_type": "Ca3Si3O9", "orbital": "2p3/2", "binding_energy_eV": 347.0 }
+            ],
+            "atomic_sensitivity_factors": {
+                "Al_Ka_90_deg": { "line": "2p", "ASF": 1.634 },
+                "Al_Ka_54_7_deg": { "line": "2p", "ASF": 1.833 }
+            }
+        },
+        "Sc": {
+            "element": "Scandium",
+            "symbol": "Sc",
+            "atomic_number": 21,
+            "binding_energy_of_most_useful_line_eV": 398.6,
+            "spin_orbit_splitting_eV": 4.87,
+            "line_positions": {
+                "photoelectron_lines_Al_Ka": [
+                    { "line": "2s", "binding_energy_eV": 499 },
+                    { "line": "2p1/2", "binding_energy_eV": 404 },
+                    { "line": "2p3/2", "binding_energy_eV": 399 },
+                    { "line": "3s", "binding_energy_eV": 51 },
+                    { "line": "3p", "binding_energy_eV": 29 }
+                ],
+                "auger_lines_Al_Ka_kinetic_energy": [
+                    { "line": "L3M23M45(1P)", "kinetic_energy_eV": 1118 },
+                    { "line": "LM23M23", "kinetic_energy_eV": 1149 }
+                ],
+                "photoelectron_lines_Mg_Ka": [
+                    { "line": "2s", "binding_energy_eV": 499 },
+                    { "line": "2p1/2", "binding_energy_eV": 404 },
+                    { "line": "2p3/2", "binding_energy_eV": 399 },
+                    { "line": "3s", "binding_energy_eV": 51 },
+                    { "line": "3p", "binding_energy_eV": 29 }
+                ],
+                "auger_lines_Mg_Ka_kinetic_energy": [
+                    { "line": "L3M23M45(1P)", "kinetic_energy_eV": 885 },
+                    { "line": "LM23M23", "kinetic_energy_eV": 916 }
+                ]
+            },
+            "chemical_state_data": [
+                { "compound_type": "Sc", "orbital": "2p3/2", "binding_energy_eV": 398.7 },
+                { "compound_type": "ScN", "orbital": "2p3/2", "binding_energy_eV": 400.7 },
+                { "compound_type": "Sc2O3", "orbital": "2p3/2", "binding_energy_eV": 401.9 },
+                { "compound_type": "ClSc(C5H5)2", "orbital": "2p3/2", "binding_energy_eV": 401.4 },
+                { "compound_type": "Sc(C5H5)(C8H8)", "orbital": "2p3/2", "binding_energy_eV": 400.2 }
+            ],
+            "atomic_sensitivity_factors": {
+                "Al_Ka_90_deg": { "line": "2p", "ASF": 1.678 },
+                "Al_Ka_54_7_deg": { "line": "2p", "ASF": 1.875 }
+            }
+        },
+        "Ti": {
+            "element": "Titanium",
+            "symbol": "Ti",
+            "atomic_number": 22,
+            "binding_energy_of_most_useful_line_eV": 454.1,
+            "spin_orbit_splitting_eV": 6.17,
+            "line_positions": {
+                "photoelectron_lines_Al_Ka": [
+                    { "line": "2s", "binding_energy_eV": 561 },
+                    { "line": "2p1/2", "binding_energy_eV": 460 },
+                    { "line": "2p3/2", "binding_energy_eV": 454 },
+                    { "line": "3s", "binding_energy_eV": 59 },
+                    { "line": "3p", "binding_energy_eV": 33 }
+                ],
+                "auger_lines_Al_Ka_kinetic_energy": [
+                    { "line": "LM23M23", "kinetic_energy_eV": 1098 },
+                    { "line": "L3M23M45(1P)", "kinetic_energy_eV": 1068 }
+                ],
+                "photoelectron_lines_Mg_Ka": [
+                    { "line": "2s", "binding_energy_eV": 561 },
+                    { "line": "2p1/2", "binding_energy_eV": 460 },
+                    { "line": "2p3/2", "binding_energy_eV": 454 },
+                    { "line": "3s", "binding_energy_eV": 59 },
+                    { "line": "3p", "binding_energy_eV": 33 }
+                ],
+                "auger_lines_Mg_Ka_kinetic_energy": [
+                    { "line": "LM23M23", "kinetic_energy_eV": 865 },
+                    { "line": "L3M23M45(1P)", "kinetic_energy_eV": 835 }
+                ]
+            },
+            "chemical_state_data": [
+                { "compound_type": "Ti", "orbital": "2p3/2", "binding_energy_eV": 453.9 },
+                { "compound_type": "TiB2", "orbital": "2p3/2", "binding_energy_eV": 454.4 },
+                { "compound_type": "TiN", "orbital": "2p3/2", "binding_energy_eV": 455.8 },
+                { "compound_type": "TiCl4", "orbital": "2p3/2", "binding_energy_eV": 458.5 },
+                { "compound_type": "TiO", "orbital": "2p3/2", "binding_energy_eV": 455.1 },
+                { "compound_type": "TiO2", "orbital": "2p3/2", "binding_energy_eV": 458.7 },
+                { "compound_type": "BaTiO3 (cubic, tetra.)", "orbital": "2p3/2", "binding_energy_eV": 458.5 },
+                { "compound_type": "CaTiO3", "orbital": "2p3/2", "binding_energy_eV": 458.9 },
+                { "compound_type": "PbTiO3", "orbital": "2p3/2", "binding_energy_eV": 458.6 },
+                { "compound_type": "SrTiO3", "orbital": "2p3/2", "binding_energy_eV": 458.8 },
+                { "compound_type": "Metallocene", "orbital": "2p3/2", "binding_energy_eV": 455.4 }
+            ],
+            "atomic_sensitivity_factors": {
+                "Al_Ka_90_deg": { "line": "2p", "ASF": 1.798 },
+                "Al_Ka_54_7_deg": { "line": "2p", "ASF": 2.001 }
+            }
+        },
+        "V": {
+            "element": "Vanadium",
+            "symbol": "V",
+            "atomic_number": 23,
+            "binding_energy_of_most_useful_line_eV": 512.2,
+            "spin_orbit_splitting_eV": 7.64,
+            "line_positions": {
+                "photoelectron_lines_Al_Ka": [
+                    { "line": "2s", "binding_energy_eV": 627 },
+                    { "line": "2p1/2", "binding_energy_eV": 520 },
+                    { "line": "2p3/2", "binding_energy_eV": 512 },
+                    { "line": "3s", "binding_energy_eV": 66 },
+                    { "line": "3p", "binding_energy_eV": 37 }
+                ],
+                "auger_lines_Al_Ka_kinetic_energy": [
+                    { "line": "L23M23M23", "kinetic_energy_eV": 1048 },
+                    { "line": "L3M23M45(1P)", "kinetic_energy_eV": 1014 },
+                    { "line": "L3M45M45", "kinetic_energy_eV": 977 }
+                ],
+                "photoelectron_lines_Mg_Ka": [
+                    { "line": "2s", "binding_energy_eV": 627 },
+                    { "line": "2p1/2", "binding_energy_eV": 520 },
+                    { "line": "2p3/2", "binding_energy_eV": 512 },
+                    { "line": "3s", "binding_energy_eV": 66 },
+                    { "line": "3p", "binding_energy_eV": 37 }
+                ],
+                "auger_lines_Mg_Ka_kinetic_energy": [
+                    { "line": "L23M23M23", "kinetic_energy_eV": 815 },
+                    { "line": "L3M23M45(1P)", "kinetic_energy_eV": 781 },
+                    { "line": "L3M45M45", "kinetic_energy_eV": 744 }
+                ]
+            },
+            "chemical_state_data": [
+                { "compound_type": "V", "orbital": "2p3/2", "binding_energy_eV": 512.1 },
+                { "compound_type": "VB2", "orbital": "2p3/2", "binding_energy_eV": 513.2 },
+                { "compound_type": "VN", "orbital": "2p3/2", "binding_energy_eV": 514.4 },
+                { "compound_type": "Oxide (V2O5)", "orbital": "2p3/2", "binding_energy_eV": 517.6 },
+                { "compound_type": "VOCl2", "orbital": "2p3/2", "binding_energy_eV": 516.4 },
+                { "compound_type": "VOSO4", "orbital": "2p3/2", "binding_energy_eV": 515.9 },
+                { "compound_type": "Vanadate (Na3VO4)", "orbital": "2p3/2", "binding_energy_eV": 517.3 },
+                { "compound_type": "K4V(CN)6", "orbital": "2p3/2", "binding_energy_eV": 513.3 },
+                { "compound_type": "V(acac)3", "orbital": "2p3/2", "binding_energy_eV": 514.2 },
+                { "compound_type": "VO(acac)2", "orbital": "2p3/2", "binding_energy_eV": 515.1 },
+                { "compound_type": "Metallocene", "orbital": "2p3/2", "binding_energy_eV": 512.9 }
+            ],
+            "atomic_sensitivity_factors": {
+                "Al_Ka_90_deg": { "line": "2p", "ASF": 1.912 },
+                "Al_Ka_54_7_deg": { "line": "2p", "ASF": 2.116 }
+            }
+        },
+        "Cr": {
+            "element": "Chromium",
+            "symbol": "Cr",
+            "atomic_number": 24,
+            "binding_energy_of_most_useful_line_eV": 574.4,
+            "spin_orbit_splitting_eV": 9.20,
+            "line_positions": {
+                "photoelectron_lines_Al_Ka": [
+                    { "line": "2s", "binding_energy_eV": 696 },
+                    { "line": "2p1/2", "binding_energy_eV": 583 },
+                    { "line": "2p3/2", "binding_energy_eV": 574 },
+                    { "line": "3s", "binding_energy_eV": 75 },
+                    { "line": "3p", "binding_energy_eV": 43 }
+                ],
+                "auger_lines_Al_Ka_kinetic_energy": [
+                    { "line": "L23M23M23", "kinetic_energy_eV": 997 },
+                    { "line": "L3M23M45(1P)", "kinetic_energy_eV": 959 },
+                    { "line": "L3M45M45", "kinetic_energy_eV": 917 }
+                ],
+                "photoelectron_lines_Mg_Ka": [
+                    { "line": "2s", "binding_energy_eV": 696 },
+                    { "line": "2p1/2", "binding_energy_eV": 583 },
+                    { "line": "2p3/2", "binding_energy_eV": 574 },
+                    { "line": "3s", "binding_energy_eV": 75 },
+                    { "line": "3p", "binding_energy_eV": 43 }
+                ],
+                "auger_lines_Mg_Ka_kinetic_energy": [
+                    { "line": "L23M23M23", "kinetic_energy_eV": 764 },
+                    { "line": "L3M23M45(1P)", "kinetic_energy_eV": 726 },
+                    { "line": "L3M45M45", "kinetic_energy_eV": 684 }
+                ]
+            },
+            "chemical_state_data": [
+                { "compound_type": "Cr", "orbital": "2p3/2", "binding_energy_eV": 574.3 },
+                { "compound_type": "Cr Nitride", "orbital": "2p3/2", "binding_energy_eV": 575.8 },
+                { "compound_type": "CrBr3", "orbital": "2p3/2", "binding_energy_eV": 576.2 },
+                { "compound_type": "CrCl3", "orbital": "2p3/2", "binding_energy_eV": 577.4 },
+                { "compound_type": "Oxide (Cr2O3)", "orbital": "2p3/2", "binding_energy_eV": 576.8 },
+                { "compound_type": "CrF3", "orbital": "2p3/2", "binding_energy_eV": 580.3 },
+                { "compound_type": "Cr(OH)3", "orbital": "2p3/2", "binding_energy_eV": 577.3 },
+                { "compound_type": "CrOOH", "orbital": "2p3/2", "binding_energy_eV": 577.0 },
+                { "compound_type": "K2Cr2O7", "orbital": "2p3/2", "binding_energy_eV": 579.9 },
+                { "compound_type": "K3Cr(CN)6", "orbital": "2p3/2", "binding_energy_eV": 576.3 },
+                { "compound_type": "Cr(acac)3", "orbital": "2p3/2", "binding_energy_eV": 576.1 }
+            ],
+            "atomic_sensitivity_factors": {
+                "Al_Ka_90_deg": { "line": "2p", "ASF": 2.201 },
+                "Al_Ka_54_7_deg": { "line": "2p", "ASF": 2.427 }
+            }
+        },
+        "Mn": {
+            "element": "Manganese",
+            "symbol": "Mn",
+            "atomic_number": 25,
+            "binding_energy_of_most_useful_line_eV": 639.0,
+            "spin_orbit_splitting_eV": 11.05,
+            "line_positions": {
+                "photoelectron_lines_Al_Ka": [
+                    { "line": "2s", "binding_energy_eV": 769 },
+                    { "line": "2p1/2", "binding_energy_eV": 650 },
+                    { "line": "2p3/2", "binding_energy_eV": 639 },
+                    { "line": "3s", "binding_energy_eV": 83 },
+                    { "line": "3p", "binding_energy_eV": 48 }
+                ],
+                "auger_lines_Al_Ka_kinetic_energy": [
+                    { "line": "L23M23M23", "kinetic_energy_eV": 944 },
+                    { "line": "L3M23M45", "kinetic_energy_eV": 900 },
+                    { "line": "L3M45M45", "kinetic_energy_eV": 852 }
+                ],
+                "photoelectron_lines_Mg_Ka": [
+                    { "line": "2s", "binding_energy_eV": 769 },
+                    { "line": "2p1/2", "binding_energy_eV": 650 },
+                    { "line": "2p3/2", "binding_energy_eV": 639 },
+                    { "line": "3s", "binding_energy_eV": 83 },
+                    { "line": "3p", "binding_energy_eV": 48 }
+                ],
+                "auger_lines_Mg_Ka_kinetic_energy": [
+                    { "line": "L23M23M23", "kinetic_energy_eV": 711 },
+                    { "line": "L3M23M45", "kinetic_energy_eV": 667 },
+                    { "line": "L3M45M45", "kinetic_energy_eV": 619 }
+                ]
+            },
+            "chemical_state_data": [
+                { "compound_type": "Mn", "orbital": "2p3/2", "binding_energy_eV": 638.8 },
+                { "compound_type": "MnS", "orbital": "2p3/2", "binding_energy_eV": 640.3 },
+                { "compound_type": "MnCl2", "orbital": "2p3/2", "binding_energy_eV": 642.0 },
+                { "compound_type": "MnF3", "orbital": "2p3/2", "binding_energy_eV": 642.6 },
+                { "compound_type": "MnO", "orbital": "2p3/2", "binding_energy_eV": 640.5 },
+                { "compound_type": "Mn2O3", "orbital": "2p3/2", "binding_energy_eV": 641.2 },
+                { "compound_type": "Mn3O4", "orbital": "2p3/2", "binding_energy_eV": 641.4 },
+                { "compound_type": "MnO2", "orbital": "2p3/2", "binding_energy_eV": 642.4 },
+                { "compound_type": "MnOOH", "orbital": "2p3/2", "binding_energy_eV": 641.7 },
+                { "compound_type": "MnSO4", "orbital": "2p3/2", "binding_energy_eV": 644.9 },
+                { "compound_type": "Mn(C5H5)2", "orbital": "2p3/2", "binding_energy_eV": 638.5 }
+            ],
+            "atomic_sensitivity_factors": {
+                "Al_Ka_90_deg": { "line": "2p", "ASF": 2.420 },
+                "Al_Ka_54_7_deg": { "line": "2p", "ASF": 2.659 }
+            }
+        },
+        "Fe": {
+            "element": "Iron",
+            "symbol": "Fe",
+            "atomic_number": 26,
+            "binding_energy_of_most_useful_line_eV": 707.0,
+            "spin_orbit_splitting_eV": 13.10,
+            "line_positions": {
+                "photoelectron_lines_Al_Ka": [
+                    { "line": "2s", "binding_energy_eV": 845 },
+                    { "line": "2p1/2", "binding_energy_eV": 720 },
+                    { "line": "2p3/2", "binding_energy_eV": 707 },
+                    { "line": "3s", "binding_energy_eV": 92 },
+                    { "line": "3p", "binding_energy_eV": 53 }
+                ],
+                "auger_lines_Al_Ka_kinetic_energy": [
+                    { "line": "LM23M23", "kinetic_energy_eV": 888 },
+                    { "line": "L3M23M45(1P)", "kinetic_energy_eV": 839 },
+                    { "line": "L3M45M45", "kinetic_energy_eV": 784 }
+                ],
+                "photoelectron_lines_Mg_Ka": [
+                    { "line": "2s", "binding_energy_eV": 845 },
+                    { "line": "2p1/2", "binding_energy_eV": 720 },
+                    { "line": "2p3/2", "binding_energy_eV": 707 },
+                    { "line": "3s", "binding_energy_eV": 92 },
+                    { "line": "3p", "binding_energy_eV": 53 }
+                ],
+                "auger_lines_Mg_Ka_kinetic_energy": [
+                    { "line": "LM23M23", "kinetic_energy_eV": 655 },
+                    { "line": "L3M23M45(1P)", "kinetic_energy_eV": 606 },
+                    { "line": "L3M45M45", "kinetic_energy_eV": 551 }
+                ]
+            },
+            "chemical_state_data": [
+                { "compound_type": "Fe", "orbital": "2p3/2", "binding_energy_eV": 706.7 },
+                { "compound_type": "FeS", "orbital": "2p3/2", "binding_energy_eV": 710.3 },
+                { "compound_type": "FeS2 (markasite, pyr)", "orbital": "2p3/2", "binding_energy_eV": 706.7 },
+                { "compound_type": "FeCl2", "orbital": "2p3/2", "binding_energy_eV": 710.6 },
+                { "compound_type": "FeCl3", "orbital": "2p3/2", "binding_energy_eV": 711.3 },
+                { "compound_type": "FeO", "orbital": "2p3/2", "binding_energy_eV": 709.4 },
+                { "compound_type": "Fe2O3", "orbital": "2p3/2", "binding_energy_eV": 710.8 },
+                { "compound_type": "FeOOH", "orbital": "2p3/2", "binding_energy_eV": 711.8 },
+                { "compound_type": "FeSO4", "orbital": "2p3/2", "binding_energy_eV": 712.1 },
+                { "compound_type": "K3Fe(CN)6", "orbital": "2p3/2", "binding_energy_eV": 709.6 },
+                { "compound_type": "K4Fe(CN)6", "orbital": "2p3/2", "binding_energy_eV": 707.1 }
+            ],
+            "atomic_sensitivity_factors": {
+                "Al_Ka_90_deg": { "line": "2p", "ASF": 2.686 },
+                "Al_Ka_54_7_deg": { "line": "2p", "ASF": 2.957 }
+            }
+        },
+        "Co": {
+            "element": "Cobalt",
+            "symbol": "Co",
+            "atomic_number": 27,
+            "binding_energy_of_most_useful_line_eV": 778.3,
+            "spin_orbit_splitting_eV": 14.97,
+            "line_positions": {
+                "photoelectron_lines_Al_Ka": [
+                    { "line": "2s", "binding_energy_eV": 925 },
+                    { "line": "2p1/2", "binding_energy_eV": 793 },
+                    { "line": "2p3/2", "binding_energy_eV": 778 },
+                    { "line": "3s", "binding_energy_eV": 101 },
+                    { "line": "3p", "binding_energy_eV": 60 }
+                ],
+                "auger_lines_Al_Ka_kinetic_energy": [
+                    { "line": "L3M23M23", "kinetic_energy_eV": 838 },
+                    { "line": "L2M23M23", "kinetic_energy_eV": 831 },
+                    { "line": "L3M23M45(1P)", "kinetic_energy_eV": 777 },
+                    { "line": "L3M45M45", "kinetic_energy_eV": 713 }
+                ],
+                "photoelectron_lines_Mg_Ka": [
+                    { "line": "2s", "binding_energy_eV": 925 },
+                    { "line": "2p1/2", "binding_energy_eV": 793 },
+                    { "line": "2p3/2", "binding_energy_eV": 778 },
+                    { "line": "3s", "binding_energy_eV": 101 },
+                    { "line": "3p", "binding_energy_eV": 60 }
+                ],
+                "auger_lines_Mg_Ka_kinetic_energy": [
+                    { "line": "L3M23M23", "kinetic_energy_eV": 605 },
+                    { "line": "L2M23M23", "kinetic_energy_eV": 598 },
+                    { "line": "L3M23M45(1P)", "kinetic_energy_eV": 544 },
+                    { "line": "L3M45M45", "kinetic_energy_eV": 480 }
+                ]
+            },
+            "chemical_state_data": [
+                { "compound_type": "Co", "orbital": "2p3/2", "binding_energy_eV": 778.1 },
+                { "compound_type": "CoF2", "orbital": "2p3/2", "binding_energy_eV": 783.0 },
+                { "compound_type": "CoF3", "orbital": "2p3/2", "binding_energy_eV": 782.4 },
+                { "compound_type": "CoO", "orbital": "2p3/2", "binding_energy_eV": 780.2 },
+                { "compound_type": "Co3O4", "orbital": "2p3/2", "binding_energy_eV": 780.2 },
+                { "compound_type": "Co2O3", "orbital": "2p3/2", "binding_energy_eV": 779.9 },
+                { "compound_type": "CoOOH", "orbital": "2p3/2", "binding_energy_eV": 780.0 },
+                { "compound_type": "Co(OH)2", "orbital": "2p3/2", "binding_energy_eV": 781.0 },
+                { "compound_type": "CoSO4", "orbital": "2p3/2", "binding_energy_eV": 784.0 },
+                { "compound_type": "Co(NH3)3Cl3", "orbital": "2p3/2", "binding_energy_eV": 781.4 }
+            ],
+            "atomic_sensitivity_factors": {
+                "Al_Ka_90_deg": { "line": "2p", "ASF": 3.255 },
+                "Al_Ka_54_7_deg": { "line": "2p", "ASF": 3.590 }
+            }
+        },
+        "Ni": {
+            "element": "Nickel",
+            "symbol": "Ni",
+            "atomic_number": 28,
+            "binding_energy_of_most_useful_line_eV": 852.7,
+            "spin_orbit_splitting_eV": 17.27,
+            "line_positions": {
+                "photoelectron_lines_Al_Ka": [
+                    { "line": "2s", "binding_energy_eV": 1009 },
+                    { "line": "2p1/2", "binding_energy_eV": 870 },
+                    { "line": "2p3/2", "binding_energy_eV": 853 },
+                    { "line": "3s", "binding_energy_eV": 111 },
+                    { "line": "3p", "binding_energy_eV": 67 }
+                ],
+                "auger_lines_Al_Ka_kinetic_energy": [
+                    { "line": "L3M23M23", "kinetic_energy_eV": 778 },
+                    { "line": "L2M23M23", "kinetic_energy_eV": 772 },
+                    { "line": "L3M23M45(1P)", "kinetic_energy_eV": 712 },
+                    { "line": "L3M45M45", "kinetic_energy_eV": 641 }
+                ],
+                "photoelectron_lines_Mg_Ka": [
+                    { "line": "2s", "binding_energy_eV": 1009 },
+                    { "line": "2p1/2", "binding_energy_eV": 870 },
+                    { "line": "2p3/2", "binding_energy_eV": 853 },
+                    { "line": "3s", "binding_energy_eV": 111 },
+                    { "line": "3p", "binding_energy_eV": 67 }
+                ],
+                "auger_lines_Mg_Ka_kinetic_energy": [
+                    { "line": "L3M23M23", "kinetic_energy_eV": 545 },
+                    { "line": "L2M23M23", "kinetic_energy_eV": 539 },
+                    { "line": "L3M23M45(1P)", "kinetic_energy_eV": 479 },
+                    { "line": "L3M45M45", "kinetic_energy_eV": 408 }
+                ]
+            },
+            "chemical_state_data": [
+                { "compound_type": "Ni", "orbital": "2p3/2", "binding_energy_eV": 852.7 },
+                { "compound_type": "Silicides", "orbital": "2p3/2", "binding_energy_eV": 853.0 },
+                { "compound_type": "NiS", "orbital": "2p3/2", "binding_energy_eV": 852.8 },
+                { "compound_type": "Halides", "orbital": "2p3/2", "binding_energy_eV": 855.3 },
+                { "compound_type": "NiO", "orbital": "2p3/2", "binding_energy_eV": 853.5 },
+                { "compound_type": "Ni2O3", "orbital": "2p3/2", "binding_energy_eV": 855.8 },
+                { "compound_type": "Ni(NO3)2", "orbital": "2p3/2", "binding_energy_eV": 857.1 },
+                { "compound_type": "Ni(acac)2", "orbital": "2p3/2", "binding_energy_eV": 855.9 },
+                { "compound_type": "Ni(OAc)2·4H2O", "orbital": "2p3/2", "binding_energy_eV": 856.5 },
+                { "compound_type": "Ni(dimethylglyoxim)2", "orbital": "2p3/2", "binding_energy_eV": 855.0 }
+            ],
+            "atomic_sensitivity_factors": {
+                "Al_Ka_90_deg": { "line": "2p", "ASF": 3.653 },
+                "Al_Ka_54_7_deg": { "line": "2p", "ASF": 4.044 }
+            }
+        },
+        "Cu": {
+            "element": "Copper",
+            "symbol": "Cu",
+            "atomic_number": 29,
+            "binding_energy_of_most_useful_line_eV": 932.7,
+            "spin_orbit_splitting_eV": 19.80,
+            "line_positions": {
+                "photoelectron_lines_Al_Ka": [
+                    { "line": "2s", "binding_energy_eV": 1097 },
+                    { "line": "2p1/2", "binding_energy_eV": 953 },
+                    { "line": "2p3/2", "binding_energy_eV": 933 },
+                    { "line": "3s", "binding_energy_eV": 123 },
+                    { "line": "3p1/2", "binding_energy_eV": 77 },
+                    { "line": "3p3/2", "binding_energy_eV": 75 }
+                ],
+                "auger_lines_Al_Ka_kinetic_energy": [
+                    { "line": "L3M23M23", "kinetic_energy_eV": 719 },
+                    { "line": "L3M45M45", "kinetic_energy_eV": 568 }
+                ],
+                "photoelectron_lines_Mg_Ka": [
+                    { "line": "2s", "binding_energy_eV": 1097 },
+                    { "line": "2p1/2", "binding_energy_eV": 953 },
+                    { "line": "2p3/2", "binding_energy_eV": 933 },
+                    { "line": "3s", "binding_energy_eV": 123 },
+                    { "line": "3p1/2", "binding_energy_eV": 77 },
+                    { "line": "3p3/2", "binding_energy_eV": 75 }
+                ],
+                "auger_lines_Mg_Ka_kinetic_energy": [
+                    { "line": "L3M23M23", "kinetic_energy_eV": 486 },
+                    { "line": "L3M45M45", "kinetic_energy_eV": 335 }
+                ]
+            },
+            "chemical_state_data": [
+                { "compound_type": "Cu", "orbital": "2p3/2", "binding_energy_eV": 932.6 },
+                { "compound_type": "Cu2S", "orbital": "2p3/2", "binding_energy_eV": 932.5 },
+                { "compound_type": "CuS", "orbital": "2p3/2", "binding_energy_eV": 932.2 },
+                { "compound_type": "CuCl", "orbital": "2p3/2", "binding_energy_eV": 932.5 },
+                { "compound_type": "CuCl2", "orbital": "2p3/2", "binding_energy_eV": 935.2 },
+                { "compound_type": "Cu2O", "orbital": "2p3/2", "binding_energy_eV": 932.5 },
+                { "compound_type": "CuO", "orbital": "2p3/2", "binding_energy_eV": 933.7 },
+                { "compound_type": "Cu(OH)2", "orbital": "2p3/2", "binding_energy_eV": 935.1 },
+                { "compound_type": "CuSO4", "orbital": "2p3/2", "binding_energy_eV": 935.5 },
+                { "compound_type": "Cu(OAc)2", "orbital": "2p3/2", "binding_energy_eV": 935.0 },
+                { "compound_type": "Cu(salicylaldoxime)", "orbital": "2p3/2", "binding_energy_eV": 934.0 }
+            ],
+            "auger_parameter_data": [
+                { "compound_type": "Cu2Se", "orbital": "2p", "binding_energy_eV": 931.9, "LMM_kinetic_energy_eV": 917.6 },
+                { "compound_type": "Cu", "orbital": "2p", "binding_energy_eV": 932.7, "LMM_kinetic_energy_eV": 918.6 },
+                { "compound_type": "Cu2O", "orbital": "2p", "binding_energy_eV": 932.5, "LMM_kinetic_energy_eV": 916.2 },
+                { "compound_type": "CuO", "orbital": "2p", "binding_energy_eV": 933.7, "LMM_kinetic_energy_eV": 918.1 },
+                { "compound_type": "CuF2", "orbital": "2p", "binding_energy_eV": 937.0, "LMM_kinetic_energy_eV": 914.8 }
+            ],
+            "atomic_sensitivity_factors": {
+                "Al_Ka_90_deg": { "line": "2p", "ASF": 4.798 },
+                "Al_Ka_54_7_deg": { "line": "2p", "ASF": 5.321 }
+            }
+        },
+        "Zn": {
+            "element": "Zinc",
+            "symbol": "Zn",
+            "atomic_number": 30,
+            "binding_energy_of_most_useful_line_eV": 1021.8,
+            "spin_orbit_splitting_eV": 22.97,
+            "line_positions": {
+                "photoelectron_lines_Al_Ka": [
+                    { "line": "2s", "binding_energy_eV": 1195 },
+                    { "line": "2p1/2", "binding_energy_eV": 1045 },
+                    { "line": "2p3/2", "binding_energy_eV": 1022 },
+                    { "line": "3s", "binding_energy_eV": 140 },
+                    { "line": "3p1/2", "binding_energy_eV": 91 },
+                    { "line": "3p3/2", "binding_energy_eV": 89 },
+                    { "line": "3d", "binding_energy_eV": 10 }
+                ],
+                "auger_lines_Al_Ka_kinetic_energy": [
+                    { "line": "L3M23M23", "kinetic_energy_eV": 660 },
+                    { "line": "L3M45M45", "kinetic_energy_eV": 495 }
+                ],
+                "photoelectron_lines_Mg_Ka": [
+                    { "line": "2s", "binding_energy_eV": 1195 },
+                    { "line": "2p1/2", "binding_energy_eV": 1045 },
+                    { "line": "2p3/2", "binding_energy_eV": 1022 },
+                    { "line": "3s", "binding_energy_eV": 140 },
+                    { "line": "3p1/2", "binding_energy_eV": 91 },
+                    { "line": "3p3/2", "binding_energy_eV": 89 },
+                    { "line": "3d", "binding_energy_eV": 10 }
+                ],
+                "auger_lines_Mg_Ka_kinetic_energy": [
+                    { "line": "L3M23M23", "kinetic_energy_eV": 427 },
+                    { "line": "L3M45M45", "kinetic_energy_eV": 262 }
+                ]
+            },
+            "chemical_state_data": [
+                { "compound_type": "Zn", "orbital": "2p3/2", "binding_energy_eV": 1021.8 },
+                { "compound_type": "ZnS", "orbital": "2p3/2", "binding_energy_eV": 1022.0 },
+                { "compound_type": "Phosphide", "orbital": "2p3/2", "binding_energy_eV": 1020.6 },
+                { "compound_type": "Halides", "orbital": "2p3/2", "binding_energy_eV": 1023.0 },
+                { "compound_type": "ZnO", "orbital": "2p3/2", "binding_energy_eV": 1021.8 },
+                { "compound_type": "Zn(acac)2", "orbital": "2p3/2", "binding_energy_eV": 1021.4 },
+                { "compound_type": "(Me4N)2ZnBr4", "orbital": "2p3/2", "binding_energy_eV": 1020.9 },
+                { "compound_type": "ZnSO4", "orbital": "2p3/2", "binding_energy_eV": 1023.1 },
+                { "compound_type": "Zn4Si2O7(OH)2·2H2O", "orbital": "2p3/2", "binding_energy_eV": 1022.0 },
+                { "compound_type": "ZnCr2O4", "orbital": "2p3/2", "binding_energy_eV": 1022.1 },
+                { "compound_type": "ZnRh2O4", "orbital": "2p3/2", "binding_energy_eV": 1021.7 }
+            ],
+            "auger_parameter_data": [
+                { "compound_type": "Zn(acac)2", "orbital": "2p", "binding_energy_eV": 1021.4, "LMM_kinetic_energy_eV": 987.7 },
+                { "compound_type": "Zn", "orbital": "2p", "binding_energy_eV": 1021.8, "LMM_kinetic_energy_eV": 992.1 },
+                { "compound_type": "ZnO", "orbital": "2p", "binding_energy_eV": 1022.5, "LMM_kinetic_energy_eV": 987.7 },
+                { "compound_type": "ZnF2", "orbital": "2p", "binding_energy_eV": 1022.8, "LMM_kinetic_energy_eV": 986.7 }
+            ],
+            "atomic_sensitivity_factors": {
+                "Al_Ka_90_deg": { "line": "2p", "ASF": 3.354 },
+                "Al_Ka_54_7_deg": { "line": "2p", "ASF": 3.726 }
+            }
+        },
+        "Ga": {
+            "element": "Gallium",
+            "symbol": "Ga",
+            "atomic_number": 31,
+            "binding_energy_of_most_useful_line_eV": 1116.7,
+            "spin_orbit_splitting_eV": 26.84,
+            "line_positions": {
+                "photoelectron_lines_Al_Ka": [
+                    { "line": "2s", "binding_energy_eV": 1301 },
+                    { "line": "2p1/2", "binding_energy_eV": 1144 },
+                    { "line": "2p3/2", "binding_energy_eV": 1117 },
+                    { "line": "3s", "binding_energy_eV": 160 },
+                    { "line": "3p1/2", "binding_energy_eV": 107 },
+                    { "line": "3p3/2", "binding_energy_eV": 104 },
+                    { "line": "3d", "binding_energy_eV": 19 }
+                ],
+                "auger_lines_Al_Ka_kinetic_energy": [
+                    { "line": "L3M23M23", "kinetic_energy_eV": 597 },
+                    { "line": "L3M45M45", "kinetic_energy_eV": 419 }
+                ],
+                "photoelectron_lines_Mg_Ka": [
+                    { "line": "2s", "binding_energy_eV": 1301 },
+                    { "line": "2p1/2", "binding_energy_eV": 1144 },
+                    { "line": "2p3/2", "binding_energy_eV": 1117 },
+                    { "line": "3s", "binding_energy_eV": 160 },
+                    { "line": "3p1/2", "binding_energy_eV": 107 },
+                    { "line": "3p3/2", "binding_energy_eV": 104 },
+                    { "line": "3d", "binding_energy_eV": 19 }
+                ],
+                "auger_lines_Mg_Ka_kinetic_energy": [
+                    { "line": "L3M23M23", "kinetic_energy_eV": 364 },
+                    { "line": "L3M45M45", "kinetic_energy_eV": 186 }
+                ]
+            },
+            "chemical_state_data": [
+                { "compound_type": "Ga", "orbital": "2p3/2", "binding_energy_eV": 1116.5 },
+                { "compound_type": "GaP", "orbital": "2p3/2", "binding_energy_eV": 1116.8 },
+                { "compound_type": "Ga2O3", "orbital": "2p3/2", "binding_energy_eV": 1117.8 }
+            ],
+            "atomic_sensitivity_factors": {
+                "Al_Ka_90_deg": { "line": "2p", "ASF": 3.341 },
+                "Al_Ka_54_7_deg": { "line": "2p", "ASF": 3.720 }
+            }
+        },
+        "Ge": {
+            "element": "Germanium",
+            "symbol": "Ge",
+            "atomic_number": 32,
+            "binding_energy_of_most_useful_line_eV": 29.4,
+            "spin_orbit_splitting_eV": null,
+            "line_positions": {
+                "photoelectron_lines_Al_Ka": [
+                    { "line": "2p1/2", "binding_energy_eV": 1248 },
+                    { "line": "2p3/2", "binding_energy_eV": 1217 },
+                    { "line": "3s", "binding_energy_eV": 181 },
+                    { "line": "3p1/2", "binding_energy_eV": 126 },
+                    { "line": "3p3/2", "binding_energy_eV": 122 },
+                    { "line": "3d", "binding_energy_eV": 29 }
+                ],
+                "auger_lines_Al_Ka_kinetic_energy": [
+                    { "line": "L3M23M23", "kinetic_energy_eV": 534 },
+                    { "line": "L3M45M45", "kinetic_energy_eV": 342 }
+                ],
+                "photoelectron_lines_Mg_Ka": [
+                    { "line": "2p1/2", "binding_energy_eV": 1248 },
+                    { "line": "2p3/2", "binding_energy_eV": 1217 },
+                    { "line": "3s", "binding_energy_eV": 181 },
+                    { "line": "3p1/2", "binding_energy_eV": 126 },
+                    { "line": "3p3/2", "binding_energy_eV": 122 },
+                    { "line": "3d", "binding_energy_eV": 29 }
+                ],
+                "auger_lines_Mg_Ka_kinetic_energy": [
+                    { "line": "L3M23M23", "kinetic_energy_eV": 301 },
+                    { "line": "L3M45M45", "kinetic_energy_eV": 109 }
+                ]
+            },
+            "chemical_state_data": [
+                { "compound_type": "Ge", "orbital": "3d", "binding_energy_eV": 29.3 },
+                { "compound_type": "GeAs2", "orbital": "3d", "binding_energy_eV": 29.7 },
+                { "compound_type": "GeTe3As2", "orbital": "3d", "binding_energy_eV": 29.9 },
+                { "compound_type": "GeS2TeAs2", "orbital": "3d", "binding_energy_eV": 30.2 },
+                { "compound_type": "GeS3As", "orbital": "3d", "binding_energy_eV": 30.4 },
+                { "compound_type": "GeTe2", "orbital": "3d", "binding_energy_eV": 30.1 },
+                { "compound_type": "GeTe", "orbital": "3d", "binding_energy_eV": 29.7 },
+                { "compound_type": "GeSe2", "orbital": "3d", "binding_energy_eV": 31.0 },
+                { "compound_type": "GeSe", "orbital": "3d", "binding_energy_eV": 30.9 },
+                { "compound_type": "Sulfides", "orbital": "3d", "binding_energy_eV": 30.4 },
+                { "compound_type": "GeO2", "orbital": "3d", "binding_energy_eV": 32.5 }
+            ],
+            "atomic_sensitivity_factors": {
+                "Al_Ka_90_deg": { "line": "2p", "ASF": 3.100 },
+                "Al_Ka_54_7_deg": { "line": "2p", "ASF": 3.457 }
+            }
+        },
+        "As": {
+            "element": "Arsenic",
+            "symbol": "As",
+            "atomic_number": 33,
+            "binding_energy_of_most_useful_line_eV": 41.6,
+            "spin_orbit_splitting_eV": 0.69,
+            "line_positions": {
+                "photoelectron_lines_Al_Ka": [
+                    { "line": "2p1/2", "binding_energy_eV": 1359 },
+                    { "line": "2p3/2", "binding_energy_eV": 1324 },
+                    { "line": "3s", "binding_energy_eV": 205 },
+                    { "line": "3p1/2", "binding_energy_eV": 146 },
+                    { "line": "3p3/2", "binding_energy_eV": 141 },
+                    { "line": "3d3/2", "binding_energy_eV": 43 },
+                    { "line": "3d5/2", "binding_energy_eV": 42 }
+                ],
+                "auger_lines_Al_Ka_kinetic_energy": [
+                    { "line": "L3M23M45(1P)", "kinetic_energy_eV": 371 },
+                    { "line": "L3M45M45", "kinetic_energy_eV": 262 }
+                ],
+                "photoelectron_lines_Mg_Ka": [
+                    { "line": "2p1/2", "binding_energy_eV": 1359 },
+                    { "line": "2p3/2", "binding_energy_eV": 1324 },
+                    { "line": "3s", "binding_energy_eV": 205 },
+                    { "line": "3p1/2", "binding_energy_eV": 146 },
+                    { "line": "3p3/2", "binding_energy_eV": 141 },
+                    { "line": "3d3/2", "binding_energy_eV": 43 },
+                    { "line": "3d5/2", "binding_energy_eV": 42 }
+                ],
+                "auger_lines_Mg_Ka_kinetic_energy": [
+                    { "line": "L3M23M45(1P)", "kinetic_energy_eV": 30 },
+                    { "line": "L3M45M45", "kinetic_energy_eV": null }
+                ]
+            },
+            "chemical_state_data": [
+                { "compound_type": "As", "orbital": "3d5/2", "binding_energy_eV": 41.6 },
+                { "compound_type": "AlAs", "orbital": "3d5/2", "binding_energy_eV": 41.0 },
+                { "compound_type": "GaAs", "orbital": "3d5/2", "binding_energy_eV": 40.8 },
+                { "compound_type": "InAs", "orbital": "3d5/2", "binding_energy_eV": 40.6 },
+                { "compound_type": "Sulfides", "orbital": "3d5/2", "binding_energy_eV": 42.9 },
+                { "compound_type": "AsI3", "orbital": "3d5/2", "binding_energy_eV": 43.5 },
+                { "compound_type": "AsBr3", "orbital": "3d5/2", "binding_energy_eV": 45.3 },
+                { "compound_type": "As2O3", "orbital": "3d5/2", "binding_energy_eV": 44.9 },
+                { "compound_type": "As2O5", "orbital": "3d5/2", "binding_energy_eV": 46.2 }
+            ],
+            "auger_parameter_data": [
+                { "compound_type": "GaAs", "orbital": "3d", "binding_energy_eV": 40.8, "LMM_kinetic_energy_eV": 1225.3 },
+                { "compound_type": "As", "orbital": "3d", "binding_energy_eV": 41.6, "LMM_kinetic_energy_eV": 1224.8 },
+                { "compound_type": "Ph3AsO", "orbital": "3d", "binding_energy_eV": 44.3, "LMM_kinetic_energy_eV": 1219.5 },
+                { "compound_type": "As2O5", "orbital": "3d", "binding_energy_eV": 46.2, "LMM_kinetic_energy_eV": 1217.5 },
+                { "compound_type": "KAsF6", "orbital": "3d", "binding_energy_eV": 48.0, "LMM_kinetic_energy_eV": 1213.8 }
+            ],
+            "atomic_sensitivity_factors": {
+                "Al_Ka_90_deg": { "line": "3d", "ASF": 0.570 },
+                "Al_Ka_54_7_deg": { "line": "3d", "ASF": 0.677 }
+            }
+        },
+        "Se": {
+            "element": "Selenium",
+            "symbol": "Se",
+            "atomic_number": 34,
+            "binding_energy_of_most_useful_line_eV": 55.6,
+            "spin_orbit_splitting_eV": 0.86,
+            "line_positions": {
+                "photoelectron_lines_Al_Ka": [
+                    { "line": "3s", "binding_energy_eV": 232 },
+                    { "line": "3p1/2", "binding_energy_eV": 169 },
+                    { "line": "3p3/2", "binding_energy_eV": 163 },
+                    { "line": "3d3/2", "binding_energy_eV": 57 },
+                    { "line": "3d5/2", "binding_energy_eV": 56 }
+                ],
+                "auger_lines_Al_Ka_kinetic_energy": [
+                    { "line": "L3M23M45(1P)", "kinetic_energy_eV": 299 },
+                    { "line": "L3M45M45", "kinetic_energy_eV": 181 }
+                ],
+                "photoelectron_lines_Mg_Ka": [
+                    { "line": "3s", "binding_energy_eV": 232 },
+                    { "line": "3p1/2", "binding_energy_eV": 169 },
+                    { "line": "3p3/2", "binding_energy_eV": 163 },
+                    { "line": "3d3/2", "binding_energy_eV": 57 },
+                    { "line": "3d5/2", "binding_energy_eV": 56 }
+                ],
+                "auger_lines_Mg_Ka_kinetic_energy": [
+                    { "line": "L3M23M45(1P)", "kinetic_energy_eV": 66 },
+                    { "line": "L3M45M45", "kinetic_energy_eV": null }
+                ]
+            },
+            "chemical_state_data": [
+                { "compound_type": "Se", "orbital": "3d5/2", "binding_energy_eV": 55.5 },
+                { "compound_type": "As2Se3", "orbital": "3d5/2", "binding_energy_eV": 55.1 },
+                { "compound_type": "Ga2Se3", "orbital": "3d5/2", "binding_energy_eV": 54.6 },
+                { "compound_type": "GeSe", "orbital": "3d5/2", "binding_energy_eV": 54.8 },
+                { "compound_type": "GeSe2", "orbital": "3d5/2", "binding_energy_eV": 54.5 },
+                { "compound_type": "Selenides", "orbital": "3d5/2", "binding_energy_eV": 54.8 },
+                { "compound_type": "SeO2", "orbital": "3d5/2", "binding_energy_eV": 58.9 },
+                { "compound_type": "H2SeO3", "orbital": "3d5/2", "binding_energy_eV": 59.2 },
+                { "compound_type": "(BrC6H4)2Se2", "orbital": "3d5/2", "binding_energy_eV": 56.0 },
+                { "compound_type": "(C14H29Se)2", "orbital": "3d5/2", "binding_energy_eV": 56.1 },
+                { "compound_type": "(C4H8COOH)2SeO", "orbital": "3d5/2", "binding_energy_eV": 58.5 }
+            ],
+            "auger_parameter_data": [
+                { "compound_type": "Se", "orbital": "3d", "binding_energy_eV": 55.5, "LMM_kinetic_energy_eV": 1307.0 },
+                { "compound_type": "Ph2Se2", "orbital": "3d", "binding_energy_eV": 55.8, "LMM_kinetic_energy_eV": 1304.3 },
+                { "compound_type": "Ph2SeO", "orbital": "3d", "binding_energy_eV": 57.6, "LMM_kinetic_energy_eV": 1301.9 },
+                { "compound_type": "SeO2", "orbital": "3d", "binding_energy_eV": 58.9, "LMM_kinetic_energy_eV": 1301.4 },
+                { "compound_type": "H2SeO4", "orbital": "3d", "binding_energy_eV": 61.2, "LMM_kinetic_energy_eV": 1297.9 }
+            ],
+            "atomic_sensitivity_factors": {
+                "Al_Ka_90_deg": { "line": "3d", "ASF": 0.722 },
+                "Al_Ka_54_7_deg": { "line": "3d", "ASF": 0.853 }
+            }
+        },
+        "Br": {
+            "element": "Bromine",
+            "symbol": "Br",
+            "atomic_number": 35,
+            "binding_energy_of_most_useful_line_eV": 68.8,
+            "spin_orbit_splitting_eV": 1.05,
+            "line_positions": {
+                "photoelectron_lines_Al_Ka": [
+                    { "line": "3s", "binding_energy_eV": 256 },
+                    { "line": "3p1/2", "binding_energy_eV": 189 },
+                    { "line": "3p3/2", "binding_energy_eV": 182 },
+                    { "line": "3d3/2", "binding_energy_eV": 70 },
+                    { "line": "3d5/2", "binding_energy_eV": 69 },
+                    { "line": "4s", "binding_energy_eV": 15 },
+                    { "line": "4p", "binding_energy_eV": 5 }
+                ],
+                "auger_lines_Al_Ka_kinetic_energy": [
+                    { "line": "M23M45N23", "kinetic_energy_eV": 1390 }
+                ],
+                "photoelectron_lines_Mg_Ka": [
+                    { "line": "3s", "binding_energy_eV": 256 },
+                    { "line": "3p1/2", "binding_energy_eV": 189 },
+                    { "line": "3p3/2", "binding_energy_eV": 182 },
+                    { "line": "3d3/2", "binding_energy_eV": 70 },
+                    { "line": "3d5/2", "binding_energy_eV": 69 },
+                    { "line": "4s", "binding_energy_eV": 15 },
+                    { "line": "4p", "binding_energy_eV": 5 }
+                ],
+                "auger_lines_Mg_Ka_kinetic_energy": [
+                    { "line": "M23M45N23", "kinetic_energy_eV": 1157 }
+                ]
+            },
+            "chemical_state_data": [
+                { "compound_type": "CsBr", "orbital": "3d5/2", "binding_energy_eV": 68.1 },
+                { "compound_type": "RbBr", "orbital": "3d5/2", "binding_energy_eV": 68.4 },
+                { "compound_type": "KBr", "orbital": "3d5/2", "binding_energy_eV": 68.8 },
+                { "compound_type": "NaBr", "orbital": "3d5/2", "binding_energy_eV": 68.8 },
+                { "compound_type": "LiBr", "orbital": "3d5/2", "binding_energy_eV": 69.2 },
+                { "compound_type": "CuBr2", "orbital": "3d5/2", "binding_energy_eV": 68.9 },
+                { "compound_type": "PbBr2", "orbital": "3d5/2", "binding_energy_eV": 68.7 },
+                { "compound_type": "Ni(NH3)6Br2", "orbital": "3d5/2", "binding_energy_eV": 68.7 },
+                { "compound_type": "Pt(NH3)4Br2", "orbital": "3d5/2", "binding_energy_eV": 68.4 },
+                { "compound_type": "K2PtBr4", "orbital": "3d5/2", "binding_energy_eV": 69.3 },
+                { "compound_type": "K2PtBr6", "orbital": "3d5/2", "binding_energy_eV": 69.2 }
+            ],
+            "atomic_sensitivity_factors": {
+                "Al_Ka_90_deg": { "line": "3d", "ASF": 0.895 },
+                "Al_Ka_54_7_deg": { "line": "3d", "ASF": 1.053 }
+            }
+        },
+        "Kr": {
+            "element": "Krypton",
+            "symbol": "Kr",
+            "atomic_number": 36,
+            "binding_energy_of_most_useful_line_eV": 87.0,
+            "spin_orbit_splitting_eV": 1.23,
+            "line_positions": {
+                "photoelectron_lines_Al_Ka": [
+                    { "line": "3s*", "binding_energy_eV": 287 },
+                    { "line": "3p1/2", "binding_energy_eV": 216 },
+                    { "line": "3p3/2", "binding_energy_eV": 208 },
+                    { "line": "3d3/2", "binding_energy_eV": 88 },
+                    { "line": "3d5/2", "binding_energy_eV": 87 },
+                    { "line": "4s", "binding_energy_eV": 21 },
+                    { "line": "4p", "binding_energy_eV": 8 }
+                ],
+                "auger_lines_Al_Ka_kinetic_energy": [
+                    { "line": "M45N23V", "kinetic_energy_eV": 97 }
+                ],
+                "photoelectron_lines_Mg_Ka": [
+                    { "line": "3s*", "binding_energy_eV": 287 },
+                    { "line": "3p1/2", "binding_energy_eV": 216 },
+                    { "line": "3p3/2", "binding_energy_eV": 208 },
+                    { "line": "3d3/2", "binding_energy_eV": 88 },
+                    { "line": "3d5/2", "binding_energy_eV": 87 },
+                    { "line": "4s", "binding_energy_eV": 21 },
+                    { "line": "4p", "binding_energy_eV": 8 }
+                ],
+                "auger_lines_Mg_Ka_kinetic_energy": [
+                    { "line": "M45N23V", "kinetic_energy_eV": null }
+                ]
+            },
+            "chemical_state_data": [
+                { "compound_type": "Kr in graphite", "orbital": "3d5/2", "binding_energy_eV": 87.0 }
+            ],
+            "atomic_sensitivity_factors": {
+                "Al_Ka_90_deg": { "line": "3d", "ASF": 1.096 },
+                "Al_Ka_54_7_deg": { "line": "3d", "ASF": 1.287 }
+            }
+        },
+        "Rb": {
+            "element": "Rubidium",
+            "symbol": "Rb",
+            "atomic_number": 37,
+            "binding_energy_of_most_useful_line_eV": 111.5,
+            "spin_orbit_splitting_eV": 1.49,
+            "line_positions": {
+                "photoelectron_lines_Al_Ka": [
+                    { "line": "3s", "binding_energy_eV": 325 },
+                    { "line": "3p1/2", "binding_energy_eV": 249 },
+                    { "line": "3p3/2", "binding_energy_eV": 240 },
+                    { "line": "3d3/2", "binding_energy_eV": 113 },
+                    { "line": "3d5/2", "binding_energy_eV": 111 },
+                    { "line": "4s", "binding_energy_eV": 31 },
+                    { "line": "4p", "binding_energy_eV": 16 }
+                ],
+                "auger_lines_Al_Ka_kinetic_energy": [
+                    { "line": "M23M45N23", "kinetic_energy_eV": 1385 }
+                ],
+                "photoelectron_lines_Mg_Ka": [
+                    { "line": "3s", "binding_energy_eV": 325 },
+                    { "line": "3p1/2", "binding_energy_eV": 249 },
+                    { "line": "3p3/2", "binding_energy_eV": 240 },
+                    { "line": "3d3/2", "binding_energy_eV": 113 },
+                    { "line": "3d5/2", "binding_energy_eV": 111 },
+                    { "line": "4s", "binding_energy_eV": 31 },
+                    { "line": "4p", "binding_energy_eV": 16 }
+                ],
+                "auger_lines_Mg_Ka_kinetic_energy": [
+                    { "line": "M23M45N23", "kinetic_energy_eV": 1152 }
+                ]
+            },
+            "chemical_state_data": [
+                { "compound_type": "Rb", "orbital": "3d5/2", "binding_energy_eV": 111.5 },
+                { "compound_type": "RbN3", "orbital": "3d5/2", "binding_energy_eV": 109.8 },
+                { "compound_type": "RbI", "orbital": "3d5/2", "binding_energy_eV": 110.4 },
+                { "compound_type": "RbBr", "orbital": "3d5/2", "binding_energy_eV": 110.0 },
+                { "compound_type": "RbCl", "orbital": "3d5/2", "binding_energy_eV": 109.9 },
+                { "compound_type": "RbF", "orbital": "3d5/2", "binding_energy_eV": 109.8 },
+                { "compound_type": "Rb3PO4", "orbital": "3d5/2", "binding_energy_eV": 110.0 },
+                { "compound_type": "Rb4P2O7", "orbital": "3d5/2", "binding_energy_eV": 110.0 },
+                { "compound_type": "RbClO4", "orbital": "3d5/2", "binding_energy_eV": 110.4 }
+            ],
+            "atomic_sensitivity_factors": {
+                "Al_Ka_90_deg": { "line": "3d", "ASF": 1.316 },
+                "Al_Ka_54_7_deg": { "line": "3d", "ASF": 1.542 }
+            }
+        },
+        "Sr": {
+            "element": "Strontium",
+            "symbol": "Sr",
+            "atomic_number": 38,
+            "binding_energy_of_most_useful_line_eV": 134.3,
+            "spin_orbit_splitting_eV": 1.79,
+            "line_positions": {
+                "photoelectron_lines_Al_Ka": [
+                    { "line": "3s", "binding_energy_eV": 360 },
+                    { "line": "3p1/2", "binding_energy_eV": 281 },
+                    { "line": "3p3/2", "binding_energy_eV": 270 },
+                    { "line": "3d3/2", "binding_energy_eV": 136 },
+                    { "line": "3d5/2", "binding_energy_eV": 134 },
+                    { "line": "4s", "binding_energy_eV": 39 },
+                    { "line": "4p", "binding_energy_eV": 21 }
+                ],
+                "auger_lines_Al_Ka_kinetic_energy": [
+                    { "line": "M45N23N23", "kinetic_energy_eV": 1373 },
+                    { "line": "M45N45N45", "kinetic_energy_eV": 1363 }
+                ],
+                "photoelectron_lines_Mg_Ka": [
+                    { "line": "3s", "binding_energy_eV": 360 },
+                    { "line": "3p1/2", "binding_energy_eV": 281 },
+                    { "line": "3p3/2", "binding_energy_eV": 270 },
+                    { "line": "3d3/2", "binding_energy_eV": 136 },
+                    { "line": "3d5/2", "binding_energy_eV": 134 },
+                    { "line": "4s", "binding_energy_eV": 39 },
+                    { "line": "4p", "binding_energy_eV": 21 }
+                ],
+                "auger_lines_Mg_Ka_kinetic_energy": [
+                    { "line": "M45N23N23", "kinetic_energy_eV": 1140 },
+                    { "line": "M45N45N45", "kinetic_energy_eV": 1130 }
+                ]
+            },
+            "chemical_state_data": [
+                { "compound_type": "Sr", "orbital": "3d5/2", "binding_energy_eV": 134.4 },
+                { "compound_type": "SrO", "orbital": "3d5/2", "binding_energy_eV": 135.3 },
+                { "compound_type": "SrF2", "orbital": "3d5/2", "binding_energy_eV": 133.8 },
+                { "compound_type": "SrCO3", "orbital": "3d5/2", "binding_energy_eV": 133.2 },
+                { "compound_type": "SrSO4", "orbital": "3d5/2", "binding_energy_eV": 134.3 },
+                { "compound_type": "Sr(NO3)2", "orbital": "3d5/2", "binding_energy_eV": 134.7 },
+                { "compound_type": "SrMoO4", "orbital": "3d5/2", "binding_energy_eV": 133.5 },
+                { "compound_type": "SrRh2O4", "orbital": "3d5/2", "binding_energy_eV": 133.0 }
+            ],
+            "atomic_sensitivity_factors": {
+                "Al_Ka_90_deg": { "line": "3d", "ASF": 1.578 },
+                "Al_Ka_54_7_deg": { "line": "3d", "ASF": 1.843 }
+            }
+        },
+        "Y": {
+            "element": "Yttrium",
+            "symbol": "Y",
+            "atomic_number": 39,
+            "binding_energy_of_most_useful_line_eV": 156.0,
+            "spin_orbit_splitting_eV": 2.05,
+            "line_positions": {
+                "photoelectron_lines_Al_Ka": [
+                    { "line": "3s", "binding_energy_eV": 394 },
+                    { "line": "3p1/2", "binding_energy_eV": 311 },
+                    { "line": "3p3/2", "binding_energy_eV": 299 },
+                    { "line": "3d3/2", "binding_energy_eV": 158 },
+                    { "line": "3d5/2", "binding_energy_eV": 156 },
+                    { "line": "4s", "binding_energy_eV": 45 },
+                    { "line": "4p", "binding_energy_eV": 24 }
+                ],
+                "auger_lines_Al_Ka_kinetic_energy": [
+                    { "line": "M45N23V", "kinetic_energy_eV": 1356 }
+                ],
+                "photoelectron_lines_Mg_Ka": [
+                    { "line": "3s", "binding_energy_eV": 394 },
+                    { "line": "3p1/2", "binding_energy_eV": 311 },
+                    { "line": "3p3/2", "binding_energy_eV": 299 },
+                    { "line": "3d3/2", "binding_energy_eV": 158 },
+                    { "line": "3d5/2", "binding_energy_eV": 156 },
+                    { "line": "4s", "binding_energy_eV": 45 },
+                    { "line": "4p", "binding_energy_eV": 24 }
+                ],
+                "auger_lines_Mg_Ka_kinetic_energy": [
+                    { "line": "M45N23V", "kinetic_energy_eV": 1123 }
+                ]
+            },
+            "chemical_state_data": [
+                { "compound_type": "Y", "orbital": "3d5/2", "binding_energy_eV": 155.8 },
+                { "compound_type": "Y2O3", "orbital": "3d5/2", "binding_energy_eV": 156.8 }
+            ],
+            "atomic_sensitivity_factors": {
+                "Al_Ka_90_deg": { "line": "3d", "ASF": 1.867 },
+                "Al_Ka_54_7_deg": { "line": "3d", "ASF": 2.175 }
+            }
+        },
+        "Zr": {
+            "element": "Zirconium",
+            "symbol": "Zr",
+            "atomic_number": 40,
+            "binding_energy_of_most_useful_line_eV": 178.9,
+            "spin_orbit_splitting_eV": 2.43,
+            "line_positions": {
+                "photoelectron_lines_Al_Ka": [
+                    { "line": "3s", "binding_energy_eV": 430 },
+                    { "line": "3p1/2", "binding_energy_eV": 343 },
+                    { "line": "3p3/2", "binding_energy_eV": 330 },
+                    { "line": "3d3/2", "binding_energy_eV": 181 },
+                    { "line": "3d5/2", "binding_energy_eV": 179 },
+                    { "line": "4s", "binding_energy_eV": 51 },
+                    { "line": "4p", "binding_energy_eV": 28 }
+                ],
+                "auger_lines_Al_Ka_kinetic_energy": [
+                    { "line": "M45N23N23", "kinetic_energy_eV": 1368 },
+                    { "line": "M45N45N45", "kinetic_energy_eV": 1337 }
+                ],
+                "photoelectron_lines_Mg_Ka": [
+                    { "line": "3s", "binding_energy_eV": 430 },
+                    { "line": "3p1/2", "binding_energy_eV": 343 },
+                    { "line": "3p3/2", "binding_energy_eV": 330 },
+                    { "line": "3d3/2", "binding_energy_eV": 181 },
+                    { "line": "3d5/2", "binding_energy_eV": 179 },
+                    { "line": "4s", "binding_energy_eV": 51 },
+                    { "line": "4p", "binding_energy_eV": 28 }
+                ],
+                "auger_lines_Mg_Ka_kinetic_energy": [
+                    { "line": "M45N23N23", "kinetic_energy_eV": 1135 },
+                    { "line": "M45N45N45", "kinetic_energy_eV": 1104 }
+                ]
+            },
+            "chemical_state_data": [
+                { "compound_type": "Zr", "orbital": "3d5/2", "binding_energy_eV": 178.8 },
+                { "compound_type": "ZrO2", "orbital": "3d5/2", "binding_energy_eV": 182.2 },
+                { "compound_type": "ZrF4", "orbital": "3d5/2", "binding_energy_eV": 185.3 },
+                { "compound_type": "K2ZrF6", "orbital": "3d5/2", "binding_energy_eV": 184.2 },
+                { "compound_type": "K3ZrF7", "orbital": "3d5/2", "binding_energy_eV": 183.7 },
+                { "compound_type": "KZrF5·H2O", "orbital": "3d5/2", "binding_energy_eV": 184.7 }
+            ],
+            "atomic_sensitivity_factors": {
+                "Al_Ka_90_deg": { "line": "3d", "ASF": 2.216 },
+                "Al_Ka_54_7_deg": { "line": "3d", "ASF": 2.576 }
+            }
+        }
+    }
+}

@@ -23,7 +23,6 @@ from .data_loader.core import load_all_data, load_single_file
 from .reference_data import (
     ElementReference,
     ReferenceDatabase,
-    identify_peaks,
     load_reference_database,
 )
 
@@ -36,5 +35,4 @@ __all__ = [
     "ReferenceDatabase",
     "ElementReference",
     "load_reference_database",
-    "identify_peaks",
 ]
