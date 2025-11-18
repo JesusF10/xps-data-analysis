@@ -6,7 +6,6 @@ Verifica que todas las dependencias estén instaladas correctamente.
 
 import sys
 from importlib import import_module
-from pathlib import Path
 
 
 def check_python_version():

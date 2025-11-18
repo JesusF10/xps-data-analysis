@@ -4,7 +4,7 @@ Este directorio contiene todos los datos relacionados con el proyecto XPS.
 
 ## Estructura
 
-### 📁 raw/
+### raw/
 Datos crudos sin procesar, directamente desde los instrumentos XPS.
 
 - **samples/**: Datos de muestras experimentales
@@ -14,21 +14,21 @@ Datos crudos sin procesar, directamente desde los instrumentos XPS.
   - Estándares de referencia
   - Muestras de calibración periódica
 
-### 📁 processed/
+### processed/
 Datos que han sido procesados y calibrados.
 
 - Datos después de calibración de energía
 - Espectros con fondo substraído
 - Datos normalizados y suavizados
 
-### 📁 test_data/
+### test_data/
 Conjunto de datos para pruebas y validación del software.
 
 - Datos de referencia conocidos
 - Casos de prueba para algoritmos
 - Datos sintéticos para testing
 
-### 📁 results/
+### results/
 Resultados finales del análisis.
 
 - **reports/**: Reportes generados automáticamente
