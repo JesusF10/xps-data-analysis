@@ -33,6 +33,7 @@ def calibrate_spectrum(spectrum: XPSSpectrum,
     spectrum.binding_energy += shift
     return
 
+
 def calibrate_sample(dataset: XPSDataset,
                       ref_element: ElementReference,
                       inplace: bool = False) -> Union[XPSDataset, None]:
@@ -63,3 +64,4 @@ def calibrate_sample(dataset: XPSDataset,
     for _, spectrum in dataset.spectra.items():
         calibrate_spectrum(spectrum, shift, inplace=True)
     return
+
