@@ -1,10 +1,4 @@
 # XPS Data Analysis
-
-Software automatizado para análisis de datos de espectroscopía de fotoelectrones de rayos X (XPS), 
-desarrollado como proyecto de servicio social en el área de química y metalurgia.
-
-## Descripción del Proyecto
-
 Este repositorio contiene el desarrollo completo de un software en Python para el análisis automatizado de datos XPS, incluyendo:
 
 - **Carga automática** de datos desde formatos específicos de XPS
@@ -271,4 +265,3 @@ Servicio Social
 Universidad de Sonora
 
 Email: jss.263.fsc@gmail.com
-

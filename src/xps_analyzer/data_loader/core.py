@@ -4,7 +4,7 @@ Funciones principales de carga de datos XPS.
 
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Any, Dict, Union
+from typing import Any
 
 import numpy as np
 import pandas as pd
@@ -17,7 +17,7 @@ class XPSSpectrum:
     region_name: str
     binding_energy: np.ndarray
     intensity: np.ndarray
-    metadata: Dict[str, Any]
+    metadata: dict[str, Any]
 
     @property
     def data(self) -> pd.DataFrame:
@@ -41,10 +41,10 @@ class XPSDataset:
     """Representa un archivo XPS completo."""
 
     filename: str
-    header: Dict[str, Any]
-    spectra: Dict[str, XPSSpectrum]
+    header: dict[str, Any]
+    spectra: dict[str, XPSSpectrum]
 
-    def get_spectrum(self, region_name: str) -> XPSSpectrum:
+    def get_spectrum(self, region_name: str) -> XPSSpectrum | None:
         """Obtiene un espectro específico."""
         return self.spectra.get(region_name)
 
@@ -66,29 +66,52 @@ class XPSSample:
     """Representa una muestra XPS que puede contener múltiples archivos."""
 
     sample_name: str
-    datasets: Dict[str, XPSDataset]
+    datasets: dict[str, XPSDataset]
 
-    def get_dataset(self, filename: str) -> XPSDataset:
-        """Obtiene un dataset específico."""
+    def get_dataset(self, filename: str) -> XPSDataset | None:
+        """Obtiene un dataset específico.
+
+        Parameters
+        ----------
+        filename : str
+            Nombre del archivo del dataset a obtener.
+        Returns
+        -------
+        XPSDataset | None
+            El dataset correspondiente o None si no existe.
+        """
         return self.datasets.get(filename)
 
     def list_datasets(self) -> list:
-        """Lista todos los datasets disponibles."""
+        """Lista todos los datasets disponibles.
+
+        Returns
+        -------
+        list
+            Lista de nombres de archivos de los datasets.
+        """
         return list(self.datasets.keys())
 
     def copy(self) -> "XPSSample":
-        """Retorna una copia de la muestra."""
+        """Retorna una copia de la muestra.
+
+        Returns
+        -------
+        XPSSample
+            Copia de la muestra.
+        """
         return XPSSample(
             sample_name=self.sample_name,
             datasets={name: ds.copy() for name, ds in self.datasets.items()},
         )
 
 
-def parse_metadata(lines: Union[list, str], header: bool = False) -> Dict[str, Any]:
+def parse_metadata(lines: list | str, header: bool = False) -> dict[str, Any]:
     """
     Parsea las líneas de metadatos y retorna un diccionario.
     ----------
-    Parametersx
+
+    Parameters
     ----------
     lines : [list, str]
         Líneas de texto que contienen metadatos.
@@ -97,7 +120,7 @@ def parse_metadata(lines: Union[list, str], header: bool = False) -> Dict[str, A
         (del espectro).
     Returns
     -------
-    Dict[str, str]
+    dict[str, str]
         Diccionario con pares clave-valor de metadatos.
     -------
     Examples
@@ -129,7 +152,7 @@ def parse_metadata(lines: Union[list, str], header: bool = False) -> Dict[str, A
         elements_config = lines[1].split()
 
         for elem, orbital, energy in zip(
-            elements_config[::2], elements_config[1::2], lines[2].split()
+            elements_config[::2], elements_config[1::2], lines[2].split(), strict=True
         ):
             elements[elem] = {"orbital": orbital, "mean_energy": energy}
         metadata["elements"] = elements
@@ -188,7 +211,7 @@ def get_spectrum_data(data_lines: list) -> XPSSpectrum:
     return spectrum
 
 
-def load_single_file(filepath: Union[str, Path]) -> XPSDataset:
+def load_single_file(filepath: str | Path) -> XPSDataset:
     """
     Carga un solo archivo de datos XPS.
     Parameters
@@ -245,8 +268,8 @@ def load_single_file(filepath: Union[str, Path]) -> XPSDataset:
 
 
 def load_all_data(
-    data_path: Union[str, Path], recursive: bool = True
-) -> Union[Dict[str, XPSSample], XPSSample, None]:
+    data_path: str | Path, recursive: bool = True
+) -> dict[str, XPSSample] | XPSSample | None:
     """
     Carga todos los archivos de datos XPS desde un directorio.
     Parameters
@@ -257,7 +280,7 @@ def load_all_data(
         Si True, busca archivos recursivamente en subdirectorios.
     Returns
     -------
-    Dict[str, Any]
+    dict[str, Any] | XPSSample | None
         Diccionario con los datos cargados. Las claves son los nombres
         de archivo y los valores son los datos procesados.
     Examples
@@ -271,7 +294,7 @@ def load_all_data(
     pass
 
 
-def detect_file_format(filepath: Union[str, Path]) -> str:
+def detect_file_format(filepath: str | Path) -> str | None:
     """
     Detecta automáticamente el formato del archivo XPS.
     Parameters
@@ -280,7 +303,7 @@ def detect_file_format(filepath: Union[str, Path]) -> str:
         Ruta al archivo a analizar.
     Returns
     -------
-    str
+    str | None
         Tipo de formato detectado: 'vamas', 'casa', 'text', 'csv', etc.
     """
     # Falta implementar

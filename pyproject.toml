@@ -46,7 +46,7 @@ dev = [
     "pytest-cov>=2.12.0",
     "ruff>=0.1.0",
     "pre-commit>=2.15.0",
-    "mypy>=0.910",
+    "ty>=0.0.6",
 ]
 
 [project.optional-dependencies]
@@ -78,7 +78,7 @@ where = ["src"]
 
 # Configuración de Ruff
 [tool.ruff]
-target-version = "py38"
+target-version = "py312"
 line-length = 88
 indent-width = 4
 select = [
@@ -113,8 +113,16 @@ python_classes = ["Test*"]
 python_functions = ["test_*"]
 addopts = "--cov=src --cov-report=html --cov-report=term-missing"
 
-[tool.mypy]
-python_version = "3.8"
-warn_return_any = true
-warn_unused_configs = true
-disallow_untyped_defs = true
+[tool.ty]
+python-version = "3.12"
+
+[tool.ty.rules]
+index-out-of-bounds = "warn"
+possibly-missing-attribute = "error"
+possibly-missing-import = "error"
+redundant-cast = "ignore"
+unused-ignore-comment = "warn"
+unused-variable = "warn"
+wrong-arg-types = "error"
+wrong-keyword-args = "error"
+wrong-return-type = "error"
