@@ -2,8 +2,6 @@
 Tests para el módulo de datos de referencia XPS.
 """
 
-import pytest
-
 from xps_analyzer.reference_data.elements import (
     CompoundReference,
     ElementReference,
@@ -17,6 +15,7 @@ from xps_analyzer.reference_data.identification import (
     suggest_compounds,
 )
 
+import pytest
 
 # ==================== Fixtures ====================
 

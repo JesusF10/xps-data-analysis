@@ -2,12 +2,12 @@
 Tests para el módulo de calibración de espectros XPS.
 """
 
-import numpy as np
-import pytest
-
 from xps_analyzer.data_loader import XPSDataset, XPSSpectrum
 from xps_analyzer.preprocessing.calibration import calibrate_sample, calibrate_spectrum
 from xps_analyzer.reference_data import ElementReference, PhotoelectronLine
+
+import numpy as np
+import pytest
 
 
 # Fixtures

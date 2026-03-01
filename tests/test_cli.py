@@ -2,15 +2,14 @@
 Tests para el módulo CLI de XPS Analyzer.
 """
 
-from pathlib import Path
 from unittest.mock import MagicMock, patch
-
-import pytest
-from click.testing import CliRunner
 
 from xps_analyzer.cli.main import analyze, cli, show_element
 from xps_analyzer.data_loader import XPSDataset, XPSSpectrum
 from xps_analyzer.reference_data import ElementReference, PhotoelectronLine
+
+import pytest
+from click.testing import CliRunner
 
 
 # Fixtures

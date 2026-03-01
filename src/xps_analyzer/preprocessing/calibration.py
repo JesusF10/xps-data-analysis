@@ -1,14 +1,12 @@
 """Calibración de espectros XPS."""
 
-from typing import Union
-
 from xps_analyzer.data_loader import XPSDataset, XPSSpectrum
 from xps_analyzer.reference_data import ElementReference
 
 
 def calibrate_spectrum(
     spectrum: XPSSpectrum, shift: float, inplace: bool = False
-) -> Union[XPSSpectrum, None]:
+) -> XPSSpectrum | None:
     """
     Calibra un espectro XPS desplazando las energías de enlace.
 
@@ -36,7 +34,7 @@ def calibrate_spectrum(
 
 def calibrate_sample(
     dataset: XPSDataset, ref_element: ElementReference, inplace: bool = False
-) -> Union[XPSDataset, None]:
+) -> XPSDataset | None:
     """
     Calibra todos los espectros en un conjunto de datos XPS.
 

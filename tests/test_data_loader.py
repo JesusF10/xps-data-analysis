@@ -1,8 +1,3 @@
-from pathlib import Path
-
-import numpy as np
-import pytest
-
 from xps_analyzer.data_loader.core import (
     XPSSpectrum,
     detect_file_format,
@@ -10,6 +5,9 @@ from xps_analyzer.data_loader.core import (
     load_all_data,
     parse_metadata,
 )
+
+import numpy as np
+import pytest
 
 
 def test_parse_metadata_header_basic():

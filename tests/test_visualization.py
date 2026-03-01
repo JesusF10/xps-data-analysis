@@ -2,12 +2,13 @@
 Tests para el módulo de visualización de datos XPS.
 """
 
-import numpy as np
-import pytest
 from unittest.mock import MagicMock, patch
 
 from xps_analyzer.data_loader import XPSSpectrum
 from xps_analyzer.visualization.plotting import plot_spectrum, plot_survey_spectrum
+
+import numpy as np
+import pytest
 
 
 # Fixtures

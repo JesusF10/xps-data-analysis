@@ -5,7 +5,6 @@ Clases principales para manejo de datos de referencia XPS.
 import json
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Dict, List, Optional, Tuple
 
 _reference_db_cache = None
 
@@ -31,9 +30,9 @@ class PhotoelectronLine:
 
     line: str
     binding_energy: float
-    x_ray_source: Optional[str] = None
+    x_ray_source: str | None = None
     type: str = "core"
-    kinetic_energy: Optional[float] = None
+    kinetic_energy: float | None = None
 
 
 @dataclass
@@ -54,9 +53,9 @@ class CompoundReference:
     """
 
     orbital: str
-    binding_energy_range: Tuple[float, float]
-    peak_position: Optional[float] = None
-    chemical_shift: Optional[float] = None
+    binding_energy_range: tuple[float, float]
+    peak_position: float | None = None
+    chemical_shift: float | None = None
 
 
 @dataclass
@@ -85,10 +84,10 @@ class ElementReference:
     symbol: str
     element: str
     atomic_number: int
-    photoelectron_lines: List[PhotoelectronLine]
-    compounds: Dict[str, CompoundReference]
-    binding_energy_most_useful: Optional[float] = None
-    spin_orbital_splitting: Optional[float] = None
+    photoelectron_lines: list[PhotoelectronLine]
+    compounds: dict[str, CompoundReference]
+    binding_energy_most_useful: float | None = None
+    spin_orbital_splitting: float | None = None
 
     def get_main_line(self) -> PhotoelectronLine:
         """
@@ -118,7 +117,7 @@ class ElementReference:
         # Fallback: retornar la primera línea disponible
         return self.photoelectron_lines[0]
 
-    def get_compound(self, name: str) -> Optional[CompoundReference]:
+    def get_compound(self, name: str) -> CompoundReference | None:
         """
         Busca un compuesto por nombre.
 
@@ -150,11 +149,11 @@ class ReferenceDatabase:
         Fuente de los datos de referencia
     """
 
-    elements: Dict[str, ElementReference]
+    elements: dict[str, ElementReference]
     version: str = "1.0"
     source: str = "Handbook of X-ray Photoelectron Spectroscopy"
 
-    def get_element(self, symbol: str) -> Optional[ElementReference]:
+    def get_element(self, symbol: str) -> ElementReference | None:
         """
         Obtiene datos de un elemento por símbolo.
 
@@ -172,7 +171,7 @@ class ReferenceDatabase:
 
     def search_by_binding_energy(
         self, energy: float, tolerance: float = 2.0
-    ) -> List[Tuple[str, str]]:
+    ) -> list[tuple[str, str]]:
         """
         Busca elementos/compuestos por energía de enlace.
 
@@ -204,7 +203,7 @@ class ReferenceDatabase:
 
         return matches
 
-    def get_chemical_shifts(self, element_symbol: str) -> Dict[str, float]:
+    def get_chemical_shifts(self, element_symbol: str) -> dict[str, float]:
         """
         Obtiene todos los desplazamientos químicos de un elemento.
 
@@ -229,7 +228,7 @@ class ReferenceDatabase:
             if comp.chemical_shift is not None
         }
 
-    def list_elements(self) -> List[str]:
+    def list_elements(self) -> list[str]:
         """
         Lista todos los elementos disponibles.
 
@@ -241,7 +240,7 @@ class ReferenceDatabase:
         return list(self.elements.keys())
 
 
-def load_reference_database(data_path: Optional[Path] = None) -> ReferenceDatabase:
+def load_reference_database(data_path: Path | None = None) -> ReferenceDatabase:
     """
     Carga la base de datos de referencia desde archivo JSON.
 
@@ -287,7 +286,7 @@ def load_reference_database(data_path: Optional[Path] = None) -> ReferenceDataba
         return ReferenceDatabase(elements={})
 
 
-def _dict_to_element_reference(data: Dict) -> ElementReference:
+def _dict_to_element_reference(data: dict) -> ElementReference:
     """
     Convierte un diccionario en una instancia de ElementReference.
 

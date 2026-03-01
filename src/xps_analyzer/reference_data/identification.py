@@ -2,16 +2,14 @@
 Funciones para identificación de elementos y compuestos usando datos de referencia.
 """
 
-from typing import Dict, List, Tuple
-
 from .elements import ReferenceDatabase
 
 
 def identify_peaks(
-    peak_energies: List[float],
+    peak_energies: list[float],
     reference_db: ReferenceDatabase,
     tolerance: float = 2.0,
-) -> List[Dict]:
+) -> list[dict]:
     """
     Identifica picos comparando con la base de datos de referencia.
 
@@ -47,8 +45,8 @@ def identify_peaks(
 
 
 def find_peaks_in_spectrum(
-    binding_energy: List[float], intensity: List[float], height_threshold: float = 0.1
-) -> List[float]:
+    binding_energy: list[float], intensity: list[float], height_threshold: float = 0.1
+) -> list[float]:
     """
     Encuentra picos en un espectro XPS.
 
@@ -89,7 +87,7 @@ def find_peaks_in_spectrum(
 
 def suggest_compounds(
     element_symbol: str, observed_energy: float, reference_db: ReferenceDatabase
-) -> List:
+) -> list:
     """
     Sugiere posibles compuestos basados en el desplazamiento químico observado.
 
@@ -126,7 +124,7 @@ def suggest_compounds(
 
 
 def _calculate_confidence(
-    peak_energy: float, matches: List[Tuple[str, str]], reference_db: ReferenceDatabase
+    peak_energy: float, matches: list[tuple[str, str]], reference_db: ReferenceDatabase
 ) -> float:
     """
     Calcula la confianza de la identificación basada en múltiples factores.
@@ -157,8 +155,8 @@ def _calculate_confidence(
 
 
 def _find_peaks_basic(
-    binding_energy: List[float], intensity: List[float], height_threshold: float
-) -> List[float]:
+    binding_energy: list[float], intensity: list[float], height_threshold: float
+) -> list[float]:
     """
     Implementación básica de detección de picos sin scipy.
 

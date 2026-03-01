@@ -483,7 +483,7 @@ def detect_file_format(filepath: str | Path) -> str | None:
 
     try:
         # Leer primeras 10 líneas para análisis
-        with open(filepath, "r", encoding="utf-8", errors="ignore") as f:
+        with open(filepath, encoding="utf-8", errors="ignore") as f:
             first_lines = [f.readline().strip() for _ in range(10)]
 
         # Concatenar para búsqueda
