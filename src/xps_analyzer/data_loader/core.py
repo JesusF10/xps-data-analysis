@@ -375,42 +375,150 @@ def load_single_file(filepath: str | Path) -> XPSDataset:
 
 def load_all_data(
     data_path: str | Path, recursive: bool = True
-) -> dict[str, XPSSample] | XPSSample | None:
+) -> dict[str, XPSDataset]:
     """
     Carga todos los archivos de datos XPS desde un directorio.
+
     Parameters
     ----------
     data_path : str or Path
         Ruta al directorio que contiene los datos XPS.
     recursive : bool, default=True
         Si True, busca archivos recursivamente en subdirectorios.
+
     Returns
     -------
-    dict[str, Any] | XPSSample | None
+    dict[str, XPSDataset]
         Diccionario con los datos cargados. Las claves son los nombres
-        de archivo y los valores son los datos procesados.
+        de archivo y los valores son los XPSDataset procesados.
+
+    Raises
+    ------
+    FileNotFoundError
+        Si el directorio no existe.
+    ValueError
+        Si la ruta no es un directorio.
+
     Examples
     --------
     >>> data = load_all_data("data/raw/samples/")
     >>> print(f"Cargados {len(data)} archivos")
     >>> for filename, dataset in data.items():
-    ...     print(f"{filename}: {dataset.shape}")
+    ...     print(f"{filename}: {len(dataset.spectra)} espectros")
     """
-    # Falta implementar
-    pass
+    directory = Path(data_path)
+
+    # Validar que el directorio existe
+    if not directory.exists():
+        raise FileNotFoundError(f"Directorio no encontrado: {directory}")
+
+    if not directory.is_dir():
+        raise ValueError(f"La ruta no es un directorio: {directory}")
+
+    datasets = {}
+    errors = []
+
+    # Buscar archivos recursivamente o no
+    if recursive:
+        pattern = directory.rglob("*.txt")
+    else:
+        pattern = directory.glob("*.txt")
+
+    # Cargar cada archivo encontrado
+    for filepath in pattern:
+        try:
+            dataset = load_single_file(filepath)
+            datasets[filepath.name] = dataset
+        except Exception as e:
+            # Guardar errores pero continuar con otros archivos
+            errors.append((filepath.name, str(e)))
+
+    # Reportar errores al usuario si hubo alguno
+    if errors:
+        print(f"Advertencia: {len(errors)} archivo(s) no pudieron cargarse:")
+        for filename, error in errors[:5]:  # Mostrar solo primeros 5
+            print(f"  - {filename}: {error}")
+        if len(errors) > 5:
+            print(f"  ... y {len(errors) - 5} más")
+
+    return datasets
 
 
 def detect_file_format(filepath: str | Path) -> str | None:
     """
     Detecta automáticamente el formato del archivo XPS.
+
     Parameters
     ----------
     filepath : str or Path
         Ruta al archivo a analizar.
+
     Returns
     -------
     str | None
-        Tipo de formato detectado: 'vamas', 'casa', 'text', 'csv', etc.
+        Tipo de formato detectado:
+        - "vamas": Formato VAMAS (ISO 14976)
+        - "casa": Formato CASA XPS
+        - "multiplex": Formato multiplex propietario
+        - "survey": Formato survey simple
+        - "text": Formato de texto genérico
+        - None: Formato no reconocido
+
+    Raises
+    ------
+    FileNotFoundError
+        Si el archivo no existe.
+
+    Examples
+    --------
+    >>> fmt = detect_file_format("data/sample_multiplex.txt")
+    >>> print(f"Formato detectado: {fmt}")
+    Formato detectado: multiplex
     """
-    # Falta implementar
-    pass
+    filepath = Path(filepath)
+
+    # Validar que el archivo existe
+    if not filepath.exists():
+        raise FileNotFoundError(f"Archivo no encontrado: {filepath}")
+
+    try:
+        # Leer primeras 10 líneas para análisis
+        with open(filepath, "r", encoding="utf-8", errors="ignore") as f:
+            first_lines = [f.readline().strip() for _ in range(10)]
+
+        # Concatenar para búsqueda
+        content = "\n".join(first_lines)
+
+        # Detección por contenido (prioridad alta)
+        if "VAMAS" in content or "ISO 14976" in content:
+            return "vamas"
+
+        if "Casa" in content or "CASA" in content:
+            return "casa"
+
+        # Detección por nombre de archivo
+        filename_lower = filepath.name.lower()
+        if "multiplex" in filename_lower:
+            return "multiplex"
+
+        # Detección por estructura de contenido
+        # Formato multiplex tiene múltiples secciones "Element"
+        element_count = content.count("Element")
+        if element_count >= 2:
+            return "multiplex"
+
+        # Si tiene separadores ";" típicos del formato propietario
+        if any(";" in line for line in first_lines):
+            # Si solo hay una sección, es survey
+            if element_count <= 1:
+                return "survey"
+            return "text"
+
+        # Formato no reconocido
+        return None
+
+    except UnicodeDecodeError:
+        # Archivo binario (puede ser VAMAS binario en Fase 2)
+        return None
+    except Exception:
+        return None

@@ -321,6 +321,8 @@ def _dict_to_element_reference(data: Dict) -> ElementReference:
         compounds[compound_name] = CompoundReference(
             orbital=compound_data.get("orbital", "unknown"),
             binding_energy_range=compound_data.get("binding_energy_eV", (0.0, 0.0)),
+            peak_position=compound_data.get("peak_position_eV", None),
+            chemical_shift=compound_data.get("chemical_shift_eV", None),
         )
 
     return ElementReference(
