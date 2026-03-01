@@ -47,10 +47,16 @@ class CompoundReference:
         Orbital asociado (ej: "1s", "2p")
     binding_energy_range : tuple of float
         Energía o rango de energías de enlace (min, max) en eV
+    peak_position : float, optional
+        Posición del pico principal en eV
+    chemical_shift : float, optional
+        Desplazamiento químico respecto al elemento puro en eV
     """
 
     orbital: str
     binding_energy_range: Tuple[float, float]
+    peak_position: Optional[float] = None
+    chemical_shift: Optional[float] = None
 
 
 @dataclass
@@ -92,8 +98,25 @@ class ElementReference:
         -------
         PhotoelectronLine
             Línea con mayor intensidad relativa
+
+        Raises
+        ------
+        ValueError
+            Si no hay líneas disponibles para el elemento
         """
-        return self.binding_energy_most_useful
+        if not self.photoelectron_lines:
+            raise ValueError(
+                f"No hay líneas fotoelectrónicas disponibles para {self.symbol}"
+            )
+
+        # Si existe binding_energy_most_useful, buscar la línea correspondiente
+        if self.binding_energy_most_useful is not None:
+            for line in self.photoelectron_lines:
+                if abs(line.binding_energy - self.binding_energy_most_useful) < 0.1:
+                    return line
+
+        # Fallback: retornar la primera línea disponible
+        return self.photoelectron_lines[0]
 
     def get_compound(self, name: str) -> Optional[CompoundReference]:
         """
@@ -168,14 +191,16 @@ class ReferenceDatabase:
         matches = []
         for element in self.elements.values():
             # Buscar en líneas fotoeléctronicas
-            for line in element.photoelectron_lines.values():
+            for line in element.photoelectron_lines:
                 if abs(line.binding_energy - energy) <= tolerance:
-                    matches.append((element.symbol, line.orbital))
+                    matches.append((element.symbol, line.line))
 
             # Buscar en compuestos
             for compound_name, compound in element.compounds.items():
-                if abs(compound.peak_position - energy) <= tolerance:
-                    matches.append((element.symbol, compound_name))
+                # Solo buscar si peak_position está definido
+                if compound.peak_position is not None:
+                    if abs(compound.peak_position - energy) <= tolerance:
+                        matches.append((element.symbol, compound_name))
 
         return matches
 
@@ -197,9 +222,11 @@ class ReferenceDatabase:
         if not element:
             return {}
 
+        # Filtrar solo compuestos con chemical_shift definido
         return {
             comp_name: comp.chemical_shift
             for comp_name, comp in element.compounds.items()
+            if comp.chemical_shift is not None
         }
 
     def list_elements(self) -> List[str]:

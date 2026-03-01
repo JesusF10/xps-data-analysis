@@ -113,9 +113,11 @@ def suggest_compounds(
 
     # Buscar compuestos con energías similares
     candidates = []
-    for compound in element.compounds:
-        if abs(compound.peak_position - observed_energy) <= 2.0:
-            candidates.append(compound)
+    for compound_name, compound in element.compounds.items():
+        # Solo considerar compuestos con peak_position definido
+        if compound.peak_position is not None:
+            if abs(compound.peak_position - observed_energy) <= 2.0:
+                candidates.append(compound)
 
     # Ordenar por proximidad energética
     candidates.sort(key=lambda c: abs(c.peak_position - observed_energy))
