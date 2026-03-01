@@ -1,0 +1,63 @@
+# Configuración por defecto para análisis XPS
+# Este archivo define parámetros predeterminados que pueden ser
+# sobrescritos por configuración de usuario o argumentos CLI
+
+[background_subtraction]
+# Método de sustracción de fondo
+# Opciones: "shirley", "tougaard", "linear", "polynomial"
+method = "shirley"
+iterations = 10
+tolerance = 1e-5
+
+[background_subtraction.tougaard]
+# Parámetros específicos para Tougaard
+B = 2866.0
+C = 1643.0
+D = 1.0
+
+[peak_fitting]
+# Configuración de ajuste de picos
+default_shape = "voigt"  # Opciones: "gaussian", "lorentzian", "voigt", "pseudo-voigt"
+max_iterations = 200
+tolerance = 1e-6
+mix_min = 0.0  # Para voigt/pseudo-voigt
+mix_max = 1.0
+
+[peak_fitting.constraints]
+# Límites por defecto para parámetros de picos
+fwhm_min = 0.5  # eV
+fwhm_max = 5.0  # eV
+amplitude_min = 0.0
+position_tolerance = 2.0  # eV
+
+[calibration]
+# Configuración de calibración de energía
+reference_element = "C"
+reference_peak = "1s"
+reference_energy = 284.8  # eV
+auto_calibrate = true
+
+[quantification]
+# Configuración de análisis cuantitativo
+use_sensitivity_factors = true
+normalize_to_100 = true
+exclude_elements = ["Ar"]  # Gases nobles usualmente de contaminación
+
+[preprocessing]
+# Parámetros de preprocesamiento
+smoothing_method = "savitzky_golay"  # Opciones: "savitzky_golay", "moving_average", "gaussian"
+smoothing_window = 5
+smoothing_order = 2  # Para Savitzky-Golay
+
+[export]
+# Configuración de exportación
+default_format = "csv"  # Opciones: "csv", "xlsx", "json", "hdf5"
+decimal_places = 3
+include_metadata = true
+
+[plotting]
+# Configuración de visualización
+dpi = 300
+figure_format = "png"  # Opciones: "png", "pdf", "svg"
+color_scheme = "tableau"
+font_size = 12

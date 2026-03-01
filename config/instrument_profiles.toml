@@ -1,0 +1,62 @@
+# Perfiles de instrumentos XPS/UPS
+# Define características específicas de diferentes equipos
+
+[instruments.generic_xps]
+name = "Generic XPS"
+technique = "XPS"
+energy_resolution = 0.1  # eV
+pass_energy_default = 50  # eV
+anode = "Al Kα"
+photon_energy = 1486.6  # eV
+
+[instruments.generic_ups]
+name = "Generic UPS"
+technique = "UPS"
+energy_resolution = 0.05  # eV
+photon_energy = 21.2  # eV (He I)
+
+[instruments.kratos_axis_ultra]
+name = "Kratos Axis Ultra DLD"
+technique = "XPS"
+manufacturer = "Kratos Analytical"
+energy_resolution = 0.1
+pass_energy_options = [10, 20, 40, 80, 160]
+pass_energy_default = 40
+anode = "Al Kα"
+photon_energy = 1486.6
+mono = true
+
+[instruments.specs_phoibos_150]
+name = "SPECS Phoibos 150"
+technique = "XPS"
+manufacturer = "SPECS"
+energy_resolution = 0.05
+pass_energy_options = [5, 10, 20, 30, 50, 75, 100]
+pass_energy_default = 20
+anode = "Al Kα"
+photon_energy = 1486.6
+
+[instruments.thermo_k_alpha]
+name = "Thermo Scientific K-Alpha"
+technique = "XPS"
+manufacturer = "Thermo Fisher Scientific"
+energy_resolution = 0.1
+pass_energy_options = [25, 50, 100, 150, 200]
+pass_energy_default = 50
+anode = "Al Kα"
+photon_energy = 1486.6
+mono = true
+flood_gun = true
+
+# Configuración de factores de sensibilidad por instrumento
+[instruments.generic_xps.sensitivity_factors]
+# Factores de Scofield por defecto
+# Formato: elemento.orbital = factor
+"C.1s" = 1.0
+"O.1s" = 2.93
+"N.1s" = 1.8
+"Si.2p" = 0.817
+"Al.2p" = 0.537
+"Fe.2p" = 6.597
+"Ti.2p" = 5.098
+"Au.4f" = 9.584

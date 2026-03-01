@@ -1,0 +1,70 @@
+# Base de datos extendida de elementos
+# Complementa reference_data/elements.py con información adicional
+
+[metadata]
+description = "Base de datos extendida de elementos para análisis XPS"
+version = "0.1.0"
+source = "NIST XPS Database + literatura"
+
+# Configuración de picos adicionales no incluidos en elements.py
+[additional_peaks]
+
+[additional_peaks."C.1s"]
+# Carbono adventicio - componentes típicos
+components = [
+    { name = "C-C/C-H", energy = 284.8, fwhm = 1.2 },
+    { name = "C-OH", energy = 286.0, fwhm = 1.3 },
+    { name = "C=O", energy = 287.5, fwhm = 1.4 },
+    { name = "O-C=O", energy = 289.0, fwhm = 1.5 },
+]
+
+[additional_peaks."Si.2p"]
+# Silicio - diferentes estados de oxidación
+components = [
+    { name = "Si⁰", energy = 99.3, fwhm = 0.8 },
+    { name = "Si¹⁺", energy = 100.3, fwhm = 1.0 },
+    { name = "Si²⁺", energy = 101.3, fwhm = 1.2 },
+    { name = "Si³⁺", energy = 102.3, fwhm = 1.4 },
+    { name = "Si⁴⁺ (SiO₂)", energy = 103.3, fwhm = 1.6 },
+]
+
+[additional_peaks."O.1s"]
+# Oxígeno - diferentes entornos químicos
+components = [
+    { name = "Óxidos metálicos", energy = 530.0, fwhm = 1.3 },
+    { name = "SiO₂", energy = 532.7, fwhm = 1.5 },
+    { name = "C-O", energy = 533.5, fwhm = 1.6 },
+    { name = "H₂O adsorbida", energy = 535.5, fwhm = 2.0 },
+]
+
+# Información de splines para doublets
+[spin_orbit_coupling]
+
+[spin_orbit_coupling."2p"]
+# p3/2 y p1/2
+intensity_ratio = 2.0  # 2p3/2 : 2p1/2
+splitting = {
+    "Si" = 0.61,
+    "Al" = 0.44,
+    "Ti" = 5.7,
+    "Fe" = 13.6,
+    "Cu" = 19.8,
+    "Ag" = 6.0,
+    "Au" = 3.7,
+}
+
+[spin_orbit_coupling."3d"]
+# d5/2 y d3/2
+intensity_ratio = 1.5  # 3d5/2 : 3d3/2
+splitting = {
+    "Cu" = 0.0,  # Sin splitting
+    "Ag" = 0.0,
+    "Au" = 0.0,
+}
+
+# Correcciones de desplazamiento químico comunes
+[chemical_shifts]
+[chemical_shifts.oxidation_states]
+"Ti" = { "Ti⁰" = 0.0, "Ti²⁺" = 1.5, "Ti³⁺" = 2.5, "Ti⁴⁺" = 4.5 }
+"Fe" = { "Fe⁰" = 0.0, "Fe²⁺" = 1.0, "Fe³⁺" = 3.0 }
+"Cu" = { "Cu⁰" = 0.0, "Cu¹⁺" = 0.5, "Cu²⁺" = 1.5 }

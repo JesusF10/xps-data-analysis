@@ -1,267 +1,251 @@
-# XPS Data Analysis
-Este repositorio contiene el desarrollo completo de un software en Python para el análisis automatizado de datos XPS, incluyendo:
+# XPS Analyzer
 
-- **Carga automática** de datos desde formatos específicos de XPS
-- **Por determinar**
+[![Python 3.10+](https://img.shields.io/badge/python-3.10+-blue.svg)](https://www.python.org/downloads/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Code style: ruff](https://img.shields.io/badge/code%20style-ruff-000000.svg)](https://github.com/astral-sh/ruff)
 
-## Estructura del Repositorio
+Software automatizado en Python para análisis de datos de Espectroscopía de Fotoelectrones de Rayos X (XPS).
+
+**Estado:** Alpha v0.1.0 - En desarrollo activo  
+**Fase:** 0 (Fundamentos) - 35% completado
+
+---
+
+## Características
+
+[COMPLETADO] **Disponible:**
+- Carga de datos XPS desde formatos propietarios
+- Calibración de energía por elemento de referencia
+- Visualización básica de espectros
+- Base de datos de ~25 elementos comunes
+- CLI para operaciones básicas
+
+[EN DESARROLLO] **En Desarrollo (Fase 1):**
+- Sustracción de fondo (Shirley, Tougaard)
+- Ajuste de picos (Gaussian, Lorentzian, Voigt)
+- Cuantificación con factores de sensibilidad
+- Exportación a CSV/Excel/JSON
+
+---
+
+## Instalación Rápida
+
+```bash
+# Clonar repositorio
+git clone https://github.com/JesusF10/xps-data-analysis.git
+cd xps-data-analysis
+
+# Instalar con uv (recomendado)
+uv sync --group dev --group jupyter
+
+# Verificar instalación
+uv run xps-analyzer --version
+```
+
+**Instalación detallada:** Ver [INSTALLATION.md](INSTALLATION.md)
+
+---
+
+## Uso Básico
+
+### Cargar y Visualizar Datos
+
+```python
+from xps_analyzer import load_single_file
+
+# Cargar archivo XPS
+dataset = load_single_file("data/raw/samples/muestra1.txt")
+
+# Listar regiones disponibles
+print(dataset.list_regions())
+# ['survey', 'C 1s', 'O 1s', 'N 1s']
+
+# Obtener espectro específico
+spectrum = dataset.get_spectrum("C 1s")
+print(f"Región: {spectrum.region_name}")
+print(f"Puntos de datos: {len(spectrum.binding_energy)}")
+```
+
+### Calibración de Energía
+
+```python
+from xps_analyzer.preprocessing import calibrate_spectrum
+
+# Calibrar usando C 1s como referencia (284.8 eV)
+spectrum_calibrated = calibrate_spectrum(
+    spectrum,
+    reference_element="C",
+    reference_energy=284.8,
+    inplace=False
+)
+```
+
+### Visualización
+
+```python
+from xps_analyzer.visualization import plot_spectrum
+
+# Plotear espectro
+plot_spectrum(spectrum)
+```
+
+### CLI
+
+```bash
+# Analizar directorio de datos
+xps-analyzer analyze data/raw/samples/
+
+# Mostrar información de elemento
+xps-analyzer show-element C
+```
+
+---
+
+## Estructura del Proyecto
 
 ```
 xps-data-analysis/
-├── src/                        # Código fuente principal
-│   ├── xps_analyzer/           # Paquete principal del software
-│   │   ├── data_loader/        # Carga de datos XPS
-│   │   ├── preprocessing/      # Preprocesamiento de datos
-│   │   ├── analysis/           # Algoritmos de análisis
-│   │   ├── visualization/      # Generación de gráficas
-│   │   ├── export/             # Exportación de resultados
-│   │   └── utils/              # Utilidades generales
-│   ├── gui/                    # Interfaz gráfica
-│   └── cli/                    # Interfaz de línea de comandos
-│
-├── data/                       # Datos del proyecto
-│   ├── raw/                    # Datos crudos XPS
-│   │   ├── samples/            # Datos por muestra
-│   │   └── calibration/        # Datos de calibración
-│   ├── processed/              # Datos procesados
-│   ├── test_data/              # Datos para pruebas
-│   └── results/                # Resultados de análisis
-│       ├── reports/            # Reportes generados
-│       ├── plots/              # Gráficas generadas
-│       └── exports/            # Datos exportados
-│
-├── experiments/                # Experimentos y prototipos
-│   ├── notebooks/              # Jupyter notebooks
-│   │   ├── exploratory/        # Análisis exploratorio
-│   │   ├── validation/         # Validación de métodos
-│   │   └── prototypes/         # Prototipos de algoritmos
-│   ├── scripts/                # Scripts de experimentación
-│   └── benchmarks/             # Pruebas de rendimiento
-│
-├── tests/                      # Pruebas del software
-│   ├── unit/                   # Pruebas unitarias
-│   ├── integration/            # Pruebas de integración
-│   └── data/                   # Datos para pruebas
-│
-├── tools/                      # Herramientas auxiliares
-│   ├── data_conversion/        # Conversión de formatos
-│   ├── validation/             # Validación de datos
-│   └── automation/             # Scripts de automatización
-│
-├── config/                     # Configuraciones (Por determinar)
-│
-├── pyproject.toml              # Configuración del proyecto
-├── README.md                   # Documentación principal
-├── environment.yml              # Entorno Conda para desarrollo
-├── setup.py                    # Configuración del paquete
-├── verify_installation.py      # Script para verificar instalación
-└── .gitignore                  # Archivos a ignorar
-```
-
-## Instalación
-
-### Requisitos del sistema
-
-- **Python**: 3.8 o superior
-- **Sistema operativo**: Linux, macOS, Windows
-- **Gestores de paquetes recomendados**: 
-  - [`uv`](https://docs.astral.sh/uv/) (más rápido, recomendado)
-  - [`conda`](https://docs.conda.io/) (para gestión de entornos científicos)
-  - `pip` (estándar de Python)
-
----
-
-## Instalación para Usuarios Finales
-
-### Con uv (Recomendado)
-
-```bash
-# Instalación básica
-uv pip install git+https://github.com/JesusF10/xps-data-analysis.git
-```
-
-### Con conda
-
-```bash
-# Crear entorno conda con Python científico
-conda create -n xps-analysis python=3.11 numpy pandas matplotlib scipy -c conda-forge
-conda activate xps-analysis
-
-# Instalar el paquete
-pip install git+https://github.com/JesusF10/xps-data-analysis.git
-
-# O con dependencias opcionales
-pip install "git+https://github.com/JesusF10/xps-data-analysis.git[jupyter]"
-```
-
-### Con pip estándar
-
-```bash
-# Crear entorno virtual (recomendado)
-python -m venv venv
-source venv/bin/activate  # En Windows: venv\Scripts\activate
-
-# Instalar el paquete
-pip install git+https://github.com/JesusF10/xps-data-analysis.git
+├── src/xps_analyzer/        # Código fuente
+│   ├── data_loader/         # Carga de datos
+│   ├── preprocessing/       # Calibración, normalización
+│   ├── analysis/            # Análisis core (EN DESARROLLO)
+│   ├── reference_data/      # Base de datos de elementos
+│   ├── visualization/       # Plotting
+│   └── cli/                 # Interfaz CLI
+├── config/                  # Archivos de configuración TOML
+├── data/                    # Datos y resultados
+├── tests/                   # Tests (cobertura <20%)
+└── docs/                    # Documentación adicional
 ```
 
 ---
 
-## Instalación para Desarrollo
+## Documentación
 
-### Con uv (Preferido)
-
-```bash
-# 1. Clonar el repositorio
-git clone https://github.com/JesusF10/xps-data-analysis.git
-cd xps-data-analysis
-
-# 2. Instalar todas las dependencias de desarrollo
-uv sync --group dev --group docs --group jupyter
-
-# 3. Verificar instalación
-uv run xps-analyzer --help
-uv run verify_installation.py
-```
-
-### Con conda
-
-```bash
-# 1. Clonar repositorio
-git clone https://github.com/JesusF10/xps-data-analysis.git
-cd xps-data-analysis
-
-# 2. Crear entorno conda con dependencias científicas
-conda env create -f environment.yml  # Si existe
-# O manualmente:
-conda create -n xps-dev python=3.11 numpy pandas matplotlib scipy jupyter pytest -c conda-forge
-conda activate xps-dev
-
-# 3. Instalar en modo desarrollo
-pip install -e ".[dev,docs,jupyter]"
-
-# 4. Configurar pre-commit hooks
-pre-commit install
-```
-
-### Con pip + venv
-
-```bash
-# 1. Clonar y crear entorno
-git clone https://github.com/JesusF10/xps-data-analysis.git
-cd xps-data-analysis
-python -m venv .venv
-source .venv/bin/activate  # Windows: .venv\Scripts\activate
-
-# 2. Actualizar pip y instalar
-pip install --upgrade pip
-pip install -e ".[dev,docs,jupyter]"
-
-# 3. Configurar desarrollo
-pre-commit install
-```
+- **[INSTALLATION.md](INSTALLATION.md)** - Guía de instalación detallada
+- **[CONTEXT.md](CONTEXT.md)** - Contexto completo del proyecto
+- **[ROADMAP.md](ROADMAP.md)** - Plan de desarrollo por fases
+- **[CONTRIBUTING.md](CONTRIBUTING.md)** - Cómo contribuir
+- **[DEVELOPMENT.md](DEVELOPMENT.md)** - Guía para desarrolladores
+- **[API_DOCS.md](API_DOCS.md)** - Referencia completa de API
+- **[TESTING.md](TESTING.md)** - Estrategia de testing
+- **[CHANGELOG.md](CHANGELOG.md)** - Historial de cambios
 
 ---
 
-## Grupos de Dependencias
+## Roadmap
 
-| Grupo | Instalación | Incluye | Cuándo usar |
-|-------|-------------|---------|-------------|
-| **Base** | `xps-analyzer` | numpy, pandas, matplotlib, scipy | Uso básico, análisis automatizado |
-| **jupyter** | `[jupyter]` | jupyterlab, widgets, plotly | Análisis interactivo, exploración |
-| **dev** | `[dev]` | pytest, ruff, mypy, pre-commit | Desarrollo, testing, linting |
-| **docs** | `[docs]` | *Por definir* | Generar documentación |
+### Fase 0 (Actual) - Fundamentos
+- [x] Carga básica de datos
+- [x] Calibración de energía
+- [x] Visualización simple
+- [x] CLI básico
+- [x] Validación manual de datos
+- [ ] Tests básicos (20% coverage)
 
-### Comandos de instalación por uso:
+### Fase 1 - Análisis Core
+- [ ] Sustracción de fondo (Shirley, Tougaard)
+- [ ] Ajuste de picos (Gaussian, Lorentzian, Voigt)
+- [ ] Cuantificación
+- [ ] Exportación (CSV, Excel, JSON)
+- [ ] Sistema de configuración TOML
+- [ ] 60% test coverage
+
+### Fase 2 - Robustez
+- [ ] Migración a Pydantic para validación
+- [ ] Soporte VAMAS (ISO 14976)
+- [ ] Soporte CASA XPS
+- [ ] Exportación HDF5
+- [ ] 80% test coverage
+
+### Fase 3 - Avanzado
+- [ ] Machine learning para identificación automática
+- [ ] Análisis de profundidad (depth profiling)
+- [ ] GUI con Streamlit/Dash
+- [ ] API REST con FastAPI
+
+**Ver roadmap completo:** [ROADMAP.md](ROADMAP.md)
+
+---
+
+## Contribuir
+
+¡Las contribuciones son bienvenidas! Especialmente para funcionalidad Fase 1.
+
+**Prioridades:**
+1. 🔥 **Alta:** Sustracción de fondo, ajuste de picos
+2. [EN PROGRESO] **Media:** Tests, documentación
+3. [COMPLETADO] **Baja:** Características avanzadas (Fase 3)
+
+**Proceso:**
+1. Fork el repositorio
+2. Crea una rama feature (`git checkout -b feature/nueva-funcionalidad`)
+3. Commit tus cambios (`git commit -m 'Agregar nueva funcionalidad'`)
+4. Push a la rama (`git push origin feature/nueva-funcionalidad`)
+5. Abre un Pull Request
+
+**Lee:** [CONTRIBUTING.md](CONTRIBUTING.md) antes de contribuir.
+
+---
+
+## Dependencias Principales
+
+- **numpy** (>=1.21.0) - Arrays numéricos
+- **pandas** (>=1.3.0) - DataFrames
+- **matplotlib** (>=3.4.0) - Visualización
+- **scipy** (>=1.7.0) - Procesamiento de señales
+- **click** (>=8.0.0) - Framework CLI
+- **pydantic** (>=2.12.4) - Validación (Fase 2)
+
+**Ver lista completa:** [pyproject.toml](pyproject.toml)
+
+---
+
+## Testing
 
 ```bash
-# Usuario final básico
-uv pip install xps-analyzer
+# Ejecutar todos los tests
+pytest
 
-# Desarrollo completo (selecciona el grupo o grupos a usar)
-uv sync --group dev --group docs --group jupyter
+# Con cobertura
+pytest --cov=src --cov-report=html
 
-
-# Conda + desarrollo
-conda create -n xps-dev python=3.11 -c conda-forge
-conda activate xps-dev
-pip install -e ".[dev,jupyter,docs]"
+# Ver reporte
+open htmlcov/index.html
 ```
 
----
-
-## Verificación de Instalación
-
-Incluimos un script que verifica automáticamente toda la instalación:
-
-```bash
-# Ejecutar verificación completa
-python verify_installation.py
-
-# O con uv
-uv run python verify_installation.py
-```
-
-Este script verifica:
-- Versión de Python compatible
-- Dependencias principales instaladas
-- XPS Analyzer funcionando correctamente  
-- CLI disponible y funcional
-- Dependencias opcionales (Jupyter, herramientas de desarrollo)
+**Estado actual:** <20% coverage ([EN PROGRESO] insuficiente)  
+**Objetivo Fase 1:** >=60% coverage
 
 ---
-
-## Herramientas de Desarrollo
-
-Si instalaste con dependencias de desarrollo (`[dev]` o `--group dev`):
-
-```bash
-# Testing
-uv run pytest                    # Con uv
-pytest                          # Directo
-
-# Linting y formateo
-uv run ruff check src/          # Verificar código
-uv run ruff format src/         # Formatear código
-
-# Type checking
-uv run mypy src/
-
-# Pre-commit (verificaciones automáticas)
-pre-commit run --all-files
-
-# Generar documentación
-# Pendiente por definir
-```
-
----
-
-### Uso básico
-
-***Pendiente***
-
----
-
-## Contexto
-
-Este proyecto forma parte de un proyecto de **servicio social** en el área de **química y metalurgia**, con el objetivo de:
-- Automatizar el análisis de datos XPS para investigación en materiales
-- Desarrollar herramientas computacionales para caracterización superficial
-- Aplicar técnicas de ciencia de datos a problemas de química analítica
-- Crear software reutilizable para la comunidad científica
 
 ## Licencia
 
-Este proyecto está bajo la Licencia MIT. Ver `LICENSE` para más detalles.
+Este proyecto está bajo la licencia MIT. Ver [LICENSE](LICENSE) para más detalles.
 
-## Autor
+---
 
-**Jesus Flores Lacarra**
+## Contacto
 
-Estudiante de la Lic. en Ciencias de la Computación
+**Autor:** Jesus Flores Lacarra  
+**Email:** jss.263.fsc@gmail.com  
+**GitHub:** [@JesusF10](https://github.com/JesusF10)
 
-Servicio Social
+**Repositorio:** https://github.com/JesusF10/xps-data-analysis  
+**Issues:** https://github.com/JesusF10/xps-data-analysis/issues
 
-Universidad de Sonora
+---
 
-Email: jss.263.fsc@gmail.com
+## Agradecimientos
+
+- **NIST XPS Database** - Datos de referencia de elementos
+- **Comunidad XPS** - Feedback y sugerencias
+- **Astral (uv, ruff)** - Herramientas de desarrollo modernas
+
+---
+
+## Referencias
+
+- Shirley, D. A. (1972). "High-Resolution X-Ray Photoemission Spectrum of Valence Bands of Gold"
+- Tougaard, S. (2020). "Practical guide to the use of backgrounds in quantitative XPS"
+- ISO 14976:1998 - Formato VAMAS para datos de espectroscopía de superficie
