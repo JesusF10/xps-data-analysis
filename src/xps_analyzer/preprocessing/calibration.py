@@ -52,14 +52,42 @@ def calibrate_sample(
     -------
     XPSDataset o None
         El conjunto de datos calibrado.
+
+    Raises
+    ------
+    ValueError
+        Si el elemento de referencia no se encuentra en el dataset.
+    ValueError
+        Si el elemento de referencia no tiene binding_energy_most_useful definido.
     """
-    spectrum_reference = [
+    # Bug #1 corregido: Buscar espectro de referencia con manejo de errores
+    spectrum_reference_list = [
         x for x in list(dataset.spectra.keys()) if x.split()[0] == ref_element.symbol
-    ][0]
-    shift = (
-        ref_element.binding_energy_most_useful
-        - dataset.spectra.get(spectrum_reference).data.idxmax().iloc[0]
-    )
+    ]
+
+    if not spectrum_reference_list:
+        raise ValueError(
+            f"Elemento de referencia '{ref_element.symbol}' no encontrado en el dataset. "
+            f"Regiones disponibles: {', '.join(dataset.spectra.keys())}"
+        )
+
+    spectrum_reference = spectrum_reference_list[0]
+
+    # Bug #2 corregido: Verificar que binding_energy_most_useful existe
+    if ref_element.binding_energy_most_useful is None:
+        raise ValueError(
+            f"El elemento de referencia '{ref_element.symbol}' no tiene "
+            f"binding_energy_most_useful definido en la base de datos"
+        )
+
+    # Bug #3 corregido: Usar numpy directamente en lugar de pandas
+    ref_spectrum = dataset.spectra.get(spectrum_reference)
+    peak_idx = ref_spectrum.intensity.argmax()
+    observed_peak_energy = ref_spectrum.binding_energy[peak_idx]
+
+    # Calcular desplazamiento
+    shift = ref_element.binding_energy_most_useful - observed_peak_energy
+
     if not inplace:
         calibrated_dataset = dataset.copy()
         calibrate_sample(calibrated_dataset, ref_element, inplace=True)
