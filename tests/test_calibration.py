@@ -335,11 +335,19 @@ def test_calibrate_spectrum_single_point():
 
 
 def test_calibrate_sample_empty_dataset():
-    """Test calibración con dataset sin espectros."""
-    empty_dataset = XPSDataset(
-        filename="empty.txt",
-        header={"sample_name": "Empty"},
-        spectra={},
+    """Test calibración con dataset que no contiene elemento de referencia."""
+    # Crear dataset con solo O 1s (sin C 1s como referencia)
+    oxygen_only_dataset = XPSDataset(
+        filename="oxygen.txt",
+        header={"sample_name": "Oxygen Only"},
+        spectra={
+            "O 1s": XPSSpectrum(
+                region_name="O 1s",
+                binding_energy=np.array([530.0, 531.0, 532.0]),
+                intensity=np.array([100.0, 200.0, 150.0]),
+                metadata={"element": "O 1s"},
+            )
+        },
     )
 
     carbon_ref = ElementReference(
@@ -354,7 +362,7 @@ def test_calibrate_sample_empty_dataset():
     )
 
     with pytest.raises(ValueError) as excinfo:
-        calibrate_sample(empty_dataset, carbon_ref, inplace=False)
+        calibrate_sample(oxygen_only_dataset, carbon_ref, inplace=False)
 
     assert "Elemento de referencia 'C' no encontrado" in str(excinfo.value)
 

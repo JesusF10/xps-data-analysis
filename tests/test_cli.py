@@ -4,12 +4,13 @@ Tests para el módulo CLI de XPS Analyzer.
 
 from unittest.mock import MagicMock, patch
 
+import numpy as np
+import pytest
+from click.testing import CliRunner
+
 from xps_analyzer.cli.main import analyze, cli, show_element
 from xps_analyzer.data_loader import XPSDataset, XPSSpectrum
 from xps_analyzer.reference_data import ElementReference, PhotoelectronLine
-
-import pytest
-from click.testing import CliRunner
 
 
 # Fixtures
@@ -24,8 +25,8 @@ def sample_dataset():
     """Crea un dataset XPS de ejemplo."""
     spectrum = XPSSpectrum(
         region_name="C 1s",
-        binding_energy=[280.0, 282.0, 284.0, 286.0],
-        intensity=[100.0, 200.0, 500.0, 300.0],
+        binding_energy=np.array([280.0, 282.0, 284.0, 286.0]),
+        intensity=np.array([100.0, 200.0, 500.0, 300.0]),
         metadata={"sweeps": 5},
     )
 

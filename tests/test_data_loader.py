@@ -91,23 +91,17 @@ def test_get_spectrum_data_malformed_line_raises():
 
 def test_load_all_data_basic(tmp_path):
     """Test carga básica de directorio con archivos válidos."""
-    # Crear archivos de prueba
+    # Crear archivos de prueba en formato survey (sin header)
     file1 = tmp_path / "sample1.txt"
     file1.write_text(
-        "Sample Name Test1; Date 2024-01-01;\n"
-        "C 1s;\n"
-        "284.8;\n"
-        "Element C 1s; Region 1; Sweeps 5; Anode Al Kα; Photon energy 1486.6;\n"
+        "Element C 1s; Region 1; Depth Cycle 1 of 1; Time Per Step 100; Sweeps 5; Anode Al Kα; Photon energy 1486.6;\n"
         "284.8 100.0\n"
         "285.0 120.0\n"
     )
 
     file2 = tmp_path / "sample2.txt"
     file2.write_text(
-        "Sample Name Test2; Date 2024-01-02;\n"
-        "O 1s;\n"
-        "531.0;\n"
-        "Element O 1s; Region 1; Sweeps 5; Anode Al Kα; Photon energy 1486.6;\n"
+        "Element O 1s; Region 1; Depth Cycle 1 of 1; Time Per Step 100; Sweeps 5; Anode Al Kα; Photon energy 1486.6;\n"
         "531.0 200.0\n"
         "532.0 180.0\n"
     )
@@ -120,9 +114,13 @@ def test_load_all_data_basic(tmp_path):
     assert "sample1.txt" in datasets
     assert "sample2.txt" in datasets
 
-    # Verificar contenido básico
-    assert "C 1s" in datasets["sample1.txt"].spectra
-    assert "O 1s" in datasets["sample2.txt"].spectra
+    # Verificar contenido básico - archivos survey se guardan con clave "survey"
+    assert "survey" in datasets["sample1.txt"].spectra
+    assert "survey" in datasets["sample2.txt"].spectra
+
+    # Verificar que los espectros tienen los nombres correctos
+    assert datasets["sample1.txt"].spectra["survey"].region_name == "C 1s"
+    assert datasets["sample2.txt"].spectra["survey"].region_name == "O 1s"
 
 
 def test_load_all_data_empty_directory(tmp_path):
@@ -156,11 +154,9 @@ def test_load_all_data_with_invalid_files(tmp_path, capsys):
     # Archivo válido
     valid_file = tmp_path / "valid.txt"
     valid_file.write_text(
-        "Sample Name Test; Date 2024-01-01;\n"
-        "C 1s;\n"
-        "284.8;\n"
-        "Element C 1s; Region 1; Sweeps 5; Anode Al Kα; Photon energy 1486.6;\n"
+        "Element C 1s; Region 1; Depth Cycle 1 of 1; Time Per Step 100; Sweeps 5; Anode Al Kα; Photon energy 1486.6;\n"
         "284.8 100.0\n"
+        "285.0 120.0\n"
     )
 
     # Archivo inválido (no tiene formato correcto)
@@ -189,22 +185,18 @@ def test_load_all_data_recursive_subdirectories(tmp_path):
     subdir1.mkdir()
     file1 = subdir1 / "sample1.txt"
     file1.write_text(
-        "Sample Name Test1;\n"
-        "C 1s;\n"
-        "284.8;\n"
-        "Element C 1s; Region 1; Sweeps 5; Anode Al Kα; Photon energy 1486.6;\n"
+        "Element C 1s; Region 1; Depth Cycle 1 of 1; Time Per Step 100; Sweeps 5; Anode Al Kα; Photon energy 1486.6;\n"
         "284.8 100.0\n"
+        "285.0 120.0\n"
     )
 
     subdir2 = tmp_path / "dir2"
     subdir2.mkdir()
     file2 = subdir2 / "sample2.txt"
     file2.write_text(
-        "Sample Name Test2;\n"
-        "O 1s;\n"
-        "531.0;\n"
-        "Element O 1s; Region 1; Sweeps 5; Anode Al Kα; Photon energy 1486.6;\n"
+        "Element O 1s; Region 1; Depth Cycle 1 of 1; Time Per Step 100; Sweeps 5; Anode Al Kα; Photon energy 1486.6;\n"
         "531.0 200.0\n"
+        "532.0 180.0\n"
     )
 
     # Cargar recursivamente
@@ -221,11 +213,9 @@ def test_load_all_data_non_recursive(tmp_path):
     # Archivo en raíz
     root_file = tmp_path / "root.txt"
     root_file.write_text(
-        "Sample Name Root;\n"
-        "C 1s;\n"
-        "284.8;\n"
-        "Element C 1s; Region 1; Sweeps 5; Anode Al Kα; Photon energy 1486.6;\n"
+        "Element C 1s; Region 1; Depth Cycle 1 of 1; Time Per Step 100; Sweeps 5; Anode Al Kα; Photon energy 1486.6;\n"
         "284.8 100.0\n"
+        "285.0 120.0\n"
     )
 
     # Archivo en subdirectorio
@@ -233,11 +223,9 @@ def test_load_all_data_non_recursive(tmp_path):
     subdir.mkdir()
     sub_file = subdir / "sub.txt"
     sub_file.write_text(
-        "Sample Name Sub;\n"
-        "O 1s;\n"
-        "531.0;\n"
-        "Element O 1s; Region 1; Sweeps 5; Anode Al Kα; Photon energy 1486.6;\n"
+        "Element O 1s; Region 1; Depth Cycle 1 of 1; Time Per Step 100; Sweeps 5; Anode Al Kα; Photon energy 1486.6;\n"
         "531.0 200.0\n"
+        "532.0 180.0\n"
     )
 
     # Cargar sin recursión
