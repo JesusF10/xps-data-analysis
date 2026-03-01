@@ -9,6 +9,7 @@ from typing import Dict, List, Optional, Tuple
 
 _reference_db_cache = None
 
+
 @dataclass
 class PhotoelectronLine:
     """
@@ -196,7 +197,10 @@ class ReferenceDatabase:
         if not element:
             return {}
 
-        return {comp_name: comp.chemical_shift for comp_name, comp in element.compounds.items()}
+        return {
+            comp_name: comp.chemical_shift
+            for comp_name, comp in element.compounds.items()
+        }
 
     def list_elements(self) -> List[str]:
         """
@@ -235,18 +239,18 @@ def load_reference_database(data_path: Optional[Path] = None) -> ReferenceDataba
         data_path = Path(__file__).parent / "data" / "reference_elements.json"
 
     try:
-        with open(data_path, encoding='utf-8') as f:
+        with open(data_path, encoding="utf-8") as f:
             data = json.load(f)
 
         # Deserializar elementos
         elements = {}
-        for symbol, element_data in data.get('elements', {}).items():
+        for symbol, element_data in data.get("elements", {}).items():
             elements[symbol] = _dict_to_element_reference(element_data)
 
-        _reference_db_cache =  ReferenceDatabase(
+        _reference_db_cache = ReferenceDatabase(
             elements=elements,
-            version=data.get('version', '1.0'),
-            source=data.get('source', 'Unknown')
+            version=data.get("version", "1.0"),
+            source=data.get("source", "Unknown"),
         )
 
         return _reference_db_cache
@@ -274,13 +278,15 @@ def _dict_to_element_reference(data: Dict) -> ElementReference:
 
     for line, line_data in data.get("line_positions", {}).items():
         for values in line_data:
-            photoelectron_lines.append(PhotoelectronLine(
-                line=values.get("line", None),
-                binding_energy=values.get("binding_energy_eV", None),
-                x_ray_source="Al_Ka" if "Al_Ka" in line.lower() else "Mg_Ka",
-                type="auger" if "auger" in line.lower() else "core",
-                kinetic_energy=values.get("kinetic_energy_eV", None),
-            ))
+            photoelectron_lines.append(
+                PhotoelectronLine(
+                    line=values.get("line", None),
+                    binding_energy=values.get("binding_energy_eV", None),
+                    x_ray_source="Al_Ka" if "Al_Ka" in line.lower() else "Mg_Ka",
+                    type="auger" if "auger" in line.lower() else "core",
+                    kinetic_energy=values.get("kinetic_energy_eV", None),
+                )
+            )
 
     compounds = {}
     for compound_data in data.get("chemical_state_data", []):
@@ -291,11 +297,13 @@ def _dict_to_element_reference(data: Dict) -> ElementReference:
         )
 
     return ElementReference(
-        symbol=data.get('symbol', None),
-        element=data.get('element', None),
-        atomic_number=data.get('atomic_number', None),
-        binding_energy_most_useful=data.get('binding_energy_of_most_useful_line_eV', None),
-        spin_orbital_splitting=data.get('spin_orbit_splitting_eV', None),
+        symbol=data.get("symbol", None),
+        element=data.get("element", None),
+        atomic_number=data.get("atomic_number", None),
+        binding_energy_most_useful=data.get(
+            "binding_energy_of_most_useful_line_eV", None
+        ),
+        spin_orbital_splitting=data.get("spin_orbit_splitting_eV", None),
         photoelectron_lines=photoelectron_lines,
-        compounds=compounds
+        compounds=compounds,
     )

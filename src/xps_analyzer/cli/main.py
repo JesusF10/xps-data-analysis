@@ -52,11 +52,10 @@ def analyze(data_dir: Path, file_format: str, output: str):
         click.echo(f"Error al procesar {data_dir}: {e}", err=True)
         raise click.ClickException(str(e))
 
+
 @cli.command()
 @click.argument("element", type=str)
-@click.option(
-    "--verbose", "-v", is_flag=True, help="Muestra información detallada"
-)
+@click.option("--verbose", "-v", is_flag=True, help="Muestra información detallada")
 def show_element(element: str, verbose: bool):
     """
     Muestra información de referencia para un elemento químico.
@@ -79,8 +78,10 @@ def show_element(element: str, verbose: bool):
         click.echo(f"- {line}")
     click.echo("Compuestos de referencia:")
     for comp_name, comp in elem_ref.compounds.items():
-        click.echo(f"- {comp_name}: Posición pico = {comp.binding_energy_range} eV"
-                   f" Orbital = {comp.orbital}")
+        click.echo(
+            f"- {comp_name}: Posición pico = {comp.binding_energy_range} eV"
+            f" Orbital = {comp.orbital}"
+        )
 
 
 def main():

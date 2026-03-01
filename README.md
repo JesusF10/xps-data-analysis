@@ -14,6 +14,7 @@ Software automatizado en Python para análisis de datos de Espectroscopía de Fo
 ## Características
 
 [COMPLETADO] **Disponible:**
+
 - Carga de datos XPS desde formatos propietarios
 - Calibración de energía por elemento de referencia
 - Visualización básica de espectros
@@ -21,6 +22,7 @@ Software automatizado en Python para análisis de datos de Espectroscopía de Fo
 - CLI para operaciones básicas
 
 [EN DESARROLLO] **En Desarrollo (Fase 1):**
+
 - Sustracción de fondo (Shirley, Tougaard)
 - Ajuste de picos (Gaussian, Lorentzian, Voigt)
 - Cuantificación con factores de sensibilidad
@@ -136,6 +138,7 @@ xps-data-analysis/
 ## Roadmap
 
 ### Fase 0 (Actual) - Fundamentos
+
 - [x] Carga básica de datos
 - [x] Calibración de energía
 - [x] Visualización simple
@@ -144,6 +147,7 @@ xps-data-analysis/
 - [ ] Tests básicos (20% coverage)
 
 ### Fase 1 - Análisis Core
+
 - [ ] Sustracción de fondo (Shirley, Tougaard)
 - [ ] Ajuste de picos (Gaussian, Lorentzian, Voigt)
 - [ ] Cuantificación
@@ -152,6 +156,7 @@ xps-data-analysis/
 - [ ] 60% test coverage
 
 ### Fase 2 - Robustez
+
 - [ ] Migración a Pydantic para validación
 - [ ] Soporte VAMAS (ISO 14976)
 - [ ] Soporte CASA XPS
@@ -159,6 +164,7 @@ xps-data-analysis/
 - [ ] 80% test coverage
 
 ### Fase 3 - Avanzado
+
 - [ ] Machine learning para identificación automática
 - [ ] Análisis de profundidad (depth profiling)
 - [ ] GUI con Streamlit/Dash
@@ -173,11 +179,13 @@ xps-data-analysis/
 ¡Las contribuciones son bienvenidas! Especialmente para funcionalidad Fase 1.
 
 **Prioridades:**
-1. 🔥 **Alta:** Sustracción de fondo, ajuste de picos
+
+1. **Alta:** Sustracción de fondo, ajuste de picos
 2. [EN PROGRESO] **Media:** Tests, documentación
 3. [COMPLETADO] **Baja:** Características avanzadas (Fase 3)
 
 **Proceso:**
+
 1. Fork el repositorio
 2. Crea una rama feature (`git checkout -b feature/nueva-funcionalidad`)
 3. Commit tus cambios (`git commit -m 'Agregar nueva funcionalidad'`)

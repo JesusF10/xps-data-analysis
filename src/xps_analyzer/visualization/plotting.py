@@ -28,7 +28,9 @@ def plot_spectrum(spectrum: XPSSpectrum, title: str = "Espectro XPS") -> None:
     plt.show()
 
 
-def plot_survey_spectrum(spectrum: XPSSpectrum, title: str = "Espectro Survey XPS") -> None:
+def plot_survey_spectrum(
+    spectrum: XPSSpectrum, title: str = "Espectro Survey XPS"
+) -> None:
     """
     Genera una gráfica del espectro survey XPS.
 
@@ -40,7 +42,7 @@ def plot_survey_spectrum(spectrum: XPSSpectrum, title: str = "Espectro Survey XP
         El título de la gráfica.
     """
     plt.figure(figsize=(10, 6))
-    plt.plot(spectrum.data, label=spectrum.region_name, color='orange')
+    plt.plot(spectrum.data, label=spectrum.region_name, color="orange")
     plt.gca().invert_xaxis()
     plt.title(title)
     plt.xlabel("Energía de enlace (eV)")

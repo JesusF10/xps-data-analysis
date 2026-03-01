@@ -18,31 +18,38 @@
 ### Reportar Bugs
 
 **Antes de reportar:**
+
 1. Busca en [issues existentes](https://github.com/JesusF10/xps-data-analysis/issues)
 2. Verifica que estás usando la versión más reciente
 3. Ejecuta `pytest` para verificar que no son errores locales
 
 **Al reportar incluye:**
+
 - Versión de Python y SO
 - Código mínimo para reproducir el bug
 - Mensaje de error completo
 - Comportamiento esperado vs. actual
 
 **Template:**
+
 ```markdown
 ## Descripción del Bug
+
 [Descripción clara del problema]
 
 ## Pasos para Reproducir
+
 1. Ejecutar ...
 2. Ver error ...
 
 ## Código de Ejemplo
+
 `‎``python
 [código mínimo]
 `‎``
 
 ## Ambiente
+
 - Python: 3.11.5
 - SO: Ubuntu 22.04
 - xps-analyzer: 0.1.0
@@ -51,25 +58,32 @@
 ### Sugerir Nuevas Características
 
 **Antes de sugerir:**
+
 1. Revisa el [ROADMAP.md](ROADMAP.md)
 2. Busca en issues existentes
 3. Considera si pertenece a Fase 1, 2 o 3
 
 **Template:**
+
 ```markdown
 ## Característica Propuesta
+
 [Descripción clara]
 
 ## Motivación
+
 [Por qué es necesaria]
 
 ## Solución Propuesta
+
 [Cómo funcionaría]
 
 ## Alternativas Consideradas
+
 [Otros enfoques]
 
 ## Fase Sugerida
+
 [ ] Fase 1 (Core)
 [ ] Fase 2 (Robustez)
 [ ] Fase 3 (Avanzado)
@@ -126,12 +140,12 @@ Antes de abrir PR, verifica:
 def calibrar_espectro(espectro: XPSSpectrum) -> XPSSpectrum:
     """
     Calibra el espectro XPS usando un elemento de referencia.
-    
+
     Parámetros
     ----------
     espectro : XPSSpectrum
         Espectro a calibrar.
-    
+
     Retorna
     -------
     XPSSpectrum
@@ -148,6 +162,7 @@ def calibrar_espectro(espectro: XPSSpectrum) -> XPSSpectrum:
 ### Formato de Código
 
 **Ruff (obligatorio):**
+
 ```bash
 # Formatear
 ruff format .
@@ -157,6 +172,7 @@ ruff check --fix .
 ```
 
 **Convenciones:**
+
 - Longitud de línea: 88 caracteres
 - Indentación: 4 espacios
 - Strings: comillas dobles (`"texto"`)
@@ -170,29 +186,29 @@ ruff check --fix .
 def funcion_ejemplo(parametro1: int, parametro2: str = "default") -> bool:
     """
     Descripción breve de una línea.
-    
+
     Descripción extendida opcional explicando detalles,
     casos especiales, y comportamiento.
-    
+
     Parámetros
     ----------
     parametro1 : int
         Descripción del parámetro 1.
     parametro2 : str, optional
         Descripción del parámetro 2. Default: "default".
-    
+
     Retorna
     -------
     bool
         Descripción del valor de retorno.
-    
+
     Raises
     ------
     ValueError
         Cuando parametro1 es negativo.
     TypeError
         Cuando parametro2 no es string.
-    
+
     Ejemplos
     --------
     >>> funcion_ejemplo(42, "test")
@@ -200,11 +216,11 @@ def funcion_ejemplo(parametro1: int, parametro2: str = "default") -> bool:
     >>> funcion_ejemplo(-1)
     Traceback (most recent call last):
     ValueError: parametro1 debe ser positivo
-    
+
     Notas
     -----
     Información adicional sobre implementación o teoría.
-    
+
     Ver También
     ------------
     otra_funcion : Función relacionada.
@@ -233,6 +249,7 @@ def procesar_archivo(
 ### Tests
 
 **Estructura:**
+
 ```python
 import pytest
 import numpy as np
@@ -249,22 +266,24 @@ def test_nombre_descriptivo_del_caso():
         intensity=np.array([100.0, 120.0]),
         metadata={}
     )
-    
+
     # Act (ejecutar)
     result = procesar(spectrum)
-    
+
     # Assert (verificar)
     assert result.region_name == "C 1s"
     assert len(result.binding_energy) == 2
 ```
 
 **Nombres de tests:**
+
 - Usar `test_` como prefijo
 - Descriptivos: `test_calibration_shifts_all_spectra()`
 - Un concepto por test
 - Tests de error: `test_raises_valueerror_on_empty_array()`
 
 **Cobertura:**
+
 - Nuevas funciones: 100% coverage
 - Modificaciones: mantener o mejorar coverage existente
 - Verificar con: `pytest --cov=src --cov-report=html`
@@ -276,6 +295,7 @@ def test_nombre_descriptivo_del_caso():
 ### 🔥 Alta Prioridad (Fase 1 - Bloqueadores)
 
 **Buscamos activamente contribuciones para:**
+
 - Sustracción de fondo (Shirley, Tougaard)
 - Ajuste de picos (Gaussian, Lorentzian, Voigt)
 - Cuantificación con factores de sensibilidad
@@ -315,21 +335,25 @@ def test_nombre_descriptivo_del_caso():
 ### Tareas Específicas
 
 **Backend:**
+
 - Implementar Shirley background subtraction
 - Implementar peak fitting con lmfit
 - Agregar tests para preprocessing
 
 **Testing:**
+
 - Aumentar cobertura de data_loader
 - Tests de integración end-to-end
 - Property-based tests con hypothesis
 
 **Documentación:**
+
 - Tutoriales para usuarios
 - Ejemplos de notebooks
 - Documentación de API faltante
 
 **Infraestructura:**
+
 - GitHub Actions para CI/CD
 - Pre-commit hooks adicionales
 - Docker image
@@ -348,11 +372,13 @@ def test_nombre_descriptivo_del_caso():
 ### Criterios de Aceptación
 
 **Automáticos:**
+
 - [COMPLETADO] Ruff pasa
 - [COMPLETADO] Tests pasan
 - [COMPLETADO] Coverage no disminuye
 
 **Manuales:**
+
 - [COMPLETADO] Código sigue convenciones
 - [COMPLETADO] Docstrings en español
 - [COMPLETADO] Tests significativos (no solo para coverage)
@@ -361,6 +387,7 @@ def test_nombre_descriptivo_del_caso():
 ### Cambios Requeridos
 
 Si el review solicita cambios:
+
 1. Hacer cambios en tu rama
 2. Commit y push
 3. El PR se actualiza automáticamente
@@ -373,6 +400,7 @@ Si el review solicita cambios:
 ### Mensajes de Commit
 
 **Formato:**
+
 ```
 tipo(ámbito): descripción breve
 
@@ -385,6 +413,7 @@ Refs: #123
 ```
 
 **Tipos:**
+
 - `feat`: Nueva característica
 - `fix`: Bug fix
 - `docs`: Cambios en documentación
@@ -394,6 +423,7 @@ Refs: #123
 - `chore`: Mantenimiento (deps, config)
 
 **Ejemplos:**
+
 ```
 feat(analysis): implementar Shirley background subtraction
 
@@ -418,6 +448,7 @@ Enfoque en quick-start. Detalles movidos a docs específicos.
 ### Ramas
 
 **Nomenclatura:**
+
 - `feature/nombre-descriptivo` - Nuevas características
 - `fix/issue-123-descripcion` - Bug fixes
 - `docs/seccion-modificada` - Solo documentación
@@ -428,17 +459,20 @@ Enfoque en quick-start. Detalles movidos a docs específicos.
 ## Recursos Adicionales
 
 ### Documentación
+
 - [DEVELOPMENT.md](DEVELOPMENT.md) - Guía de desarrollo
 - [ARCHITECTURE.md](ARCHITECTURE.md) - Arquitectura del proyecto
 - [TESTING.md](TESTING.md) - Estrategia de testing
 - [API_DOCS.md](API_DOCS.md) - Referencia de API
 
 ### Herramientas
+
 - [Ruff](https://docs.astral.sh/ruff/) - Linter y formatter
 - [pytest](https://docs.pytest.org/) - Framework de testing
 - [uv](https://docs.astral.sh/uv/) - Package manager
 
 ### Contacto
+
 - **Email:** jss.263.fsc@gmail.com
 - **GitHub Issues:** Para preguntas sobre contribuciones
 - **Discussions:** Para ideas y discusiones generales
@@ -455,6 +489,7 @@ A: Sí, pero usa ramas separadas y PRs separados por issue.
 
 **Q: ¿Qué hago si mi PR está desactualizado con main?**  
 A:
+
 ```bash
 git checkout main
 git pull upstream main
@@ -468,4 +503,4 @@ A: ¡Excelente! Eso cuenta como contribución valiosa. Sigue estructura de tests
 
 ---
 
-¡Gracias por contribuir a XPS Analyzer! 🎉
+¡Gracias por contribuir a XPS Analyzer!

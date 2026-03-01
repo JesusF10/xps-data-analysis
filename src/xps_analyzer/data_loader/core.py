@@ -2,6 +2,8 @@
 Funciones principales de carga de datos XPS.
 """
 
+from __future__ import annotations
+
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
@@ -19,6 +21,33 @@ class XPSSpectrum:
     intensity: np.ndarray
     metadata: dict[str, Any]
 
+    def __post_init__(self):
+        """Validación básica después de inicialización."""
+        # Validar tipos
+        if not isinstance(self.binding_energy, np.ndarray):
+            raise TypeError("binding_energy debe ser un numpy.ndarray")
+        if not isinstance(self.intensity, np.ndarray):
+            raise TypeError("intensity debe ser un numpy.ndarray")
+
+        # Validar longitudes coincidentes
+        if len(self.binding_energy) != len(self.intensity):
+            raise ValueError(
+                f"binding_energy ({len(self.binding_energy)} puntos) e intensity "
+                f"({len(self.intensity)} puntos) deben tener la misma longitud"
+            )
+
+        # Validar que no estén vacíos
+        if len(self.binding_energy) == 0:
+            raise ValueError("Los arrays no pueden estar vacíos")
+
+        # Validar energías positivas
+        if np.any(self.binding_energy < 0):
+            raise ValueError("Los valores de binding_energy deben ser positivos")
+
+        # Validar region_name
+        if not self.region_name or not self.region_name.strip():
+            raise ValueError("region_name no puede estar vacío")
+
     @property
     def data(self) -> pd.DataFrame:
         """Retorna los datos como DataFrame."""
@@ -26,7 +55,7 @@ class XPSSpectrum:
             {"binding_energy": self.binding_energy, "intensity": self.intensity}
         ).set_index("binding_energy")
 
-    def copy(self) -> "XPSSpectrum":
+    def copy(self) -> XPSSpectrum:
         """Retorna una copia del espectro."""
         return XPSSpectrum(
             region_name=self.region_name,
@@ -44,6 +73,16 @@ class XPSDataset:
     header: dict[str, Any]
     spectra: dict[str, XPSSpectrum]
 
+    def __post_init__(self):
+        """Validación básica después de inicialización."""
+        if not self.filename or not self.filename.strip():
+            raise ValueError("filename no puede estar vacío")
+
+        if not self.spectra:
+            raise ValueError(
+                "spectra no puede estar vacío - debe contener al menos un espectro"
+            )
+
     def get_spectrum(self, region_name: str) -> XPSSpectrum | None:
         """Obtiene un espectro específico."""
         return self.spectra.get(region_name)
@@ -52,7 +91,7 @@ class XPSDataset:
         """Lista todas las regiones disponibles."""
         return list(self.spectra.keys())
 
-    def copy(self) -> "XPSDataset":
+    def copy(self) -> XPSDataset:
         """Retorna una copia del dataset."""
         return XPSDataset(
             filename=self.filename,
@@ -67,6 +106,16 @@ class XPSSample:
 
     sample_name: str
     datasets: dict[str, XPSDataset]
+
+    def __post_init__(self):
+        """Validación básica después de inicialización."""
+        if not self.sample_name or not self.sample_name.strip():
+            raise ValueError("sample_name no puede estar vacío")
+
+        if not self.datasets:
+            raise ValueError(
+                "datasets no puede estar vacío - debe contener al menos un dataset"
+            )
 
     def get_dataset(self, filename: str) -> XPSDataset | None:
         """Obtiene un dataset específico.
@@ -92,7 +141,7 @@ class XPSSample:
         """
         return list(self.datasets.keys())
 
-    def copy(self) -> "XPSSample":
+    def copy(self) -> XPSSample:
         """Retorna una copia de la muestra.
 
         Returns
@@ -122,6 +171,11 @@ def parse_metadata(lines: list | str, header: bool = False) -> dict[str, Any]:
     -------
     dict[str, str]
         Diccionario con pares clave-valor de metadatos.
+
+    Raises
+    ------
+    ValueError
+        Si los metadatos están malformados o incompletos.
     -------
     Examples
     --------
@@ -143,39 +197,57 @@ def parse_metadata(lines: list | str, header: bool = False) -> dict[str, Any]:
     metadata = {}
 
     if header:
-        for meta_line in lines[0].split(";")[:-2]:
-            key = "_".join(meta_line.split()[:-1])
-            value = meta_line.split()[-1].strip()
-            metadata[key] = value
+        try:
+            for meta_line in lines[0].split(";")[:-2]:
+                key = "_".join(meta_line.split()[:-1])
+                value = meta_line.split()[-1].strip()
+                metadata[key] = value
 
-        elements = {}
-        elements_config = lines[1].split()
+            elements = {}
+            elements_config = lines[1].split()
 
-        for elem, orbital, energy in zip(
-            elements_config[::2], elements_config[1::2], lines[2].split(), strict=True
-        ):
-            elements[elem] = {"orbital": orbital, "mean_energy": energy}
-        metadata["elements"] = elements
+            for elem, orbital, energy in zip(
+                elements_config[::2],
+                elements_config[1::2],
+                lines[2].split(),
+                strict=True,
+            ):
+                elements[elem] = {"orbital": orbital, "mean_energy": energy}
+            metadata["elements"] = elements
+        except (IndexError, ValueError, KeyError) as e:
+            raise ValueError(
+                f"Error al parsear metadatos del header: {e}. "
+                f"Formato esperado: 3 líneas con información de muestra, elementos y energías"
+            ) from e
         return metadata
 
     elif isinstance(lines, str) and lines.split()[0] == "Element":
-        lines = lines.split(";")
-        if len(lines[0].split()) < 2:
-            metadata["element"] = "survey"
-        else:
-            metadata["element"] = " ".join(lines[0].split()[1:])
-        # Region
-        metadata["region"] = int(lines[1].split()[1])
-        # Depth cycle
-        metadata["depth_cycle"] = (int(lines[2].split()[2]), int(lines[2].split()[4]))
-        # Time Per Step
-        metadata["time_per_step"] = int(lines[3].split()[-1])
-        # Sweeps
-        metadata["sweeps"] = int(lines[4].split()[-1])
-        # Anode
-        metadata["anode"] = lines[5].split()[-1]
-        # Photon energy
-        metadata["photon_energy"] = float(lines[6].split()[-1])
+        try:
+            lines = lines.split(";")
+            if len(lines[0].split()) < 2:
+                metadata["element"] = "survey"
+            else:
+                metadata["element"] = " ".join(lines[0].split()[1:])
+            # Region
+            metadata["region"] = int(lines[1].split()[1])
+            # Depth cycle
+            metadata["depth_cycle"] = (
+                int(lines[2].split()[2]),
+                int(lines[2].split()[4]),
+            )
+            # Time Per Step
+            metadata["time_per_step"] = int(lines[3].split()[-1])
+            # Sweeps
+            metadata["sweeps"] = int(lines[4].split()[-1])
+            # Anode
+            metadata["anode"] = lines[5].split()[-1]
+            # Photon energy
+            metadata["photon_energy"] = float(lines[6].split()[-1])
+        except (IndexError, ValueError, KeyError) as e:
+            raise ValueError(
+                f"Error al parsear metadatos del espectro: {e}. "
+                f"Formato esperado: 'Element X; Region N; Depth Cycle N of M; ...'"
+            ) from e
 
     return metadata
 
@@ -191,15 +263,49 @@ def get_spectrum_data(data_lines: list) -> XPSSpectrum:
     -------
     XPSSpectrum
         Objeto XPSSpectrum con los datos del espectro.
+
+    Raises
+    ------
+    ValueError
+        Si los datos están malformados o incompletos.
     """
+    if not data_lines or len(data_lines) < 2:
+        raise ValueError(
+            "data_lines debe contener al menos 2 líneas (metadata + datos)"
+        )
+
     binding_energy = []
     intensity = []
-    metadata = parse_metadata(data_lines[0], header=False)
 
-    for line in data_lines[1:]:
+    try:
+        metadata = parse_metadata(data_lines[0], header=False)
+    except (IndexError, ValueError, KeyError) as e:
+        raise ValueError(f"Error al parsear metadata del espectro: {e}") from e
+
+    for line_num, line in enumerate(data_lines[1:], start=2):
         parts = line.split()
-        binding_energy.append(float(parts[0]))
-        intensity.append(float(parts[1]))
+        if len(parts) < 2:
+            raise ValueError(
+                f"Línea {line_num} malformada: se esperan 2 columnas "
+                f"(binding_energy intensity), se encontraron {len(parts)}"
+            )
+        try:
+            binding_energy.append(float(parts[0]))
+            intensity.append(float(parts[1]))
+        except (ValueError, IndexError) as e:
+            raise ValueError(
+                f"Error al convertir datos numéricos en línea {line_num}: {e}"
+            ) from e
+
+    # Validación antes de crear el objeto
+    if len(binding_energy) == 0:
+        raise ValueError("No se encontraron puntos de datos en el espectro")
+
+    if len(binding_energy) != len(intensity):
+        raise ValueError(
+            f"Desajuste de datos: {len(binding_energy)} valores de energía "
+            f"pero {len(intensity)} valores de intensidad"
+        )
 
     spectrum = XPSSpectrum(
         region_name=metadata.get("element", "unknown"),
