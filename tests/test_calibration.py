@@ -258,3 +258,115 @@ def test_calibrate_sample_with_oxygen_reference(simple_dataset, oxygen_reference
 
     expected = original_o1s - 1.0
     np.testing.assert_array_almost_equal(calibrated_o1s, expected, decimal=5)
+
+
+# Tests adicionales para edge cases y validación
+def test_calibrate_spectrum_zero_shift(simple_spectrum):
+    """Test calibración con desplazamiento cero (no cambio)."""
+    shift = 0.0
+    calibrated = calibrate_spectrum(simple_spectrum, shift, inplace=False)
+
+    # Verificar que las energías son idénticas
+    np.testing.assert_array_equal(
+        calibrated.binding_energy, simple_spectrum.binding_energy
+    )
+
+    # Verificar que las intensidades no cambiaron
+    np.testing.assert_array_equal(calibrated.intensity, simple_spectrum.intensity)
+
+
+def test_calibrate_spectrum_large_positive_shift(simple_spectrum):
+    """Test calibración con desplazamiento grande positivo."""
+    shift = 100.0
+    calibrated = calibrate_spectrum(simple_spectrum, shift, inplace=False)
+
+    expected = simple_spectrum.binding_energy + shift
+    np.testing.assert_array_almost_equal(calibrated.binding_energy, expected)
+
+    # Verificar que las energías resultantes son positivas
+    assert np.all(calibrated.binding_energy > 0)
+
+
+def test_calibrate_spectrum_large_negative_shift(simple_spectrum):
+    """Test calibración con desplazamiento grande negativo."""
+    shift = -100.0
+    calibrated = calibrate_spectrum(simple_spectrum, shift, inplace=False)
+
+    expected = simple_spectrum.binding_energy + shift
+    np.testing.assert_array_almost_equal(calibrated.binding_energy, expected)
+
+
+def test_calibrate_spectrum_preserves_intensity(simple_spectrum):
+    """Test que calibración no modifica valores de intensidad."""
+    shift = 2.5
+    original_intensity = simple_spectrum.intensity.copy()
+
+    calibrated = calibrate_spectrum(simple_spectrum, shift, inplace=False)
+
+    # Verificar que intensidades son idénticas
+    np.testing.assert_array_equal(calibrated.intensity, original_intensity)
+    np.testing.assert_array_equal(simple_spectrum.intensity, original_intensity)
+
+
+def test_calibrate_spectrum_preserves_metadata(simple_spectrum):
+    """Test que calibración preserva metadata del espectro."""
+    shift = 1.2
+    calibrated = calibrate_spectrum(simple_spectrum, shift, inplace=False)
+
+    # Verificar que metadata se copió correctamente
+    assert calibrated.metadata == simple_spectrum.metadata
+    assert calibrated.region_name == simple_spectrum.region_name
+
+
+def test_calibrate_spectrum_single_point():
+    """Test calibración con espectro de un solo punto."""
+    single_point = XPSSpectrum(
+        region_name="Test",
+        binding_energy=np.array([284.0]),
+        intensity=np.array([100.0]),
+        metadata={},
+    )
+
+    shift = 0.8
+    calibrated = calibrate_spectrum(single_point, shift, inplace=False)
+
+    expected = np.array([284.8])
+    np.testing.assert_array_almost_equal(calibrated.binding_energy, expected)
+
+
+def test_calibrate_sample_empty_dataset():
+    """Test calibración con dataset sin espectros."""
+    empty_dataset = XPSDataset(
+        filename="empty.txt",
+        header={"sample_name": "Empty"},
+        spectra={},
+    )
+
+    carbon_ref = ElementReference(
+        symbol="C",
+        element="Carbon",
+        atomic_number=6,
+        photoelectron_lines=[
+            PhotoelectronLine(line="1s", binding_energy=284.8, type="core")
+        ],
+        compounds={},
+        binding_energy_most_useful=284.8,
+    )
+
+    with pytest.raises(ValueError) as excinfo:
+        calibrate_sample(empty_dataset, carbon_ref, inplace=False)
+
+    assert "Elemento de referencia 'C' no encontrado" in str(excinfo.value)
+
+
+def test_calibrate_sample_preserves_non_calibrated_metadata(
+    simple_dataset, carbon_reference
+):
+    """Test que calibración preserva metadata del dataset (header)."""
+    original_header = simple_dataset.header.copy()
+
+    calibrated = calibrate_sample(simple_dataset, carbon_reference, inplace=False)
+
+    # Verificar que el header se preserva
+    assert calibrated.header == original_header
+    assert calibrated.filename == simple_dataset.filename
