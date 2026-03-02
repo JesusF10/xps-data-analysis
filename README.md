@@ -6,8 +6,8 @@
 
 Software automatizado en Python para análisis de datos de Espectroscopía de Fotoelectrones de Rayos X (XPS).
 
-**Estado:** Beta v0.7.0 - Análisis core funcional  
-**Fase:** 1 (Análisis Core) - 75% completado
+**Estado:** Beta v0.8.0 - Fase 1 COMPLETADA  
+**Fase:** 1 (Análisis Core) - 100% completado
 
 ---
 
@@ -23,10 +23,13 @@ Software automatizado en Python para análisis de datos de Espectroscopía de Fo
 - **Sustracción de fondo (Shirley, Tougaard, Linear)**
 - **Ajuste de picos (Gaussian, Lorentzian, Voigt)**
 - **Cuantificación atómica con factores RSF (Scofield, Wagner)**
+- **Exportación a CSV/Excel/JSON con metadata completa**
 
-[EN DESARROLLO] **En Desarrollo (Fase 1):**
+[EN DESARROLLO] **Próxima Fase (Fase 2):**
 
-- Exportación a CSV/Excel/JSON (próxima sesión)
+- Migración a Pydantic para validación avanzada
+- Soporte para formatos VAMAS y CASA XPS
+- Exportación a HDF5
 
 ---
 
@@ -123,6 +126,47 @@ for element, conc in concentrations.items():
 # Salida:
 #   C 1s: 75.02%
 #   O 1s: 24.98%
+```
+
+### Exportación de Resultados (NUEVO en v0.8.0)
+
+```python
+from xps_analyzer.export import export_to_csv, export_to_excel, export_to_json
+
+# 1. Exportar espectro individual a CSV
+export_to_csv(
+    c1s_spectrum,
+    "output/c1s_spectrum.csv",
+    include_metadata=True
+)
+# Crea: c1s_spectrum.csv + c1s_spectrum.metadata.csv
+
+# 2. Exportar dataset completo a Excel
+export_to_excel(
+    dataset,
+    "output/muestra1.xlsx",
+    include_metadata=True
+)
+# Crea archivo Excel con múltiples hojas:
+# - C_1s: datos del espectro C 1s
+# - O_1s: datos del espectro O 1s  
+# - Dataset_Metadata: metadata del dataset
+# - Spectra_Metadata: metadata de cada espectro
+
+# 3. Exportar a JSON para procesamiento posterior
+export_to_json(
+    dataset,
+    "output/muestra1.json",
+    indent=2
+)
+# Crea archivo JSON con estructura jerárquica completa
+
+# 4. Controlar precisión decimal en CSV
+export_to_csv(
+    c1s_spectrum,
+    "output/c1s_high_precision.csv",
+    decimal_places=10
+)
 ```
 
 ### Ajuste de Múltiples Picos

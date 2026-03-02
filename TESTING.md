@@ -73,14 +73,14 @@ reference_data/elements   | 70%       | 86    | Media
 reference_data/identification | 60%   | Incl. | Media
 visualization/            | 0%        | 0     | Baja
 cli/                      | 0%        | 0     | Baja
-export/                   | N/A       | N/A   | Alta (Sesión 4 pendiente)
+export/                   | 92%       | 19    | Completado (Sesión 4)
 --------------------------|-----------|-------|----------
-TOTAL                     | 87%       | 208   | -
+TOTAL                     | 87%       | 227   | -
 ```
 
 **Meta de cobertura:**
 - **Fase 0 (completada):** 20% cobertura significativa ✓ (alcanzado 87%)
-- **Fase 1 (75% completado):** 60% ✓ (alcanzado 87%)
+- **Fase 1 (COMPLETADA 100%):** 80% ✓ (alcanzado 87%)
 - **Fase 2:** 85% (incluir integración multi-formato)
 - **Fase 3:** 90% (property-based testing, edge cases)
 
@@ -531,23 +531,26 @@ def test_calibrate_spectrum_invalid_element():
 **Prioridad:** Múltiples formatos + exportación
 
 ```python
-# tests/unit/test_export.py - NUEVO (Sesión 4)
-- test_export_csv() (3 tests)
-- test_export_excel() (3 tests)
-- test_export_json() (2 tests)
+# tests/test_export.py - COMPLETADO (Sesión 4)
+- test_export_to_csv: 6 tests (básico, metadata, dataset, errores, directorios, precisión)
+- test_export_to_excel: 5 tests (básico, metadata, dataset, validación, hojas múltiples)
+- test_export_to_json: 6 tests (básico, metadata, dataset, NumpyEncoder, NaN/Inf, indentación)
+- test_roundtrip: 2 tests (CSV y JSON export → reimport)
+**Total:** 19 tests (100% passing), 92% cobertura
 
-# tests/integration/test_multi_format.py - NUEVO
+# tests/integration/test_multi_format.py - PLANEADO FASE 2
 - test_load_vamas() (5 tests)
 - test_load_casa_xps() (5 tests)
 - test_format_detection() (3 tests)
 
-# tests/unit/test_pydantic_validation.py - NUEVO
+# tests/unit/test_pydantic_validation.py - PLANEADO FASE 2
 - test_pydantic_spectrum_validation() (10 tests)
 - test_pydantic_dataset_validation() (8 tests)
 - test_json_serialization() (4 tests)
 ```
 
-**Total Fase 2:** +43 tests -> ~251 tests total, 85% cobertura
+**Total Fase 1:** 227 tests (100% passing), 87% cobertura  
+**Total Fase 2 (planeado):** +43 tests → ~270 tests total, 85% cobertura
 
 ### Fase 3 - 90% Cobertura Objetivo
 

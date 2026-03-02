@@ -1,11 +1,12 @@
 # XPS Analyzer - Referencia de API
 
-**Versión:** 0.7.0-beta  
-**Estado:** Fase 1 (75% completado) - Análisis Core Funcional  
+**Versión:** 0.8.0-beta  
+**Estado:** Fase 1 COMPLETADA (100%) - Análisis Core + Exportación  
 **Última actualización:** Marzo 2026
 
 Esta es la referencia completa de la API pública de XPS Analyzer. Incluye todas las funciones, clases y métodos disponibles para usuarios finales.
 
+**ACTUALIZACIÓN v0.8.0**: Sistema de exportación completo (CSV, Excel, JSON) - Fase 1 100% completada
 **ACTUALIZACIÓN v0.7.0**: Agregado módulo completo de análisis (background, peak_fitting, quantification)
 
 ---
@@ -1110,68 +1111,272 @@ plot_fitted_spectrum(
 
 ### Namespace: `xps_analyzer.export`
 
-**Estado:** MÓDULO VACÍO - Fase 1
+**Estado:** COMPLETADO - v0.8.0
 
-**API planeada:**
+Módulo completo para exportar espectros XPS y datasets a formatos estándar (CSV, Excel, JSON) con metadata completa.
+
+**API pública:**
 ```python
-from xps_analyzer.export import export_csv, export_excel, export_hdf5
+from xps_analyzer.export import export_to_csv, export_to_excel, export_to_json
 ```
 
 ---
 
-### export_csv
+### export_to_csv
 
-**Estado:** PENDIENTE - Fase 1
-
-```python
-def export_csv(
-    dataset: XPSDataset,
-    output_dir: str | Path,
-    separate_files: bool = True
-) -> None
-```
-
-Exporta dataset a archivo(s) CSV.
-
-**Ejemplo futuro:**
-```python
-from xps_analyzer.export import export_csv
-
-# Archivo separado por región
-export_csv(dataset, output_dir="data/results/exports/", separate_files=True)
-# Genera: C_1s.csv, O_1s.csv, N_1s.csv, ...
-
-# Todo en un archivo
-export_csv(dataset, output_dir="data/results/", separate_files=False)
-# Genera: muestra1.csv con todas las regiones
-```
-
----
-
-### export_excel
-
-**Estado:** PENDIENTE - Fase 1
+**Estado:** COMPLETADO - v0.8.0
 
 ```python
-def export_excel(
-    dataset: XPSDataset,
+def export_to_csv(
+    data: XPSSpectrum | XPSDataset,
     output_path: str | Path,
-    include_metadata: bool = True
-) -> None
+    include_metadata: bool = True,
+    decimal_places: int = 6
+) -> Path
 ```
 
-Exporta dataset a Excel con múltiples hojas.
+Exporta espectro o dataset XPS a archivo(s) CSV.
 
-**Ejemplo futuro:**
+**Parámetros:**
+- `data` : `XPSSpectrum` o `XPSDataset`  
+  Datos a exportar. Si es XPSSpectrum, crea un archivo CSV. Si es XPSDataset, crea un directorio con múltiples archivos CSV (uno por región).
+- `output_path` : `str` o `Path`  
+  Ruta del archivo o directorio de salida.
+- `include_metadata` : `bool`, default `True`  
+  Si True, genera archivos `.metadata.csv` adicionales con metadata.
+- `decimal_places` : `int`, default `6`  
+  Número de decimales para valores numéricos.
+
+**Retorna:**
+- `Path`  
+  Ruta del archivo o directorio creado.
+
+**Lanza:**
+- `TypeError` - Si data no es XPSSpectrum ni XPSDataset
+
+**Ejemplo:**
 ```python
-from xps_analyzer.export import export_excel
+from xps_analyzer import load_single_file
+from xps_analyzer.export import export_to_csv
 
-export_excel(
-    dataset=dataset,
-    output_path="data/results/muestra1.xlsx",
-    include_metadata=True
-)
-# Genera Excel con hojas: Metadata, C 1s, O 1s, N 1s, ...
+dataset = load_single_file("muestra1.txt")
+spectrum = dataset.get_spectrum("C 1s")
+
+# Exportar espectro individual
+export_to_csv(spectrum, "output/c1s.csv", include_metadata=True)
+# Crea: output/c1s.csv + output/c1s.metadata.csv
+
+# Exportar dataset completo
+export_to_csv(dataset, "output/dataset_export/", include_metadata=True)
+# Crea: output/dataset_export/C_1s.csv, O_1s.csv, dataset_metadata.csv, ...
+
+# Controlar precisión
+export_to_csv(spectrum, "output/high_prec.csv", decimal_places=10)
+```
+
+**Estructura CSV - Espectro:**
+```csv
+binding_energy,intensity
+280.0,145.234567
+280.2,148.123456
+...
+```
+
+**Estructura CSV - Metadata:**
+```csv
+key,value
+region_name,C 1s
+sweeps,10
+dwell_time,0.1
+pass_energy,20.0
+```
+
+---
+
+### export_to_excel
+
+**Estado:** COMPLETADO - v0.8.0
+
+```python
+def export_to_excel(
+    data: XPSSpectrum | XPSDataset,
+    output_path: str | Path,
+    include_metadata: bool = True,
+    decimal_places: int = 6
+) -> Path
+```
+
+Exporta espectro o dataset XPS a archivo Excel (.xlsx).
+
+Crea un archivo Excel con múltiples hojas:
+- Para `XPSSpectrum`: hoja "Data" con datos + hoja "Metadata" opcional
+- Para `XPSDataset`: una hoja por espectro + hojas "Dataset_Metadata" y "Spectra_Metadata"
+
+**Parámetros:**
+- `data` : `XPSSpectrum` o `XPSDataset`  
+  Datos a exportar.
+- `output_path` : `str` o `Path`  
+  Ruta del archivo Excel de salida (debe terminar en .xlsx).
+- `include_metadata` : `bool`, default `True`  
+  Si True, incluye hojas con metadata.
+- `decimal_places` : `int`, default `6`  
+  Número de decimales para valores numéricos.
+
+**Retorna:**
+- `Path`  
+  Ruta del archivo Excel creado.
+
+**Lanza:**
+- `TypeError` - Si data no es XPSSpectrum ni XPSDataset
+- `ValueError` - Si output_path no termina en .xlsx
+
+**Ejemplo:**
+```python
+from xps_analyzer.export import export_to_excel
+
+# Exportar espectro individual
+export_to_excel(spectrum, "output/c1s.xlsx", include_metadata=True)
+# Hojas: "Data", "Metadata"
+
+# Exportar dataset completo
+export_to_excel(dataset, "output/muestra1.xlsx", include_metadata=True)
+# Hojas: "C_1s", "O_1s", "N_1s", "Dataset_Metadata", "Spectra_Metadata"
+```
+
+**Estructura Excel - Dataset:**
+- **Hoja "C_1s"**: Columnas `binding_energy`, `intensity`
+- **Hoja "O_1s"**: Columnas `binding_energy`, `intensity`
+- **Hoja "Dataset_Metadata"**: Columnas `key`, `value` (sample_name, date, instrument, etc.)
+- **Hoja "Spectra_Metadata"**: Columnas `region`, `key`, `value`
+
+**Notas:**
+- Requiere librería `openpyxl` instalada (incluida en dependencias)
+- Nombres de hoja limitados a 31 caracteres (restricción Excel)
+- Caracteres especiales en nombres de región se reemplazan por "_"
+
+---
+
+### export_to_json
+
+**Estado:** COMPLETADO - v0.8.0
+
+```python
+def export_to_json(
+    data: XPSSpectrum | XPSDataset,
+    output_path: str | Path,
+    include_metadata: bool = True,
+    indent: int = 2
+) -> Path
+```
+
+Exporta espectro o dataset XPS a archivo JSON con estructura jerárquica.
+
+**Parámetros:**
+- `data` : `XPSSpectrum` o `XPSDataset`  
+  Datos a exportar.
+- `output_path` : `str` o `Path`  
+  Ruta del archivo JSON de salida.
+- `include_metadata` : `bool`, default `True`  
+  Si True, incluye metadata en el JSON.
+- `indent` : `int`, default `2`  
+  Nivel de indentación para formato legible. Use `None` para compacto.
+
+**Retorna:**
+- `Path`  
+  Ruta del archivo JSON creado.
+
+**Lanza:**
+- `TypeError` - Si data no es XPSSpectrum ni XPSDataset
+
+**Ejemplo:**
+```python
+from xps_analyzer.export import export_to_json
+
+# Exportar con formato legible
+export_to_json(dataset, "output/muestra1.json", indent=2)
+
+# Exportar compacto (sin indentación)
+export_to_json(dataset, "output/compact.json", indent=None)
+
+# Exportar sin metadata
+export_to_json(spectrum, "output/data_only.json", include_metadata=False)
+```
+
+**Estructura JSON - XPSSpectrum:**
+```json
+{
+  "region_name": "C 1s",
+  "binding_energy": [280.0, 280.2, 280.4, ...],
+  "intensity": [145.23, 148.12, 150.45, ...],
+  "metadata": {
+    "sweeps": 10,
+    "dwell_time": 0.1,
+    "pass_energy": 20.0
+  }
+}
+```
+
+**Estructura JSON - XPSDataset:**
+```json
+{
+  "filename": "muestra1_multiplex.txt",
+  "header": {
+    "sample_name": "Test Sample",
+    "date": "2026-03-01",
+    "instrument": "Thermo K-Alpha"
+  },
+  "spectra": {
+    "C 1s": {
+      "region_name": "C 1s",
+      "binding_energy": [...],
+      "intensity": [...],
+      "metadata": {...}
+    },
+    "O 1s": {...}
+  }
+}
+```
+
+**Notas:**
+- Arrays NumPy se convierten automáticamente a listas
+- Valores `NaN` e `Inf` se convierten a `null`
+- Usa `NumpyEncoder` personalizado para manejar tipos NumPy
+
+---
+
+### NumpyEncoder
+
+**Estado:** COMPLETADO - v0.8.0
+
+```python
+class NumpyEncoder(json.JSONEncoder)
+```
+
+Encoder JSON personalizado para manejar tipos NumPy.
+
+**Convierte:**
+- `np.ndarray` → `list` (con NaN/Inf → null)
+- `np.integer` → `int`
+- `np.floating` → `float` (con NaN/Inf → null)
+- `np.bool_` → `bool`
+
+**Uso:**
+```python
+import json
+import numpy as np
+from xps_analyzer.export.exporters import NumpyEncoder
+
+data = {
+    "array": np.array([1.0, 2.0, np.nan, 4.0]),
+    "float": np.float64(3.14),
+    "int": np.int32(42)
+}
+
+with open("output.json", "w") as f:
+    json.dump(data, f, cls=NumpyEncoder)
+
+# Resultado:
+# {"array": [1.0, 2.0, null, 4.0], "float": 3.14, "int": 42}
 ```
 
 ---
