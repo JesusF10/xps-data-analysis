@@ -1,10 +1,12 @@
 # XPS Analyzer - Referencia de API
 
-**Versión:** 0.1.0  
-**Estado:** Fase 0 (35% completado)  
-**Última actualización:** Febrero 2026
+**Versión:** 0.7.0-beta  
+**Estado:** Fase 1 (75% completado) - Análisis Core Funcional  
+**Última actualización:** Marzo 2026
 
 Esta es la referencia completa de la API pública de XPS Analyzer. Incluye todas las funciones, clases y métodos disponibles para usuarios finales.
+
+**ACTUALIZACIÓN v0.7.0**: Agregado módulo completo de análisis (background, peak_fitting, quantification)
 
 ---
 
@@ -1311,3 +1313,429 @@ xps-analyzer calibrate data/raw/muestra1.txt --element C --output calibrated.txt
 **Última actualización:** Febrero 2026  
 **Próxima revisión:** Después de completar Fase 1  
 **Mantenedor:** Jesus Flores Lacarra (jss.263.fsc@gmail.com)
+
+---
+
+## ACTUALIZACIÓN FASE 1 - Módulo de Análisis Completo
+
+### Namespace: `xps_analyzer.analysis`
+
+**Estado:** COMPLETADO - v0.7.0-beta (75% Fase 1)
+
+API completa implementada:
+```python
+from xps_analyzer.analysis import (
+    # Sustracción de fondo
+    shirley_background,
+    tougaard_background,
+    linear_background,
+    # Ajuste de picos
+    fit_gaussian,
+    fit_lorentzian,
+    fit_voigt,
+    fit_multiple_peaks,
+    estimate_peak_positions,
+    # Cuantificación
+    load_sensitivity_factors,
+    calculate_atomic_concentration,
+    normalize_to_100,
+    quantify_dataset,
+    # Dataclasses
+    PeakParameters,
+    FitResult
+)
+```
+
+---
+
+### shirley_background
+
+**Estado:** COMPLETADO - v0.5.5-beta
+
+```python
+def shirley_background(
+    spectrum: XPSSpectrum,
+    tol: float = 1e-5,
+    max_iter: int = 100,
+    inplace: bool = False
+) -> XPSSpectrum
+```
+
+Calcula y sustrae fondo Shirley (método iterativo estándar en XPS).
+
+**Parámetros:**
+- `spectrum` : `XPSSpectrum`  
+  Espectro a procesar
+- `tol` : `float`, default `1e-5`  
+  Tolerancia para convergencia
+- `max_iter` : `int`, default `100`  
+  Máximo de iteraciones
+- `inplace` : `bool`, default `False`  
+  Si `True`, modifica el espectro original
+
+**Retorna:**
+- `XPSSpectrum`  
+  Espectro con fondo sustraído
+
+**Ejemplo:**
+```python
+from xps_analyzer.analysis import shirley_background
+
+# Crear copia sin fondo
+c1s_nobg = shirley_background(c1s_spectrum, inplace=False)
+
+# Ver metadata del proceso
+print(c1s_nobg.metadata['background_method'])  # 'shirley'
+print(c1s_nobg.metadata['background_iterations'])  # 12
+```
+
+**Referencia:** Shirley, D.A. (1972), Phys Rev B, 5(12), 4709-4714
+
+---
+
+### tougaard_background
+
+**Estado:** COMPLETADO - v0.5.5-beta
+
+```python
+def tougaard_background(
+    spectrum: XPSSpectrum,
+    B: float = 2866.0,
+    C: float = 1643.0,
+    D: float = 1.0,
+    inplace: bool = False
+) -> XPSSpectrum
+```
+
+Calcula fondo Tougaard (modelo de dispersión inelástica).
+
+**Parámetros:**
+- `spectrum` : `XPSSpectrum`  
+  Espectro a procesar
+- `B`, `C`, `D` : `float`  
+  Parámetros del modelo. Defaults para materiales orgánicos.
+  Para metales usar: B=1600, C=400
+- `inplace` : `bool`, default `False`
+
+**Retorna:**
+- `XPSSpectrum`  
+  Espectro con fondo sustraído
+
+**Ejemplo:**
+```python
+from xps_analyzer.analysis import tougaard_background
+
+# Materiales orgánicos (default)
+organic_nobg = tougaard_background(spectrum)
+
+# Metales
+metal_nobg = tougaard_background(spectrum, B=1600, C=400)
+```
+
+**Referencia:** Tougaard, S. (1997), Surf Interface Anal, 25(3), 137-154
+
+---
+
+### fit_gaussian
+
+**Estado:** COMPLETADO - v0.6.0-beta
+
+```python
+def fit_gaussian(
+    spectrum: XPSSpectrum,
+    position: float | None = None,
+    amplitude: float | None = None,
+    width: float | None = None,
+    bounds: dict | None = None
+) -> FitResult
+```
+
+Ajusta pico gaussiano: A * exp(-(x-x0)²/(2σ²))
+
+**Parámetros:**
+- `spectrum` : `XPSSpectrum`  
+  Espectro a ajustar
+- `position`, `amplitude`, `width` : `float | None`  
+  Parámetros iniciales. Si `None`, estimación automática.
+- `bounds` : `dict | None`  
+  Bounds para optimización: `{'position': (min, max), ...}`
+
+**Retorna:**
+- `FitResult`  
+  Resultado con picos ajustados, R², residuales
+
+**Ejemplo:**
+```python
+from xps_analyzer.analysis import fit_gaussian
+
+result = fit_gaussian(c1s_spectrum, position=284.8)
+print(f"R² = {result.r_squared:.4f}")
+print(f"Área = {result.peaks[0].area:.2f}")
+```
+
+---
+
+### fit_voigt
+
+**Estado:** COMPLETADO - v0.6.0-beta
+
+```python
+def fit_voigt(
+    spectrum: XPSSpectrum,
+    position: float | None = None,
+    amplitude: float | None = None,
+    sigma: float | None = None,
+    gamma: float | None = None,
+    bounds: dict | None = None
+) -> FitResult
+```
+
+Ajusta perfil Voigt (convolución gaussiano-lorentziano). Más realista para XPS.
+
+**Parámetros:**
+- `sigma` : `float | None`  
+  Ancho gaussiano (ensanchamiento instrumental)
+- `gamma` : `float | None`  
+  Ancho lorentziano (tiempo de vida del estado)
+
+**Ejemplo:**
+```python
+from xps_analyzer.analysis import fit_voigt
+
+result = fit_voigt(
+    c1s_spectrum,
+    position=284.8,
+    sigma=0.6,  # Instrumental
+    gamma=0.3   # Natural
+)
+```
+
+**Referencia:** Thompson et al. (1987), J. Appl. Cryst. 20, 79-83
+
+---
+
+### fit_multiple_peaks
+
+**Estado:** COMPLETADO - v0.6.0-beta
+
+```python
+def fit_multiple_peaks(
+    spectrum: XPSSpectrum,
+    n_peaks: int,
+    peak_shape: Literal["gaussian", "lorentzian", "voigt"] = "voigt",
+    initial_positions: list[float] | None = None
+) -> FitResult
+```
+
+Ajusta múltiples picos simultáneamente.
+
+**Parámetros:**
+- `n_peaks` : `int`  
+  Número de picos a ajustar
+- `peak_shape` : `str`  
+  Forma de pico para todos
+- `initial_positions` : `list[float] | None`  
+  Posiciones iniciales. Si `None`, usa estimación automática.
+
+**Retorna:**
+- `FitResult`  
+  Resultado con lista de picos en `result.peaks`
+
+**Ejemplo:**
+```python
+from xps_analyzer.analysis import fit_multiple_peaks
+
+# C 1s con 3 componentes
+result = fit_multiple_peaks(
+    c1s_spectrum,
+    n_peaks=3,
+    peak_shape="voigt",
+    initial_positions=[284.8, 286.2, 288.5]  # C-C, C-O, C=O
+)
+
+for i, peak in enumerate(result.peaks):
+    print(f"Pico {i+1}: {peak.position:.2f} eV, Área: {peak.area:.2f}")
+```
+
+---
+
+### PeakParameters
+
+**Estado:** COMPLETADO - v0.6.0-beta
+
+```python
+@dataclass
+class PeakParameters:
+    position: float            # Binding energy (eV)
+    amplitude: float           # Intensidad máxima
+    width: float               # FWHM (eV)
+    area: float                # Área integrada
+    shape: Literal["gaussian", "lorentzian", "voigt"]
+    gamma: float | None = None              # Para Voigt
+    position_error: float | None = None     # Error estándar
+    amplitude_error: float | None = None
+    width_error: float | None = None
+```
+
+Parámetros de un pico ajustado individual.
+
+---
+
+### FitResult
+
+**Estado:** COMPLETADO - v0.6.0-beta
+
+```python
+@dataclass
+class FitResult:
+    peaks: list[PeakParameters]  # Lista de picos ajustados
+    fitted_spectrum: np.ndarray  # Espectro ajustado completo
+    residual: np.ndarray         # Datos - ajuste
+    r_squared: float             # Bondad de ajuste
+    chi_squared: float           # Chi-cuadrado reducido
+    success: bool                # Si convergió
+    message: str                 # Mensaje descriptivo
+```
+
+Resultado completo de ajuste de pico(s).
+
+---
+
+### load_sensitivity_factors
+
+**Estado:** COMPLETADO - v0.7.0-beta
+
+```python
+def load_sensitivity_factors(
+    source: Literal["scofield", "wagner"] = "scofield",
+    xray_source: Literal["al_ka", "mg_ka"] = "al_ka"
+) -> dict[str, float]
+```
+
+Carga factores de sensibilidad relativa (RSF) para cuantificación XPS.
+
+**Parámetros:**
+- `source` : `"scofield"` o `"wagner"`  
+  Fuente de factores. Scofield (teórico), Wagner (empírico).
+- `xray_source` : `"al_ka"` o `"mg_ka"`  
+  Fuente de rayos X del instrumento
+
+**Retorna:**
+- `dict[str, float]`  
+  Factores RSF por línea: `{"C 1s": 0.296, "O 1s": 0.711, ...}`
+
+**Ejemplo:**
+```python
+from xps_analyzer.analysis import load_sensitivity_factors
+
+# Scofield para Al Kα (más común)
+rsf = load_sensitivity_factors()
+
+# Wagner empírico
+rsf_wagner = load_sensitivity_factors(source="wagner")
+
+# Mg Kα
+rsf_mg = load_sensitivity_factors(xray_source="mg_ka")
+```
+
+**Elementos soportados:** C, N, O, F, Na, Mg, Al, Si, P, S, Cl, K, Ca, Ti, Cr, Mn, Fe, Co, Ni, Cu, Zn, Ag, Au (23 elementos)
+
+**Referencias:**
+- Scofield, J.H. (1976) LLNL Report UCRL-51326
+- Wagner, C.D. et al. (1981) Surf. Interface Anal. 3(5), 211-225
+
+---
+
+### calculate_atomic_concentration
+
+**Estado:** COMPLETADO - v0.7.0-beta
+
+```python
+def calculate_atomic_concentration(
+    peaks: list[PeakParameters],
+    sensitivity_factors: dict[str, float],
+    element_names: list[str],
+    normalize: bool = True
+) -> dict[str, float]
+```
+
+Calcula concentraciones atómicas usando fórmula estándar XPS:  
+**C_i = (A_i / S_i) / Σ(A_j / S_j) × 100%**
+
+**Parámetros:**
+- `peaks` : `list[PeakParameters]`  
+  Picos ajustados con áreas
+- `sensitivity_factors` : `dict[str, float]`  
+  Factores RSF (de `load_sensitivity_factors()`)
+- `element_names` : `list[str]`  
+  Nombres de elementos: `["C 1s", "O 1s", ...]`
+- `normalize` : `bool`, default `True`  
+  Normalizar a 100%
+
+**Retorna:**
+- `dict[str, float]`  
+  Concentraciones atómicas en %: `{"C 1s": 75.02, "O 1s": 24.98}`
+
+**Lanza:**
+- `ValueError` - Si áreas negativas, RSF faltantes, o longitudes no coinciden
+
+**Ejemplo completo:**
+```python
+from xps_analyzer.analysis import (
+    shirley_background,
+    fit_gaussian,
+    load_sensitivity_factors,
+    calculate_atomic_concentration
+)
+
+# 1. Sustracción de fondo
+c1s_nobg = shirley_background(c1s_spectrum, inplace=False)
+o1s_nobg = shirley_background(o1s_spectrum, inplace=False)
+
+# 2. Ajuste de picos
+c_fit = fit_gaussian(c1s_nobg, position=284.8)
+o_fit = fit_gaussian(o1s_nobg, position=531.0)
+
+# 3. Cargar RSF
+rsf = load_sensitivity_factors()
+
+# 4. Cuantificar
+concentrations = calculate_atomic_concentration(
+    peaks=[c_fit.peaks[0], o_fit.peaks[0]],
+    sensitivity_factors=rsf,
+    element_names=["C 1s", "O 1s"]
+)
+
+print(concentrations)
+# {'C 1s': 75.02, 'O 1s': 24.98}
+```
+
+---
+
+### normalize_to_100
+
+**Estado:** COMPLETADO - v0.7.0-beta
+
+```python
+def normalize_to_100(
+    concentrations: dict[str, float]
+) -> dict[str, float]
+```
+
+Normaliza concentraciones para suma exacta 100%.
+
+**Parámetros:**
+- `concentrations` : `dict[str, float]`  
+  Concentraciones que pueden no sumar 100%
+
+**Retorna:**
+- `dict[str, float]`  
+  Concentraciones normalizadas
+
+**Ejemplo:**
+```python
+conc = {"C 1s": 65.1, "O 1s": 34.2}  # Suma = 99.3%
+normalized = normalize_to_100(conc)
+# {'C 1s': 65.57, 'O 1s': 34.43}  # Suma = 100.0%
+```
+

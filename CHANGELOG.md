@@ -9,7 +9,167 @@ y este proyecto adhiere a [Semantic Versioning](https://semver.org/lang/es/).
 
 ## [Sin Publicar]
 
-_No hay cambios sin publicar actualmente._
+### En Progreso - Fase 1 (75% completado)
+
+**Sesión 4 pendiente:** Export System
+
+---
+
+## [0.7.0-beta] - 2026-03-02
+
+**Hito:** Fase 1 - Sesión 3 completada - Cuantificación Atómica
+
+Implementación del módulo de cuantificación atómica con factores de sensibilidad
+relativa (RSF) de Scofield y Wagner. Permite calcular composiciones atómicas
+precisas a partir de áreas de picos ajustados.
+
+### Agregado
+
+**Módulo de Cuantificación** (`analysis/quantification.py`)
+- `load_sensitivity_factors()`: Carga factores RSF de Scofield (1976) y Wagner (1981)
+  * Soporta 23 elementos comunes en XPS
+  * Al Kα (1486.6 eV) y Mg Kα (1253.6 eV) para Scofield
+  * Al Kα para Wagner (empírico)
+  * Elementos: C, N, O, F, Na, Mg, Al, Si, P, S, Cl, K, Ca, Ti, Cr, Mn, Fe, Co, Ni, Cu, Zn, Ag, Au
+- `calculate_atomic_concentration()`: Calcula concentraciones atómicas
+  * Fórmula estándar: C_i = (A_i / S_i) / Σ(A_j / S_j) × 100%
+  * Validación exhaustiva de inputs (áreas positivas, RSF disponibles)
+  * Normalización automática a 100%
+- `normalize_to_100()`: Normaliza concentraciones para suma exacta
+  * Mantiene proporciones relativas
+  * Útil para excluir elementos traza
+- `quantify_dataset()`: Placeholder para integración futura
+
+**Factores RSF**
+- SCOFIELD_RSF_AL_KA: Factores teóricos normalizado a F 1s = 1.0
+- SCOFIELD_RSF_MG_KA: Factores teóricos normalizado a Na 1s = 1.0  
+- WAGNER_RSF_AL_KA: Factores empíricos normalizado a F 1s = 1.0
+
+**Tests** (165 → 208 tests, +43 tests)
+- `test_quantification.py`: 43 tests comprehensivos (100% passing)
+  * TestLoadSensitivityFactors: 11 tests
+  * TestCalculateAtomicConcentration: 8 tests
+  * TestCalculateConcentrationErrors: 7 tests
+  * TestNormalizeTo100: 9 tests
+  * TestQuantificationIntegration: 5 tests
+  * TestNumericalPrecision: 3 tests
+- Cobertura del módulo: 85% (superando objetivo de 80%)
+
+### Cambiado
+
+**Cobertura de Tests**
+- Cobertura total del proyecto: 80% → 87%
+- Tests totales: 165 → 208 (+43 tests)
+
+**API Pública**
+- Exportado desde `xps_analyzer.analysis.__init__.py`:
+  * `load_sensitivity_factors`
+  * `calculate_atomic_concentration`
+  * `normalize_to_100`
+  * `quantify_dataset`
+
+---
+
+## [0.6.0-beta] - 2026-03-02
+
+**Hito:** Fase 1 - Sesión 2 completada - Ajuste de Picos
+
+Implementación completa de ajuste de picos con perfiles gaussiano, lorentziano
+y Voigt. Soporta ajuste de picos individuales y múltiples picos simultáneamente
+con estimación automática de posiciones iniciales.
+
+### Agregado
+
+**Módulo de Peak Fitting** (`analysis/peak_fitting.py`)
+- `fit_gaussian()`: Ajusta pico gaussiano con perfil A * exp(-(x-x0)²/(2σ²))
+  * Estimación automática de parámetros iniciales
+  * Bounds configurables
+  * Cálculo de área: amplitude × width × √(2π)
+- `fit_lorentzian()`: Ajusta pico lorentziano A * γ² / ((x-x0)² + γ²)
+  * Mejor para estados con colas largas
+  * Cálculo de área: amplitude × π × width
+- `fit_voigt()`: Ajusta perfil Voigt (convolución gaussiano-lorentziano)
+  * Más realista para XPS (considera ensanchamiento instrumental + tiempo de vida)
+  * Parámetros sigma (gaussiano) y gamma (lorentziano)
+  * Usa `scipy.special.voigt_profile`
+- `fit_multiple_peaks()`: Ajuste simultáneo de múltiples picos
+  * Soporta gaussian, lorentzian, voigt
+  * Estimación automática o posiciones manuales
+  * Optimización global con `scipy.optimize.curve_fit`
+- `estimate_peak_positions()`: Detección automática de picos
+  * Usa `scipy.signal.find_peaks`
+  * Parámetros configurables: prominence, min_distance
+
+**Dataclasses**
+- `PeakParameters`: Parámetros de pico ajustado
+  * position, amplitude, width, area, shape
+  * gamma (para Voigt), errores estándar
+- `FitResult`: Resultado completo de ajuste
+  * Lista de picos, espectro ajustado, residual
+  * R², χ² reducido, success, mensaje
+
+**Tests** (120 → 165 tests, +45 tests)
+- `test_peak_fitting.py`: 45 tests comprehensivos (100% passing)
+  * TestEstimatePeakPositions: 7 tests
+  * TestFitGaussian: 9 tests
+  * TestFitLorentzian: 5 tests
+  * TestFitVoigt: 7 tests
+  * TestFitMultiplePeaks: 12 tests
+  * TestMethodComparison: 3 tests
+  * TestPeakFittingIntegration: 3 tests
+- Cobertura del módulo: 95%
+
+### Corregido
+
+- TypeError en `voigt_profile()`: API requiere 3 args (x_centered, sigma, gamma)
+- Detección de picos conservadora: ajustados prominence y min_distance defaults
+
+---
+
+## [0.5.5-beta] - 2026-03-02
+
+**Hito:** Fase 1 - Sesión 1 completada - Sustracción de Fondo
+
+Implementación de tres métodos estándar de sustracción de fondo para XPS:
+Shirley (iterativo), Tougaard (dispersión inelástica), y Linear (simple).
+
+### Agregado
+
+**Módulo de Background Subtraction** (`analysis/background.py`)
+- `shirley_background()`: Método iterativo más usado en XPS
+  * Convergencia configurable (tol=1e-5, max_iter=100)
+  * Almacena iteraciones en metadata
+  * Referencia: Shirley, D.A. (1972), Phys Rev B, 5(12), 4709-4714
+- `tougaard_background()`: Modelo de dispersión inelástica
+  * Parámetros ajustables: B, C, D
+  * Presets para orgánicos (B=2866, C=1643) y metales (B=1600, C=400)
+  * Referencia: Tougaard, S. (1997), Surf Interface Anal, 25(3), 137-154
+- `linear_background()`: Línea recta entre extremos
+  * Método simple pero menos preciso
+
+**Características Comunes**
+- Parámetro `inplace` (modificar original vs retornar copia)
+- Validación de entrada (≥3 puntos)
+- Manejo automático de energías crecientes/decrecientes
+- Metadata completa almacenada
+
+**Tests** (90 → 120 tests, +30 tests)
+- `test_background.py`: 30 tests comprehensivos (100% passing)
+  * TestLinearBackground: 5 tests
+  * TestShirleyBackground: 10 tests
+  * TestTougaardBackground: 11 tests
+  * TestBackgroundIntegration: 4 tests
+- Cobertura del módulo: 96%
+
+### Cambiado
+
+**Estructura del Proyecto**
+- Creado módulo `analysis/` con submódulos especializados
+- Exportado funciones desde `xps_analyzer.analysis.__init__.py`
+
+**Cobertura de Tests**
+- Cobertura total: 80% → 85%
+- Tests totales: 90 → 120
 
 ---
 

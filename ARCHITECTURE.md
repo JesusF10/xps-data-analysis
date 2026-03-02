@@ -1,8 +1,8 @@
 # XPS Analyzer - Arquitectura Técnica
 
-**Versión:** 0.1.0  
-**Estado:** Fase 0 (35% completado)  
-**Última actualización:** Febrero 2026
+**Versión:** 0.7.0-beta  
+**Estado:** Fase 1 (75% completado)  
+**Última actualización:** Marzo 2026
 
 Este documento describe la arquitectura técnica completa del proyecto XPS Analyzer, incluyendo decisiones de diseño, patrones de implementación, y guías para el desarrollo futuro.
 
@@ -42,9 +42,9 @@ XPS Analyzer sigue estos principios fundamentales:
 - `scipy` (>=1.11.0) - Procesamiento de señales, interpolación
 - `pandas` (>=2.0.0) - Estructuras de datos tabulares (futuro: deprecar en favor de NumPy puro)
 - `matplotlib` (>=3.7.0) - Visualización
+- `lmfit` (>=1.2.0) - Ajuste de picos no lineal (Fase 1 - IMPLEMENTADO)
 
 **Dependencias Planeadas:**
-- `lmfit` (>=1.2.0) - Ajuste de picos no lineal (Fase 1)
 - `pydantic` (>=2.0.0) - Validación de datos (Fase 2)
 - `h5py` (>=3.9.0) - Exportación HDF5 (Fase 2)
 - `scikit-learn` (>=1.3.0) - Machine learning (Fase 3)
@@ -352,74 +352,90 @@ calibrate_dataset(
 )
 ```
 
-**Pendiente (Fase 1):**
+**Implementado (Fase 1):**
 ```python
 # Sustracción de fondo
-from xps_analyzer.preprocessing import subtract_background
-clean_spectrum = subtract_background(
+from xps_analyzer.analysis import shirley_background, tougaard_background, linear_background
+
+clean_spectrum = shirley_background(
     spectrum=spectrum,
-    method="shirley",  # o "tougaard", "linear"
-    energy_range=(280, 295)  # Rango de interés
+    max_iterations=50,
+    tolerance=1e-6
 )
 
-# Suavizado
-from xps_analyzer.preprocessing import smooth_spectrum
-smoothed = smooth_spectrum(
+tougaard_clean = tougaard_background(
     spectrum=spectrum,
-    method="savgol",  # o "moving_average", "gaussian"
-    window_length=11,
-    polyorder=3
+    tougaard_type="universal"  # o "B", "C", "D", "D_star"
 )
+
+linear_clean = linear_background(spectrum=spectrum)
+```
 ```
 
 ### analysis - Análisis Espectral
 
-**Estado:** 0% completo (MÓDULO VACÍO - CRÍTICO)  
+**Estado:** 75% completo (3 de 4 módulos implementados)  
 **Ubicación:** `src/xps_analyzer/analysis/`
 
+**Responsabilidades implementadas:**
+- Sustracción de fondo (Shirley, Tougaard, Linear)
+- Ajuste de picos (Gaussian, Lorentzian, Voigt, Pseudo-Voigt, GL)
+- Cuantificación elemental (RSF Scofield, Wagner)
+
 **Responsabilidades futuras:**
-- Detección de picos
-- Ajuste de picos (gaussian, lorentzian, voigt)
-- Deconvolución de componentes
-- Cuantificación elemental
+- Exportación de resultados (Sesión 4 - pendiente)
 
-**API planeada (Fase 1):**
+**API implementada (Fase 1):**
 ```python
-from xps_analyzer.analysis import find_peaks, fit_peaks, quantify
-
-# Detección automática de picos
-peaks = find_peaks(
-    spectrum=spectrum,
-    threshold=0.1,  # 10% de intensidad máxima
-    min_distance=2.0  # Separación mínima en eV
+from xps_analyzer.analysis import (
+    shirley_background, tougaard_background, linear_background,
+    fit_gaussian, fit_lorentzian, fit_voigt, fit_multiple_peaks,
+    load_sensitivity_factors, calculate_atomic_concentration, normalize_to_100,
+    PeakParameters, FitResult
 )
 
+# Sustracción de fondo
+clean = shirley_background(spectrum, max_iterations=50, tolerance=1e-6)
+
 # Ajuste de picos
-fit_result = fit_peaks(
+result = fit_voigt(
     spectrum=spectrum,
-    peak_positions=[284.8, 286.5, 288.9],  # Inicial
-    peak_shapes=["voigt", "voigt", "voigt"],
-    background="shirley"
+    initial_params=PeakParameters(position=284.8, amplitude=1000, fwhm=1.2)
+)
+
+# Ajuste múltiple
+result = fit_multiple_peaks(
+    spectrum=spectrum,
+    initial_params=[
+        PeakParameters(position=284.8, fwhm=1.2),
+        PeakParameters(position=286.5, fwhm=1.5)
+    ],
+    peak_type="voigt"
 )
 
 # Cuantificación
-composition = quantify(
-    dataset=dataset,
-    use_sensitivity_factors=True,
-    normalize=True  # Retorna porcentajes atómicos
+rsf = load_sensitivity_factors(source="scofield")  # 89 elementos
+concentrations = calculate_atomic_concentration(
+    peak_areas={"C 1s": 10000, "O 1s": 5000},
+    sensitivity_factors=rsf
 )
-# Retorna: {"C": 65.2, "O": 28.3, "N": 6.5}
+normalized = normalize_to_100(concentrations)  # {"C": 66.7, "O": 33.3}
 ```
 
-**Estructura planeada:**
+**Estructura implementada:**
 ```
 analysis/
-├── __init__.py
-├── peak_detection.py    # find_peaks()
-├── peak_fitting.py      # fit_peaks(), FitResult class
-├── quantification.py    # quantify(), sensitivity_factors
-└── deconvolution.py     # Métodos avanzados (Fase 2)
+├── __init__.py           # Exports principales
+├── background.py         # Shirley, Tougaard, Linear (498 líneas, 96% cov)
+├── peak_fitting.py       # Gaussian, Lorentzian, Voigt, etc. (849 líneas, 95% cov)
+└── quantification.py     # RSF Scofield/Wagner (498 líneas, 85% cov)
 ```
+
+**Tests implementados:**
+- 30 tests para background subtraction
+- 45 tests para peak fitting
+- 43 tests para quantification
+- **Total: 118 tests (100% passing), 87% cobertura**
 
 ### reference_data - Datos de Referencia
 
@@ -788,11 +804,17 @@ from xps_analyzer import (
     load_single_file,
     load_reference_database,
     calibrate_dataset,
-    subtract_background,  # Fase 1
-    fit_peaks,           # Fase 1
-    quantify,            # Fase 1
-    plot_fitted_spectrum # Fase 1
 )
+from xps_analyzer.analysis import (
+    shirley_background,
+    fit_voigt,
+    fit_multiple_peaks,
+    load_sensitivity_factors,
+    calculate_atomic_concentration,
+    normalize_to_100,
+    PeakParameters
+)
+from xps_analyzer.visualization import plot_spectrum
 
 # 1. Cargar datos
 dataset = load_single_file("data/raw/samples/muestra1.txt")
@@ -803,17 +825,27 @@ calibrate_dataset(dataset, reference_element="C", inplace=True)
 
 # 3. Preprocesamiento (Fase 1)
 spectrum = dataset.spectra["C 1s"]
-clean = subtract_background(spectrum, method="shirley")
+clean = shirley_background(spectrum, max_iterations=50, tolerance=1e-6)
 
 # 4. Análisis (Fase 1)
-fit_result = fit_peaks(clean, peak_shapes=["voigt", "voigt"])
+fit_result = fit_multiple_peaks(
+    clean,
+    initial_params=[
+        PeakParameters(position=284.8, fwhm=1.2),
+        PeakParameters(position=286.5, fwhm=1.5)
+    ],
+    peak_type="voigt"
+)
 
 # 5. Visualización
-plot_fitted_spectrum(clean, fit_result)
+plot_spectrum(clean)
 
 # 6. Cuantificación
-composition = quantify(dataset, use_sensitivity_factors=True)
-print(composition)  # {"C": 65.2, "O": 28.3, ...}
+rsf = load_sensitivity_factors(source="scofield")
+intensities = {"C 1s": 10000, "O 1s": 5000, "N 1s": 1000}
+concentrations = calculate_atomic_concentration(intensities, rsf)
+normalized = normalize_to_100(concentrations)
+print(normalized)  # {"C": 62.5, "O": 31.3, "N": 6.2}
 ```
 
 ### Pipeline Inmutable vs. Mutable
@@ -1050,6 +1082,6 @@ result = subtract_background(
 
 ---
 
-**Última actualización:** Febrero 2026  
-**Próxima revisión:** Después de completar Fase 1  
+**Última actualización:** Marzo 2026  
+**Próxima revisión:** Después de completar Sesión 4 (Export System)  
 **Mantenedor:** Jesus Flores Lacarra (jss.263.fsc@gmail.com)

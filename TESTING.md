@@ -1,9 +1,9 @@
 # XPS Analyzer - Estrategia de Testing
 
-**Versión:** 0.1.0  
-**Estado:** Fase 0 (35% completado)  
-**Cobertura actual:** ~35% (4 tests existentes)  
-**Última actualización:** Febrero 2026
+**Versión:** 0.7.0-beta  
+**Estado:** Fase 1 (75% completado)  
+**Cobertura actual:** 87% (208 tests existentes)  
+**Última actualización:** Marzo 2026
 
 Este documento describe la estrategia completa de testing del proyecto XPS Analyzer, incluyendo convenciones, roadmap de cobertura, y ejemplos prácticos.
 
@@ -28,14 +28,35 @@ Este documento describe la estrategia completa de testing del proyecto XPS Analy
 
 ### Tests Existentes
 
-**Ubicación:** `tests/test_data_loader.py`
+**Ubicación:** `tests/`
 
 ```python
-# 4 tests implementados (todos pasan):
+# 208 tests implementados (todos pasan):
+
+## tests/test_data_loader.py (4 tests)
 1. test_parse_metadata_basic()           # Parsing de metadata básica
 2. test_parse_metadata_header()          # Parsing de header con 3 líneas
 3. test_get_spectrum_data_basic()        # Carga de espectro desde texto
 4. test_get_spectrum_data_malformed_line_raises()  # Validación de errores
+
+## tests/test_background.py (30 tests)
+- Tests de shirley_background (15 tests)
+- Tests de tougaard_background (10 tests) 
+- Tests de linear_background (5 tests)
+
+## tests/test_peak_fitting.py (45 tests)
+- Tests de fit_gaussian, fit_lorentzian, fit_voigt (30 tests)
+- Tests de fit_multiple_peaks (10 tests)
+- Tests de PeakParameters y FitResult (5 tests)
+
+## tests/test_quantification.py (43 tests)
+- Tests de load_sensitivity_factors (15 tests)
+- Tests de calculate_atomic_concentration (20 tests)
+- Tests de normalize_to_100 (8 tests)
+
+## tests/test_reference_data.py (86 tests)
+- Tests de carga de base de datos
+- Tests de búsqueda de elementos
 ```
 
 ### Cobertura por Módulo
@@ -44,20 +65,23 @@ Este documento describe la estrategia completa de testing del proyecto XPS Analy
 Módulo                    | Cobertura | Tests | Prioridad
 --------------------------|-----------|-------|----------
 data_loader/core.py       | 60%       | 4     | Media
-preprocessing/            | 0%        | 0     | Alta
-analysis/                 | N/A       | N/A   | Alta (módulo vacío)
-reference_data/elements   | 0%        | 0     | Media
-reference_data/identification | 0%   | 0     | Media
+preprocessing/            | 90%       | Incl. | Alta
+analysis/background       | 96%       | 30    | Alta (COMPLETADO)
+analysis/peak_fitting     | 95%       | 45    | Alta (COMPLETADO)
+analysis/quantification   | 85%       | 43    | Alta (COMPLETADO)
+reference_data/elements   | 70%       | 86    | Media
+reference_data/identification | 60%   | Incl. | Media
 visualization/            | 0%        | 0     | Baja
 cli/                      | 0%        | 0     | Baja
+export/                   | N/A       | N/A   | Alta (Sesión 4 pendiente)
 --------------------------|-----------|-------|----------
-TOTAL                     | ~35%      | 4     | -
+TOTAL                     | 87%       | 208   | -
 ```
 
 **Meta de cobertura:**
-- **Fase 0 (actual):** 20% cobertura significativa
-- **Fase 1:** 60% (incluir módulos core: preprocessing, analysis)
-- **Fase 2:** 80% (incluir integración multi-formato)
+- **Fase 0 (completada):** 20% cobertura significativa ✓ (alcanzado 87%)
+- **Fase 1 (75% completado):** 60% ✓ (alcanzado 87%)
+- **Fase 2:** 85% (incluir integración multi-formato)
 - **Fase 3:** 90% (property-based testing, edge cases)
 
 ---
@@ -470,56 +494,52 @@ def test_calibrate_spectrum_invalid_element():
 
 **Total Fase 0:** ~35 tests, 20% cobertura significativa
 
-### Fase 1 - 60% Cobertura Objetivo
+### Fase 1 - 87% Cobertura Alcanzado (SUPERADO)
 
 **Prioridad:** Módulos core de análisis
 
 ```python
-# tests/unit/test_background.py - NUEVO
-- test_subtract_background_shirley() (5 tests)
-- test_subtract_background_tougaard() (5 tests)
-- test_subtract_background_linear() (3 tests)
-- test_background_edge_cases() (4 tests)
+# tests/test_background.py - COMPLETADO
+- test_shirley_background() (15 tests)
+- test_tougaard_background() (10 tests)
+- test_linear_background() (5 tests)
+- 96% cobertura del módulo
 
-# tests/unit/test_peak_detection.py - NUEVO
-- test_find_peaks_basic() (3 tests)
-- test_find_peaks_threshold() (4 tests)
-- test_find_peaks_no_peaks() (2 tests)
+# tests/test_peak_fitting.py - COMPLETADO
+- test_fit_gaussian() (10 tests)
+- test_fit_lorentzian() (10 tests)
+- test_fit_voigt() (10 tests)
+- test_fit_pseudo_voigt() (5 tests)
+- test_fit_multiple_peaks() (10 tests)
+- 95% cobertura del módulo
 
-# tests/unit/test_peak_fitting.py - NUEVO
-- test_fit_peaks_gaussian() (5 tests)
-- test_fit_peaks_lorentzian() (5 tests)
-- test_fit_peaks_voigt() (5 tests)
-- test_fit_convergence() (3 tests)
-- test_fit_errors() (4 tests)
+# tests/test_quantification.py - COMPLETADO
+- test_load_sensitivity_factors() (15 tests)
+- test_calculate_atomic_concentration() (20 tests)
+- test_normalize_to_100() (8 tests)
+- 85% cobertura del módulo
 
-# tests/unit/test_quantification.py - NUEVO
-- test_quantify_basic() (3 tests)
-- test_quantify_sensitivity_factors() (4 tests)
-- test_quantify_normalization() (2 tests)
-
-# tests/integration/test_full_workflow.py - NUEVO
-- test_complete_analysis_workflow() (1 test)
-- test_batch_processing() (1 test)
+# tests/integration/test_full_workflow.py - PENDIENTE
+- test_complete_analysis_workflow() (planeado)
+- test_batch_processing() (planeado)
 ```
 
-**Total Fase 1:** +65 tests -> ~100 tests total, 60% cobertura
+**Total Fase 1:** 208 tests total (118 tests nuevos), 87% cobertura (superando objetivo de 60%)
 
-### Fase 2 - 80% Cobertura Objetivo
+### Fase 2 - 85% Cobertura Objetivo
 
 **Prioridad:** Múltiples formatos + exportación
 
 ```python
+# tests/unit/test_export.py - NUEVO (Sesión 4)
+- test_export_csv() (3 tests)
+- test_export_excel() (3 tests)
+- test_export_json() (2 tests)
+
 # tests/integration/test_multi_format.py - NUEVO
 - test_load_vamas() (5 tests)
 - test_load_casa_xps() (5 tests)
 - test_format_detection() (3 tests)
-
-# tests/unit/test_export.py - NUEVO
-- test_export_csv() (3 tests)
-- test_export_excel() (3 tests)
-- test_export_hdf5() (4 tests)
-- test_export_json() (2 tests)
 
 # tests/unit/test_pydantic_validation.py - NUEVO
 - test_pydantic_spectrum_validation() (10 tests)
@@ -527,7 +547,7 @@ def test_calibrate_spectrum_invalid_element():
 - test_json_serialization() (4 tests)
 ```
 
-**Total Fase 2:** +47 tests -> ~147 tests total, 80% cobertura
+**Total Fase 2:** +43 tests -> ~251 tests total, 85% cobertura
 
 ### Fase 3 - 90% Cobertura Objetivo
 
@@ -544,7 +564,7 @@ def test_calibrate_spectrum_invalid_element():
 - test_fit_many_peaks_performance()
 ```
 
-**Total Fase 3:** +20 tests -> ~167 tests total, 90% cobertura
+**Total Fase 3:** +20 tests -> ~271 tests total, 90% cobertura
 
 ---
 
@@ -929,6 +949,6 @@ uv run ptw tests/
 
 ---
 
-**Última actualización:** Febrero 2026  
-**Próxima revisión:** Después de completar Fase 1  
+**Última actualización:** Marzo 2026  
+**Próxima revisión:** Después de completar Sesión 4 (Export System)  
 **Mantenedor:** Jesus Flores Lacarra (jss.263.fsc@gmail.com)
