@@ -204,15 +204,23 @@ def parse_metadata(lines: list | str, header: bool = False) -> dict[str, Any]:
                 metadata[key] = value
 
             elements = {}
-            elements_config = lines[1].split()
+            # Línea 2: elementos separados por tabs (ej: "Bi 4f\tNa 1s\t...")
+            # Línea 3: energías separadas por tabs (ej: "4767.5\t2226.25\t...")
+            elements_list = [e.strip() for e in lines[1].split("\t") if e.strip()]
+            energies_list = [e.strip() for e in lines[2].split("\t") if e.strip()]
 
-            for elem, orbital, energy in zip(
-                elements_config[::2],
-                elements_config[1::2],
-                lines[2].split(),
-                strict=True,
-            ):
-                elements[elem] = {"orbital": orbital, "mean_energy": energy}
+            for element_full, energy in zip(elements_list, energies_list, strict=True):
+                # Separar elemento y orbital (ej: "Bi 4f" -> "Bi", "4f")
+                parts = element_full.split()
+                if len(parts) == 2:
+                    elem, orbital = parts
+                    elements[elem] = {"orbital": orbital, "mean_energy": energy}
+                else:
+                    # Fallback si formato es diferente
+                    elements[element_full] = {
+                        "orbital": "unknown",
+                        "mean_energy": energy,
+                    }
             metadata["elements"] = elements
         except (IndexError, ValueError, KeyError) as e:
             raise ValueError(
@@ -335,7 +343,7 @@ def load_single_file(filepath: str | Path) -> XPSDataset:
     if isinstance(filepath, str):
         filepath = Path(filepath)
 
-    with open(filepath) as file:
+    with open(filepath, encoding="latin-1") as file:
         data = file.readlines()
         data = [line.strip() for line in data if line.strip()]
 
@@ -357,10 +365,9 @@ def load_single_file(filepath: str | Path) -> XPSDataset:
             while i < len(data):
                 if data[i].startswith("Element"):
                     region_lines = []
-                    while (
-                        i < len(data)
-                        and not data[i].startswith("Element")
-                        or len(region_lines) == 0
+                    # Recolectar todas las líneas hasta la siguiente región o EOF
+                    while i < len(data) and (
+                        not data[i].startswith("Element") or len(region_lines) == 0
                     ):
                         region_lines.append(data[i])
                         i += 1

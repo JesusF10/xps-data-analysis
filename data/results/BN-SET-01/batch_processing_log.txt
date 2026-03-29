@@ -1,0 +1,185 @@
+
+======================================================================
+🚀 FASE C: BATCH PROCESSING - XPS Analyzer v0.8.0-beta
+======================================================================
+
+Input:  data/raw/BN-SET-01
+Output: data/results/BN-SET-01
+
+Muestras a procesar: BN-BS-1, BN-BS-2, BN-BS-3, BN-BS-4
+
+======================================================================
+📊 ANALIZANDO: BN-BS-1
+======================================================================
+
+1️⃣  Cargando datos...
+Archivo multiplex detectado
+  ✓ 6 regiones: Bi 4f, Na 1s, O 1s, Sr 3d, Ti 2p, C 1s
+
+2️⃣  Calibrando energía...
+  ✓ Shift aplicado: -3.95 eV
+
+3️⃣  Analizando regiones...
+
+  📊 Bi 4f
+    ✓ Pico @ 158.87 eV (R²=0.607)
+
+  📊 Na 1s
+
+  📊 O 1s
+
+  📊 Sr 3d
+
+  📊 Ti 2p
+
+  📊 C 1s
+    ✓ Pico @ 283.38 eV (R²=0.696)
+
+4️⃣  Cuantificando composición...
+  ⚠️  RSF no disponible para: Bi 4f
+
+  Composición atómica (%):
+    C 1s        : 100.00%
+
+5️⃣  Exportando...
+  ✓ Resultados: analysis_results.json
+  ✓ Plots: 7 archivos
+
+======================================================================
+📊 ANALIZANDO: BN-BS-2
+======================================================================
+
+1️⃣  Cargando datos...
+Archivo multiplex detectado
+  ✓ 6 regiones: Bi 4f, C 1s, Na 1s, O 1s, Sr 3d, Ti 2p
+
+2️⃣  Calibrando energía...
+  ✓ Shift aplicado: -0.95 eV
+
+3️⃣  Analizando regiones...
+
+  📊 Bi 4f
+
+  📊 C 1s
+    ✓ Pico @ 285.54 eV (R²=0.856)
+
+  📊 Na 1s
+
+  📊 O 1s
+
+  📊 Sr 3d
+    ✓ Pico @ 161.38 eV (R²=0.751)
+
+  📊 Ti 2p
+
+4️⃣  Cuantificando composición...
+  ⚠️  RSF no disponible para: Sr 3d
+
+  Composición atómica (%):
+    C 1s        : 100.00%
+
+5️⃣  Exportando...
+  ✓ Resultados: analysis_results.json
+  ✓ Plots: 7 archivos
+
+======================================================================
+📊 ANALIZANDO: BN-BS-3
+======================================================================
+
+1️⃣  Cargando datos...
+Archivo multiplex detectado
+  ✓ 6 regiones: Bi 4f, C 1s, Na 1s, O 1s, Sr 3d, Ti 2p
+
+2️⃣  Calibrando energía...
+  ✓ Shift aplicado: -3.40 eV
+
+3️⃣  Analizando regiones...
+
+  📊 Bi 4f
+    ✓ Pico @ 158.93 eV (R²=0.632)
+
+  📊 C 1s
+
+  📊 Na 1s
+    ✓ Pico @ 1070.76 eV (R²=0.255)
+
+  📊 O 1s
+    ✓ Pico @ 529.22 eV (R²=0.820)
+
+  📊 Sr 3d
+    ✓ Pico @ 158.99 eV (R²=0.799)
+
+  📊 Ti 2p
+    ✓ Pico @ 457.66 eV (R²=0.407)
+
+4️⃣  Cuantificando composición...
+  ⚠️  RSF no disponible para: Bi 4f, Sr 3d
+
+  Composición atómica (%):
+    O 1s        :  50.80%
+    Ti 2p       :  43.06%
+    Na 1s       :   6.13%
+
+5️⃣  Exportando...
+  ✓ Resultados: analysis_results.json
+  ✓ Plots: 7 archivos
+
+======================================================================
+📊 ANALIZANDO: BN-BS-4
+======================================================================
+
+1️⃣  Cargando datos...
+Archivo multiplex detectado
+  ✓ 6 regiones: Bi 4f, C 1s, Na 1s, O 1s, Sr 3d, Ti 2p
+
+2️⃣  Calibrando energía...
+  ✓ Shift aplicado: -3.55 eV
+
+3️⃣  Analizando regiones...
+
+  📊 Bi 4f
+    ✓ Pico @ 158.53 eV (R²=0.619)
+
+  📊 C 1s
+    ✓ Pico @ 283.41 eV (R²=0.791)
+
+  📊 Na 1s
+
+  📊 O 1s
+
+  📊 Sr 3d
+    ✓ Pico @ 158.64 eV (R²=0.625)
+
+  📊 Ti 2p
+
+4️⃣  Cuantificando composición...
+  ⚠️  RSF no disponible para: Bi 4f, Sr 3d
+
+  Composición atómica (%):
+    C 1s        : 100.00%
+
+5️⃣  Exportando...
+  ✓ Resultados: analysis_results.json
+  ✓ Plots: 7 archivos
+
+======================================================================
+📊 GENERANDO RESUMEN CONSOLIDADO
+======================================================================
+
+📋 TABLA COMPARATIVA DE COMPOSICIONES
+======================================================================
+Elemento          BN-BS-1      BN-BS-2      BN-BS-3      BN-BS-4        Media       StdDev        CV(%)
+----------------------------------------------------------------------
+C 1s              100.00%      100.00%          N/A      100.00%      100.00%        0.00%         0.0%
+Na 1s                 N/A          N/A        6.13%          N/A        6.13%        0.00%         0.0%
+O 1s                  N/A          N/A       50.80%          N/A       50.80%        0.00%         0.0%
+Ti 2p                 N/A          N/A       43.06%          N/A       43.06%        0.00%         0.0%
+
+✓ Resumen guardado: data/results/BN-SET-01/batch_analysis_summary.json
+
+======================================================================
+✅ FASE C COMPLETADA
+======================================================================
+
+Muestras procesadas exitosamente: 4/4
+Resultados en: data/results/BN-SET-01
