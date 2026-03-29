@@ -1,0 +1,108 @@
+{
+  "dataset": "BN-SET-01",
+  "num_samples": 4,
+  "num_regions": 6,
+  "calibration": {
+    "shifts_eV": {
+      "BN-BS-1": -3.9499999999999886,
+      "BN-BS-2": -0.9499999999999886,
+      "BN-BS-3": -3.3999999999999773,
+      "BN-BS-4": -3.5500000000000114
+    },
+    "mean_shift_eV": -2.9624999999999915,
+    "std_shift_eV": 1.179181389778521,
+    "cv_percent": 39.803591216152725
+  },
+  "fitting_quality": {
+    "mean_r2": 0.6547427479343262,
+    "median_r2": 0.6638248254672319,
+    "std_r2": 0.169356289815427,
+    "min_r2": 0.2550848749396779,
+    "max_r2": 0.8564061829904608,
+    "num_successful_fits": 12,
+    "total_attempts": 24,
+    "success_rate_percent": 50.0
+  },
+  "snr_analysis": {
+    "Bi 4f": {
+      "mean": 66.61872820779256,
+      "std": 1.61326715356599,
+      "min": 64.36101042600393,
+      "max": 68.46757329389476
+    },
+    "C 1s": {
+      "mean": 114.90076977273256,
+      "std": 23.58562825947324,
+      "min": 79.63495112703995,
+      "max": 140.90184258721442
+    },
+    "Na 1s": {
+      "mean": 199.57459584184525,
+      "std": 24.54095229027431,
+      "min": 171.15716483603904,
+      "max": 236.8147713809278
+    },
+    "O 1s": {
+      "mean": 102.08411616361937,
+      "std": 16.625894181211926,
+      "min": 79.09467378033051,
+      "max": 122.97230258346713
+    },
+    "Sr 3d": {
+      "mean": 214.24221041923744,
+      "std": 59.93061045216606,
+      "min": 113.03958555110837,
+      "max": 269.40664010933625
+    },
+    "Ti 2p": {
+      "mean": 111.17127821102767,
+      "std": 9.695074335978365,
+      "min": 94.79191839797797,
+      "max": 120.09204528271988
+    }
+  },
+  "failure_analysis": {
+    "Bi 4f": {
+      "failed_samples": [
+        "BN-BS-2"
+      ],
+      "failure_rate_percent": 25.0
+    },
+    "C 1s": {
+      "failed_samples": [
+        "BN-BS-3"
+      ],
+      "failure_rate_percent": 25.0
+    },
+    "Na 1s": {
+      "failed_samples": [
+        "BN-BS-1",
+        "BN-BS-2",
+        "BN-BS-4"
+      ],
+      "failure_rate_percent": 75.0
+    },
+    "O 1s": {
+      "failed_samples": [
+        "BN-BS-1",
+        "BN-BS-2",
+        "BN-BS-4"
+      ],
+      "failure_rate_percent": 75.0
+    },
+    "Sr 3d": {
+      "failed_samples": [
+        "BN-BS-1"
+      ],
+      "failure_rate_percent": 25.0
+    },
+    "Ti 2p": {
+      "failed_samples": [
+        "BN-BS-1",
+        "BN-BS-2",
+        "BN-BS-4"
+      ],
+      "failure_rate_percent": 75.0
+    }
+  }
+}
