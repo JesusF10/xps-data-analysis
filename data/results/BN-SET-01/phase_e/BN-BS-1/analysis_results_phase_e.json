@@ -1,0 +1,193 @@
+{
+  "sample_name": "BN-BS-1",
+  "calibration_shift_ev": -3.9499999999999886,
+  "regions": {
+    "Bi 4f": {
+      "region_name": "Bi 4f",
+      "metadata": {
+        "region": "Bi 4f",
+        "background_method": "shirley",
+        "fitting_method": "fit_doublet",
+        "is_doublet": true,
+        "background_attempts": [
+          "shirley",
+          "tougaard",
+          "linear"
+        ],
+        "errors": []
+      },
+      "fit": {
+        "r_squared": 0.9276696900526447,
+        "num_peaks": 2,
+        "peaks": [
+          {
+            "position": 158.8657311398265,
+            "amplitude": 1537.5901824469115,
+            "area": 2282.0433462814535,
+            "width": 0.592097677868643
+          },
+          {
+            "position": 164.1657311398265,
+            "amplitude": 1156.082843945046,
+            "area": 1715.822064873273,
+            "width": 0.592097677868643
+          }
+        ]
+      }
+    },
+    "Na 1s": {
+      "region_name": "Na 1s",
+      "metadata": {
+        "region": "Na 1s",
+        "background_method": "tougaard",
+        "fitting_method": null,
+        "is_doublet": false,
+        "background_attempts": [
+          "shirley",
+          "tougaard",
+          "linear"
+        ],
+        "errors": [
+          "No peaks detected"
+        ]
+      },
+      "fit": null
+    },
+    "O 1s": {
+      "region_name": "O 1s",
+      "metadata": {
+        "region": "O 1s",
+        "background_method": "tougaard",
+        "fitting_method": "fit_voigt_single",
+        "is_doublet": false,
+        "background_attempts": [
+          "shirley",
+          "tougaard",
+          "linear"
+        ],
+        "errors": []
+      },
+      "fit": {
+        "r_squared": 0.6742717807248984,
+        "num_peaks": 1,
+        "peaks": [
+          {
+            "position": 538.9083041055071,
+            "amplitude": 1579.2672688679122,
+            "area": 93794.21780464955,
+            "width": 17.499999999999584
+          }
+        ]
+      }
+    },
+    "Sr 3d": {
+      "region_name": "Sr 3d",
+      "metadata": {
+        "region": "Sr 3d",
+        "background_method": "shirley",
+        "fitting_method": "fit_doublet",
+        "is_doublet": true,
+        "background_attempts": [
+          "shirley",
+          "tougaard",
+          "linear"
+        ],
+        "errors": []
+      },
+      "fit": {
+        "r_squared": 0.005804605572590993,
+        "num_peaks": 2,
+        "peaks": [
+          {
+            "position": 155.82495851109476,
+            "amplitude": 13.827468611459153,
+            "area": 33.12952373809711,
+            "width": 0.9558342253430835
+          },
+          {
+            "position": 157.62495851109477,
+            "amplitude": 9.218312407639436,
+            "area": 22.086349158731412,
+            "width": 0.9558342253430835
+          }
+        ]
+      }
+    },
+    "Ti 2p": {
+      "region_name": "Ti 2p",
+      "metadata": {
+        "region": "Ti 2p",
+        "background_method": "tougaard",
+        "fitting_method": "fit_doublet",
+        "is_doublet": true,
+        "background_attempts": [
+          "shirley",
+          "tougaard",
+          "linear"
+        ],
+        "errors": []
+      },
+      "fit": {
+        "r_squared": 0.0884118200930808,
+        "num_peaks": 2,
+        "peaks": [
+          {
+            "position": 457.7994746039721,
+            "amplitude": 936.2341919277007,
+            "area": 1255.634247526585,
+            "width": 0.5350430419839614
+          },
+          {
+            "position": 463.4994746039721,
+            "amplitude": 468.1170959638504,
+            "area": 627.8171237632926,
+            "width": 0.5350430419839614
+          }
+        ]
+      }
+    },
+    "C 1s": {
+      "region_name": "C 1s",
+      "metadata": {
+        "region": "C 1s",
+        "background_method": "shirley",
+        "fitting_method": "fit_voigt_single",
+        "is_doublet": false,
+        "background_attempts": [
+          "shirley",
+          "tougaard",
+          "linear"
+        ],
+        "errors": []
+      },
+      "fit": {
+        "r_squared": 0.6961472077844233,
+        "num_peaks": 1,
+        "peaks": [
+          {
+            "position": 283.37984472305266,
+            "amplitude": 465.907753157223,
+            "area": 2851.7612647223154,
+            "width": 2.3918742431291453
+          }
+        ]
+      }
+    }
+  },
+  "summary": {
+    "total_regions": 6,
+    "successful_background": 6,
+    "successful_fits": 5,
+    "doublet_fits": 3,
+    "background_methods": {
+      "shirley": 3,
+      "tougaard": 3
+    },
+    "fitting_methods": {
+      "fit_doublet": 3,
+      "fit_voigt_single": 2
+    },
+    "background_success_rate": 1.0,
+    "fit_success_rate": 0.8333333333333334
+  }
+}

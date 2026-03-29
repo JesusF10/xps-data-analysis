@@ -1,0 +1,178 @@
+{
+  "sample_name": "BN-BS-4",
+  "calibration_shift_ev": -3.5500000000000114,
+  "regions": {
+    "Bi 4f": {
+      "region_name": "Bi 4f",
+      "metadata": {
+        "region": "Bi 4f",
+        "background_method": "shirley",
+        "fitting_method": "fit_doublet",
+        "is_doublet": true,
+        "background_attempts": [
+          "shirley",
+          "tougaard",
+          "linear"
+        ],
+        "errors": []
+      },
+      "fit": {
+        "r_squared": 0.8253743042346902,
+        "num_peaks": 2,
+        "peaks": [
+          {
+            "position": 158.55336979585476,
+            "amplitude": 1252.639169526988,
+            "area": 1624.600251911435,
+            "width": 0.5174049678512198
+          },
+          {
+            "position": 163.85336979585477,
+            "amplitude": 941.833962050367,
+            "area": 1221.5039488055902,
+            "width": 0.5174049678512198
+          }
+        ]
+      }
+    },
+    "C 1s": {
+      "region_name": "C 1s",
+      "metadata": {
+        "region": "C 1s",
+        "background_method": "shirley",
+        "fitting_method": "fit_voigt_single",
+        "is_doublet": false,
+        "background_attempts": [
+          "shirley",
+          "tougaard",
+          "linear"
+        ],
+        "errors": []
+      },
+      "fit": {
+        "r_squared": 0.7913265662449209,
+        "num_peaks": 1,
+        "peaks": [
+          {
+            "position": 283.4092556836803,
+            "amplitude": 559.1338575321645,
+            "area": 2542.250062391276,
+            "width": 1.7638966610204196
+          }
+        ]
+      }
+    },
+    "Na 1s": {
+      "region_name": "Na 1s",
+      "metadata": {
+        "region": "Na 1s",
+        "background_method": "tougaard",
+        "fitting_method": null,
+        "is_doublet": false,
+        "background_attempts": [
+          "shirley",
+          "tougaard",
+          "linear"
+        ],
+        "errors": [
+          "No peaks detected"
+        ]
+      },
+      "fit": null
+    },
+    "O 1s": {
+      "region_name": "O 1s",
+      "metadata": {
+        "region": "O 1s",
+        "background_method": "tougaard",
+        "fitting_method": "fit_voigt_single",
+        "is_doublet": false,
+        "background_attempts": [
+          "shirley",
+          "tougaard",
+          "linear"
+        ],
+        "errors": []
+      },
+      "fit": {
+        "r_squared": 0.6478626528568112,
+        "num_peaks": 1,
+        "peaks": [
+          {
+            "position": 539.3880764432006,
+            "amplitude": 1436.535350225157,
+            "area": 90950.89182074084,
+            "width": 17.500000000000007
+          }
+        ]
+      }
+    },
+    "Sr 3d": {
+      "region_name": "Sr 3d",
+      "metadata": {
+        "region": "Sr 3d",
+        "background_method": "shirley",
+        "fitting_method": "fit_doublet",
+        "is_doublet": true,
+        "background_attempts": [
+          "shirley",
+          "tougaard",
+          "linear"
+        ],
+        "errors": []
+      },
+      "fit": {
+        "r_squared": 0.7603841594839209,
+        "num_peaks": 2,
+        "peaks": [
+          {
+            "position": 157.82454344809665,
+            "amplitude": 2090.2134790249547,
+            "area": 5230.24796393028,
+            "width": 0.9982554752104271
+          },
+          {
+            "position": 159.62454344809666,
+            "amplitude": 1393.4756526833032,
+            "area": 3486.83197595352,
+            "width": 0.9982554752104271
+          }
+        ]
+      }
+    },
+    "Ti 2p": {
+      "region_name": "Ti 2p",
+      "metadata": {
+        "region": "Ti 2p",
+        "background_method": "tougaard",
+        "fitting_method": null,
+        "is_doublet": false,
+        "background_attempts": [
+          "shirley",
+          "tougaard",
+          "linear"
+        ],
+        "errors": [
+          "No peaks detected"
+        ]
+      },
+      "fit": null
+    }
+  },
+  "summary": {
+    "total_regions": 6,
+    "successful_background": 6,
+    "successful_fits": 4,
+    "doublet_fits": 2,
+    "background_methods": {
+      "shirley": 3,
+      "tougaard": 3
+    },
+    "fitting_methods": {
+      "fit_doublet": 2,
+      "fit_voigt_single": 2
+    },
+    "background_success_rate": 1.0,
+    "fit_success_rate": 0.6666666666666666
+  }
+}
