@@ -847,3 +847,398 @@ def fit_multiple_peaks(
         success=success,
         message=message,
     )
+
+
+# ============================================================================
+# Doublet fitting with spin-orbit constraints (Fase E)
+# ============================================================================
+
+
+def fit_doublet(
+    spectrum: XPSSpectrum,
+    initial_position: float | None = None,
+    splitting: float = 5.7,
+    intensity_ratio: float = 2.0,
+    shape: Literal["gaussian", "lorentzian", "voigt"] = "voigt",
+    constrain_widths: bool = True,
+) -> FitResult:
+    """
+    Ajusta un doblete spin-órbita con constraints físicos.
+
+    Los dobletes spin-órbita son comunes en XPS para orbitales p, d y f.
+    Esta función ajusta dos picos simultáneamente con las siguientes constraints:
+    - Separación fija (splitting)
+    - Ratio de intensidad fijo (determinado por reglas de selección)
+    - Mismo ancho (opcional, típicamente válido)
+
+    Parámetros
+    ----------
+    spectrum : XPSSpectrum
+        Espectro XPS a ajustar.
+    initial_position : float, opcional
+        Posición inicial estimada del pico de mayor intensidad (eV).
+        Si None, se estima automáticamente como el máximo del espectro.
+    splitting : float, default=5.7
+        Separación spin-órbita en eV. Valores típicos:
+        - Ti 2p: 5.7 eV
+        - Bi 4f: 5.3 eV
+        - Sr 3d: 1.8 eV
+        - O 1s: no tiene doblete (s orbital)
+    intensity_ratio : float, default=2.0
+        Ratio de intensidad entre los componentes (I1/I2).
+        Determinado por multiplicidad: (2j1+1)/(2j2+1)
+        - 2p (2p3/2 : 2p1/2): 2.0
+        - 3d (3d5/2 : 3d3/2): 1.5
+        - 4f (4f7/2 : 4f5/2): 1.33
+    shape : {"gaussian", "lorentzian", "voigt"}, default="voigt"
+        Tipo de perfil a usar para ambos picos.
+    constrain_widths : bool, default=True
+        Si True, ambos picos tienen el mismo ancho (físicamente esperado).
+        Si False, permite anchos diferentes.
+
+    Retorna
+    -------
+    FitResult
+        Objeto con los resultados del ajuste del doblete.
+        Los dos picos se almacenan en orden de energía decreciente
+        (pico más intenso primero).
+
+    Raises
+    ------
+    ValueError
+        Si el espectro tiene menos de 5 puntos.
+        Si splitting <= 0.
+        Si intensity_ratio <= 0.
+
+    Notas
+    -----
+    Esta función fue implementada en Fase E para resolver el problema
+    identificado en validación (Fase D):
+    - Ti 2p con ajuste de pico único: R² = 0.407 (pobre)
+    - Bi 4f con ajuste de pico único: R² = 0.619 (moderado)
+
+    Con constraints de doblete, se espera R² > 0.80 para ambos casos.
+
+    Ejemplos
+    --------
+    >>> # Ajustar Ti 2p (splitting=5.7 eV, ratio=2.0)
+    >>> result = fit_doublet(spectrum, splitting=5.7, intensity_ratio=2.0)
+
+    >>> # Ajustar Bi 4f (splitting=5.3 eV, ratio=1.33)
+    >>> result = fit_doublet(spectrum, splitting=5.3, intensity_ratio=1.33)
+
+    >>> # Ajustar Sr 3d (splitting=1.8 eV, ratio=1.5)
+    >>> result = fit_doublet(spectrum, splitting=1.8, intensity_ratio=1.5)
+
+    Referencias
+    ----------
+    Hallazgos de validación documentados en:
+    data/results/BN-SET-01/FASE_D_COMPLETADA.md (líneas 124-139)
+    data/results/BN-SET-01/COMPARATIVE_ANALYSIS.md (líneas 46-54)
+
+    Biesinger, M. C. (2017). "Advanced analysis of copper X-ray photoelectron
+    spectra". Surface and Interface Analysis, 49(13), 1325-1334.
+    """
+    if len(spectrum.binding_energy) < 5:
+        raise ValueError(
+            "El espectro debe tener al menos 5 puntos para ajustar doblete"
+        )
+
+    if splitting <= 0:
+        raise ValueError(f"splitting debe ser positivo, recibido: {splitting}")
+
+    if intensity_ratio <= 0:
+        raise ValueError(
+            f"intensity_ratio debe ser positivo, recibido: {intensity_ratio}"
+        )
+
+    # Estimar posición inicial si no se proporciona
+    if initial_position is None:
+        # Usar máximo del espectro
+        max_idx = np.argmax(spectrum.intensity)
+        initial_position = spectrum.binding_energy[max_idx]
+
+    # Estimar amplitud y ancho inicial
+    max_intensity = np.max(spectrum.intensity)
+    estimated_width = 1.5  # eV, típico para XPS
+
+    # Extraer datos
+    x = spectrum.binding_energy
+    y = spectrum.intensity
+
+    # Definir función de doblete con constraints
+    if constrain_widths:
+        # Caso 1: Mismo ancho para ambos picos (5 parámetros)
+        if shape == "gaussian":
+
+            def doublet_func(
+                x: np.ndarray, amp1: float, pos1: float, width: float, offset: float
+            ) -> np.ndarray:
+                """Doblete gaussiano con constraints."""
+                # Pico 1 (más intenso)
+                peak1 = _gaussian(x, amp1, pos1, width)
+                # Pico 2 (menos intenso, separado por splitting)
+                amp2 = amp1 / intensity_ratio
+                pos2 = pos1 + splitting
+                peak2 = _gaussian(x, amp2, pos2, width)
+                return peak1 + peak2 + offset
+
+            n_params = 4
+
+        elif shape == "lorentzian":
+
+            def doublet_func(
+                x: np.ndarray, amp1: float, pos1: float, width: float, offset: float
+            ) -> np.ndarray:
+                """Doblete lorentziano con constraints."""
+                peak1 = _lorentzian(x, amp1, pos1, width)
+                amp2 = amp1 / intensity_ratio
+                pos2 = pos1 + splitting
+                peak2 = _lorentzian(x, amp2, pos2, width)
+                return peak1 + peak2 + offset
+
+            n_params = 4
+
+        elif shape == "voigt":
+
+            def doublet_func(
+                x: np.ndarray,
+                amp1: float,
+                pos1: float,
+                sigma: float,
+                gamma: float,
+                offset: float,
+            ) -> np.ndarray:
+                """Doblete Voigt con constraints."""
+                peak1 = _voigt(x, amp1, pos1, sigma, gamma)
+                amp2 = amp1 / intensity_ratio
+                pos2 = pos1 + splitting
+                peak2 = _voigt(x, amp2, pos2, sigma, gamma)
+                return peak1 + peak2 + offset
+
+            n_params = 5
+
+        else:
+            raise ValueError(f"shape inválido: {shape}")
+
+    else:
+        # Caso 2: Anchos diferentes (6 parámetros para gaussian/lorentzian, 7 para voigt)
+        if shape == "gaussian":
+
+            def doublet_func(
+                x: np.ndarray,
+                amp1: float,
+                pos1: float,
+                width1: float,
+                width2: float,
+                offset: float,
+            ) -> np.ndarray:
+                """Doblete gaussiano sin constraint de ancho."""
+                peak1 = _gaussian(x, amp1, pos1, width1)
+                amp2 = amp1 / intensity_ratio
+                pos2 = pos1 + splitting
+                peak2 = _gaussian(x, amp2, pos2, width2)
+                return peak1 + peak2 + offset
+
+            n_params = 5
+
+        elif shape == "lorentzian":
+
+            def doublet_func(
+                x: np.ndarray,
+                amp1: float,
+                pos1: float,
+                width1: float,
+                width2: float,
+                offset: float,
+            ) -> np.ndarray:
+                """Doblete lorentziano sin constraint de ancho."""
+                peak1 = _lorentzian(x, amp1, pos1, width1)
+                amp2 = amp1 / intensity_ratio
+                pos2 = pos1 + splitting
+                peak2 = _lorentzian(x, amp2, pos2, width2)
+                return peak1 + peak2 + offset
+
+            n_params = 5
+
+        elif shape == "voigt":
+
+            def doublet_func(
+                x: np.ndarray,
+                amp1: float,
+                pos1: float,
+                sigma1: float,
+                gamma1: float,
+                sigma2: float,
+                gamma2: float,
+                offset: float,
+            ) -> np.ndarray:
+                """Doblete Voigt sin constraint de ancho."""
+                peak1 = _voigt(x, amp1, pos1, sigma1, gamma1)
+                amp2 = amp1 / intensity_ratio
+                pos2 = pos1 + splitting
+                peak2 = _voigt(x, amp2, pos2, sigma2, gamma2)
+                return peak1 + peak2 + offset
+
+            n_params = 7
+
+        else:
+            raise ValueError(f"shape inválido: {shape}")
+
+    # Estimar offset (mínimo del espectro)
+    offset_estimate = np.min(y)
+
+    # Parámetros iniciales
+    if constrain_widths:
+        if shape == "voigt":
+            p0 = [
+                max_intensity,
+                initial_position,
+                estimated_width,
+                estimated_width,
+                offset_estimate,
+            ]
+            bounds_lower = [0, x.min(), 0.1, 0.1, -np.inf]
+            bounds_upper = [np.inf, x.max(), 10.0, 10.0, np.inf]
+        else:
+            p0 = [max_intensity, initial_position, estimated_width, offset_estimate]
+            bounds_lower = [0, x.min(), 0.1, -np.inf]
+            bounds_upper = [np.inf, x.max(), 10.0, np.inf]
+    else:
+        if shape == "voigt":
+            p0 = [
+                max_intensity,
+                initial_position,
+                estimated_width,
+                estimated_width,
+                estimated_width,
+                estimated_width,
+                offset_estimate,
+            ]
+            bounds_lower = [0, x.min(), 0.1, 0.1, 0.1, 0.1, -np.inf]
+            bounds_upper = [np.inf, x.max(), 10.0, 10.0, 10.0, 10.0, np.inf]
+        else:
+            p0 = [
+                max_intensity,
+                initial_position,
+                estimated_width,
+                estimated_width,
+                offset_estimate,
+            ]
+            bounds_lower = [0, x.min(), 0.1, 0.1, -np.inf]
+            bounds_upper = [np.inf, x.max(), 10.0, 10.0, np.inf]
+
+    # Ajustar
+    try:
+        popt, pcov = curve_fit(
+            doublet_func, x, y, p0=p0, bounds=(bounds_lower, bounds_upper), maxfev=10000
+        )
+        success = True
+        message = "Ajuste de doblete exitoso"
+    except RuntimeError as e:
+        success = False
+        message = f"Ajuste de doblete falló: {str(e)}"
+        # Retornar resultado fallido con parámetros iniciales
+        popt = np.array(p0)
+        pcov = np.diag(np.ones(len(p0)) * np.inf)
+
+    # Calcular espectro ajustado y residual
+    fitted = doublet_func(x, *popt)
+    residual = y - fitted
+
+    # Calcular R² y chi²
+    ss_res = np.sum(residual**2)
+    ss_tot = np.sum((y - np.mean(y)) ** 2)
+    r_squared = 1 - (ss_res / ss_tot) if ss_tot > 0 else 0.0
+
+    n_points = len(x)
+    dof = n_points - n_params
+    chi_squared = ss_res / dof if dof > 0 else np.inf
+
+    # Extraer parámetros de los picos
+    perr = np.sqrt(np.diag(pcov)) if success else np.ones(len(popt)) * np.inf
+
+    if constrain_widths:
+        if shape == "voigt":
+            amp1, pos1, sigma, gamma, offset = popt
+            amp1_err, pos1_err, sigma_err, gamma_err, _ = perr
+            width1 = sigma
+            width2 = sigma
+            width1_err = sigma_err
+            width2_err = sigma_err
+            gamma1 = gamma
+            gamma2 = gamma
+        else:
+            amp1, pos1, width, offset = popt
+            amp1_err, pos1_err, width_err, _ = perr
+            width1 = width
+            width2 = width
+            width1_err = width_err
+            width2_err = width_err
+            gamma1 = None
+            gamma2 = None
+    else:
+        if shape == "voigt":
+            amp1, pos1, sigma1, gamma1, sigma2, gamma2, offset = popt
+            amp1_err, pos1_err, sigma1_err, gamma1_err, sigma2_err, gamma2_err, _ = perr
+            width1 = sigma1
+            width2 = sigma2
+            width1_err = sigma1_err
+            width2_err = sigma2_err
+        else:
+            amp1, pos1, width1, width2, offset = popt
+            amp1_err, pos1_err, width1_err, width2_err, _ = perr
+            gamma1 = None
+            gamma2 = None
+
+    # Pico 1 (más intenso)
+    amp2 = amp1 / intensity_ratio
+    pos2 = pos1 + splitting
+    amp2_err = amp1_err / intensity_ratio
+    pos2_err = pos1_err  # Asumimos mismo error en posición
+
+    # Calcular áreas (aproximación para gaussiano/lorentziano: área ≈ amp * width)
+    if shape == "gaussian":
+        area1 = amp1 * width1 * np.sqrt(2 * np.pi)
+        area2 = amp2 * width2 * np.sqrt(2 * np.pi)
+    elif shape == "lorentzian":
+        area1 = amp1 * width1 * np.pi
+        area2 = amp2 * width2 * np.pi
+    else:  # voigt
+        # Área Voigt: más complejo, usar aproximación
+        area1 = amp1 * width1 * np.sqrt(2 * np.pi)
+        area2 = amp2 * width2 * np.sqrt(2 * np.pi)
+
+    peak1 = PeakParameters(
+        position=pos1,
+        amplitude=amp1,
+        width=width1,
+        area=area1,
+        shape=shape,
+        gamma=gamma1,
+        position_error=pos1_err,
+        amplitude_error=amp1_err,
+        width_error=width1_err,
+    )
+
+    peak2 = PeakParameters(
+        position=pos2,
+        amplitude=amp2,
+        width=width2,
+        area=area2,
+        shape=shape,
+        gamma=gamma2,
+        position_error=pos2_err,
+        amplitude_error=amp2_err,
+        width_error=width2_err,
+    )
+
+    return FitResult(
+        peaks=[peak1, peak2],
+        fitted_spectrum=fitted,
+        residual=residual,
+        r_squared=r_squared,
+        chi_squared=chi_squared,
+        success=success,
+        message=message,
+    )

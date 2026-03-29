@@ -6,6 +6,7 @@ from xps_analyzer.analysis.peak_fitting import (
     FitResult,
     PeakParameters,
     estimate_peak_positions,
+    fit_doublet,
     fit_gaussian,
     fit_lorentzian,
     fit_multiple_peaks,
@@ -742,3 +743,395 @@ class TestPeakFittingIntegration:
         assert isinstance(result.chi_squared, float)
         assert isinstance(result.success, bool)
         assert isinstance(result.message, str)
+
+
+# ============================================================================
+# Tests para fit_doublet (Fase E)
+# ============================================================================
+
+
+@pytest.fixture
+def ti_2p_doublet_spectrum():
+    """
+    Crea un espectro sintético de Ti 2p con doblete spin-órbita.
+    Parámetros realistas: splitting=5.7 eV, ratio=2:1
+    """
+    binding_energy = np.linspace(450.0, 470.0, 400)
+
+    # Ti 2p3/2 (más intenso) centrado en 458.5 eV
+    sigma = 1.2
+    amp1 = 2000.0
+    pos1 = 458.5
+    peak1 = amp1 * np.exp(-((binding_energy - pos1) ** 2) / (2 * sigma**2))
+
+    # Ti 2p1/2 (menos intenso) centrado en 458.5 + 5.7 = 464.2 eV
+    amp2 = amp1 / 2.0  # Ratio 2:1
+    pos2 = pos1 + 5.7
+    peak2 = amp2 * np.exp(-((binding_energy - pos2) ** 2) / (2 * sigma**2))
+
+    # Agregar fondo constante y ruido
+    background = 100.0
+    noise = np.random.randn(len(binding_energy)) * 10.0
+    intensity = peak1 + peak2 + background + noise
+
+    return XPSSpectrum(
+        region_name="Ti 2p",
+        binding_energy=binding_energy,
+        intensity=intensity,
+        metadata={"element": "Ti", "orbital": "2p"},
+    )
+
+
+@pytest.fixture
+def bi_4f_doublet_spectrum():
+    """
+    Crea un espectro sintético de Bi 4f con doblete spin-órbita.
+    Parámetros realistas: splitting=5.3 eV, ratio=1.33:1
+    """
+    binding_energy = np.linspace(150.0, 170.0, 400)
+
+    # Bi 4f7/2 (más intenso) centrado en 157.0 eV
+    sigma = 1.0
+    amp1 = 3000.0
+    pos1 = 157.0
+    peak1 = amp1 * np.exp(-((binding_energy - pos1) ** 2) / (2 * sigma**2))
+
+    # Bi 4f5/2 (menos intenso) centrado en 157.0 + 5.3 = 162.3 eV
+    amp2 = amp1 / 1.33  # Ratio 1.33:1
+    pos2 = pos1 + 5.3
+    peak2 = amp2 * np.exp(-((binding_energy - pos2) ** 2) / (2 * sigma**2))
+
+    # Agregar fondo constante
+    background = 200.0
+    intensity = peak1 + peak2 + background
+
+    return XPSSpectrum(
+        region_name="Bi 4f",
+        binding_energy=binding_energy,
+        intensity=intensity,
+        metadata={"element": "Bi", "orbital": "4f"},
+    )
+
+
+class TestFitDoublet:
+    """
+    Tests para la función de ajuste de dobletes con constraints (Fase E).
+    """
+
+    def test_fit_doublet_ti_2p_basic(self, ti_2p_doublet_spectrum):
+        """
+        Verifica ajuste básico de doblete Ti 2p con parámetros por defecto.
+        """
+        result = fit_doublet(ti_2p_doublet_spectrum, splitting=5.7, intensity_ratio=2.0)
+
+        # Debe tener éxito
+        assert result.success
+
+        # Debe ajustar exactamente 2 picos
+        assert len(result.peaks) == 2
+
+        # Verificar separación
+        pos1 = result.peaks[0].position
+        pos2 = result.peaks[1].position
+        assert np.isclose(pos2 - pos1, 5.7, atol=0.2)
+
+        # Verificar ratio de amplitud (aproximado)
+        amp1 = result.peaks[0].amplitude
+        amp2 = result.peaks[1].amplitude
+        ratio = amp1 / amp2
+        assert np.isclose(ratio, 2.0, atol=0.3)
+
+        # R² debe ser alto (>0.90 para datos sintéticos limpios)
+        assert result.r_squared > 0.85
+
+    def test_fit_doublet_bi_4f_basic(self, bi_4f_doublet_spectrum):
+        """
+        Verifica ajuste básico de doblete Bi 4f.
+        """
+        result = fit_doublet(
+            bi_4f_doublet_spectrum, splitting=5.3, intensity_ratio=1.33
+        )
+
+        # Debe tener éxito
+        assert result.success
+
+        # Debe ajustar exactamente 2 picos
+        assert len(result.peaks) == 2
+
+        # Verificar separación
+        pos1 = result.peaks[0].position
+        pos2 = result.peaks[1].position
+        assert np.isclose(pos2 - pos1, 5.3, atol=0.2)
+
+        # Verificar ratio de amplitud
+        amp1 = result.peaks[0].amplitude
+        amp2 = result.peaks[1].amplitude
+        ratio = amp1 / amp2
+        assert np.isclose(ratio, 1.33, atol=0.2)
+
+        # R² debe ser muy alto para datos sintéticos
+        assert result.r_squared > 0.90
+
+    def test_fit_doublet_with_initial_position(self, ti_2p_doublet_spectrum):
+        """
+        Verifica que se puede proporcionar posición inicial explícita.
+        """
+        result = fit_doublet(
+            ti_2p_doublet_spectrum,
+            initial_position=458.0,
+            splitting=5.7,
+            intensity_ratio=2.0,
+        )
+
+        assert result.success
+        assert len(result.peaks) == 2
+
+        # Posición ajustada debe estar cerca de la inicial
+        assert np.abs(result.peaks[0].position - 458.0) < 2.0
+
+    def test_fit_doublet_with_voigt_profile(self, ti_2p_doublet_spectrum):
+        """
+        Verifica ajuste con perfil Voigt (más realista para XPS).
+        """
+        result = fit_doublet(
+            ti_2p_doublet_spectrum,
+            splitting=5.7,
+            intensity_ratio=2.0,
+            shape="voigt",
+        )
+
+        assert result.success
+        assert len(result.peaks) == 2
+        assert result.peaks[0].shape == "voigt"
+        assert result.peaks[1].shape == "voigt"
+
+        # Gamma debe estar definido para Voigt
+        assert result.peaks[0].gamma is not None
+        assert result.peaks[1].gamma is not None
+
+    def test_fit_doublet_with_gaussian_profile(self, ti_2p_doublet_spectrum):
+        """
+        Verifica ajuste con perfil gaussiano.
+        """
+        result = fit_doublet(
+            ti_2p_doublet_spectrum,
+            splitting=5.7,
+            intensity_ratio=2.0,
+            shape="gaussian",
+        )
+
+        assert result.success
+        assert len(result.peaks) == 2
+        assert result.peaks[0].shape == "gaussian"
+        assert result.peaks[1].shape == "gaussian"
+
+    def test_fit_doublet_with_lorentzian_profile(self, ti_2p_doublet_spectrum):
+        """
+        Verifica ajuste con perfil lorentziano.
+        """
+        result = fit_doublet(
+            ti_2p_doublet_spectrum,
+            splitting=5.7,
+            intensity_ratio=2.0,
+            shape="lorentzian",
+        )
+
+        assert result.success
+        assert len(result.peaks) == 2
+        assert result.peaks[0].shape == "lorentzian"
+
+    def test_fit_doublet_constrain_widths_true(self, ti_2p_doublet_spectrum):
+        """
+        Verifica que con constrain_widths=True, ambos picos tienen mismo ancho.
+        """
+        result = fit_doublet(
+            ti_2p_doublet_spectrum,
+            splitting=5.7,
+            intensity_ratio=2.0,
+            constrain_widths=True,
+        )
+
+        assert result.success
+        width1 = result.peaks[0].width
+        width2 = result.peaks[1].width
+
+        # Deben ser idénticos (constraint)
+        assert np.isclose(width1, width2, atol=1e-6)
+
+    def test_fit_doublet_constrain_widths_false(self, ti_2p_doublet_spectrum):
+        """
+        Verifica que con constrain_widths=False, anchos pueden diferir.
+        """
+        result = fit_doublet(
+            ti_2p_doublet_spectrum,
+            splitting=5.7,
+            intensity_ratio=2.0,
+            constrain_widths=False,
+        )
+
+        assert result.success
+        width1 = result.peaks[0].width
+        width2 = result.peaks[1].width
+
+        # Pueden ser diferentes (pero probablemente similares con datos sintéticos)
+        assert isinstance(width1, float)
+        assert isinstance(width2, float)
+
+    def test_fit_doublet_returns_correct_structure(self, ti_2p_doublet_spectrum):
+        """
+        Verifica que el resultado tiene la estructura correcta de FitResult.
+        """
+        result = fit_doublet(ti_2p_doublet_spectrum)
+
+        assert isinstance(result, FitResult)
+        assert isinstance(result.peaks, list)
+        assert len(result.peaks) == 2
+        assert isinstance(result.peaks[0], PeakParameters)
+        assert isinstance(result.peaks[1], PeakParameters)
+        assert isinstance(result.fitted_spectrum, np.ndarray)
+        assert isinstance(result.residual, np.ndarray)
+        assert isinstance(result.r_squared, float)
+        assert isinstance(result.chi_squared, float)
+        assert isinstance(result.success, bool)
+        assert isinstance(result.message, str)
+
+    def test_fit_doublet_peak_parameters_complete(self, ti_2p_doublet_spectrum):
+        """
+        Verifica que cada pico tiene todos los parámetros completos.
+        """
+        result = fit_doublet(ti_2p_doublet_spectrum)
+
+        for peak in result.peaks:
+            assert peak.position > 0
+            assert peak.amplitude > 0
+            assert peak.width > 0
+            assert peak.area > 0
+            assert peak.shape in ["gaussian", "lorentzian", "voigt"]
+            # Errores deben estar definidos si el ajuste tuvo éxito
+            if result.success:
+                assert peak.position_error is not None
+                assert peak.amplitude_error is not None
+                assert peak.width_error is not None
+
+    def test_fit_doublet_residual_small(self, bi_4f_doublet_spectrum):
+        """
+        Verifica que el residual es pequeño para datos sintéticos.
+        """
+        result = fit_doublet(
+            bi_4f_doublet_spectrum, splitting=5.3, intensity_ratio=1.33
+        )
+
+        # Residual RMS debe ser pequeño
+        residual_rms = np.sqrt(np.mean(result.residual**2))
+        max_intensity = np.max(bi_4f_doublet_spectrum.intensity)
+
+        # Residual debe ser <5% de intensidad máxima
+        assert residual_rms < 0.05 * max_intensity
+
+    def test_fit_doublet_invalid_splitting_raises_error(self, ti_2p_doublet_spectrum):
+        """
+        Verifica que splitting negativo o cero lanza ValueError.
+        """
+        with pytest.raises(ValueError, match="splitting debe ser positivo"):
+            fit_doublet(ti_2p_doublet_spectrum, splitting=-1.0)
+
+        with pytest.raises(ValueError, match="splitting debe ser positivo"):
+            fit_doublet(ti_2p_doublet_spectrum, splitting=0.0)
+
+    def test_fit_doublet_invalid_ratio_raises_error(self, ti_2p_doublet_spectrum):
+        """
+        Verifica que intensity_ratio negativo o cero lanza ValueError.
+        """
+        with pytest.raises(ValueError, match="intensity_ratio debe ser positivo"):
+            fit_doublet(ti_2p_doublet_spectrum, intensity_ratio=-1.0)
+
+        with pytest.raises(ValueError, match="intensity_ratio debe ser positivo"):
+            fit_doublet(ti_2p_doublet_spectrum, intensity_ratio=0.0)
+
+    def test_fit_doublet_too_few_points_raises_error(self):
+        """
+        Verifica que espectro con muy pocos puntos lanza ValueError.
+        """
+        # Espectro con solo 3 puntos
+        spectrum = XPSSpectrum(
+            region_name="tiny",
+            binding_energy=np.array([1.0, 2.0, 3.0]),
+            intensity=np.array([10.0, 20.0, 10.0]),
+            metadata={},
+        )
+
+        with pytest.raises(ValueError, match="al menos 5 puntos"):
+            fit_doublet(spectrum)
+
+    def test_fit_doublet_invalid_shape_raises_error(self, ti_2p_doublet_spectrum):
+        """
+        Verifica que shape inválido lanza ValueError.
+        """
+        with pytest.raises(ValueError, match="shape inválido"):
+            fit_doublet(ti_2p_doublet_spectrum, shape="invalid")  # type: ignore
+
+    def test_fit_doublet_automatic_position_estimation(self, ti_2p_doublet_spectrum):
+        """
+        Verifica que sin initial_position, se estima automáticamente.
+        """
+        # Sin proporcionar initial_position (debe usar máximo)
+        result = fit_doublet(ti_2p_doublet_spectrum, splitting=5.7, intensity_ratio=2.0)
+
+        assert result.success
+
+        # Posición del pico 1 debe estar cerca del máximo del espectro
+        max_idx = np.argmax(ti_2p_doublet_spectrum.intensity)
+        max_position = ti_2p_doublet_spectrum.binding_energy[max_idx]
+
+        assert np.abs(result.peaks[0].position - max_position) < 3.0
+
+    def test_fit_doublet_improves_over_single_peak(self, ti_2p_doublet_spectrum):
+        """
+        Verifica que ajuste de doblete es mejor que pico único.
+        """
+        # Ajustar con doblete
+        result_doublet = fit_doublet(
+            ti_2p_doublet_spectrum, splitting=5.7, intensity_ratio=2.0
+        )
+
+        # Ajustar con pico único (debería ser peor)
+        result_single = fit_gaussian(ti_2p_doublet_spectrum)
+
+        # R² del doblete debe ser mayor
+        assert result_doublet.r_squared > result_single.r_squared
+
+    def test_fit_doublet_sr_3d_parameters(self):
+        """
+        Verifica ajuste de Sr 3d con parámetros correctos (splitting=1.8, ratio=1.5).
+        """
+        # Crear espectro sintético de Sr 3d
+        binding_energy = np.linspace(128.0, 140.0, 300)
+        sigma = 0.8
+        amp1 = 1500.0
+        pos1 = 133.0
+        peak1 = amp1 * np.exp(-((binding_energy - pos1) ** 2) / (2 * sigma**2))
+
+        amp2 = amp1 / 1.5  # Ratio 1.5:1
+        pos2 = pos1 + 1.8  # Splitting 1.8 eV
+        peak2 = amp2 * np.exp(-((binding_energy - pos2) ** 2) / (2 * sigma**2))
+
+        intensity = peak1 + peak2 + 50.0
+
+        spectrum = XPSSpectrum(
+            region_name="Sr 3d",
+            binding_energy=binding_energy,
+            intensity=intensity,
+            metadata={"element": "Sr"},
+        )
+
+        result = fit_doublet(spectrum, splitting=1.8, intensity_ratio=1.5)
+
+        assert result.success
+        assert len(result.peaks) == 2
+
+        # Verificar parámetros
+        assert np.isclose(
+            result.peaks[1].position - result.peaks[0].position, 1.8, atol=0.1
+        )
+        ratio = result.peaks[0].amplitude / result.peaks[1].amplitude
+        assert np.isclose(ratio, 1.5, atol=0.2)

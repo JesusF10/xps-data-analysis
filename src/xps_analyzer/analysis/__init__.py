@@ -17,6 +17,7 @@ from xps_analyzer.analysis.peak_fitting import (
     FitResult,
     PeakParameters,
     estimate_peak_positions,
+    fit_doublet,
     fit_gaussian,
     fit_lorentzian,
     fit_multiple_peaks,
@@ -40,6 +41,7 @@ __all__ = [
     "fit_lorentzian",
     "fit_voigt",
     "fit_multiple_peaks",
+    "fit_doublet",
     "estimate_peak_positions",
     # Quantification
     "load_sensitivity_factors",
