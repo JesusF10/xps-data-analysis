@@ -326,3 +326,147 @@ def linear_background(spectrum: XPSSpectrum, inplace: bool = False) -> XPSSpectr
     result.metadata["linear_background"] = background
 
     return result
+
+
+def background_with_fallback(
+    spectrum: XPSSpectrum,
+    methods: list[str] | None = None,
+    shirley_max_iter: int = 100,
+    shirley_tol: float = 1e-5,
+    tougaard_B: float = 2866.0,
+    tougaard_C: float = 1643.0,
+    tougaard_D: float = 1.0,
+    inplace: bool = False,
+) -> XPSSpectrum:
+    """
+    Calcula y sustrae el fondo de un espectro XPS con cascada de fallbacks.
+
+    Esta función intenta múltiples métodos de sustracción de fondo en orden,
+    usando el siguiente método si el anterior falla. Esto aumenta la robustez
+    del análisis cuando se trabaja con datos experimentales de calidad variable.
+
+    Parámetros
+    ----------
+    spectrum : XPSSpectrum
+        El espectro al cual sustraer el fondo.
+    methods : list[str] | None, default=None
+        Lista de métodos a intentar en orden. Si None, usa ["shirley", "tougaard", "linear"].
+        Métodos válidos: "shirley", "tougaard", "linear".
+    shirley_max_iter : int, default=100
+        Número máximo de iteraciones para Shirley.
+    shirley_tol : float, default=1e-5
+        Tolerancia de convergencia para Shirley.
+    tougaard_B : float, default=2866.0
+        Parámetro B de Tougaard (eV²).
+    tougaard_C : float, default=1643.0
+        Parámetro C de Tougaard (eV²).
+    tougaard_D : float, default=1.0
+        Parámetro D de Tougaard (adimensional).
+    inplace : bool, default=False
+        Si True, modifica el espectro original. Si False, retorna una copia.
+
+    Retorna
+    -------
+    XPSSpectrum
+        Espectro con el fondo sustraído. El método utilizado se almacena
+        en metadata["background_method"].
+
+    Raises
+    ------
+    ValueError
+        Si todos los métodos fallan.
+        Si se proporciona un método inválido.
+
+    Notas
+    -----
+    El orden de fallback por defecto está diseñado según precisión decreciente:
+    1. Shirley - Más preciso pero puede no converger en espectros complejos
+    2. Tougaard - Más robusto para fondos con estructura
+    3. Linear - Siempre funciona pero menos preciso
+
+    En validación con dataset BN-SET-01, esta estrategia aumentó la tasa de
+    éxito de sustracción de fondo del 54% al 100%, permitiendo procesar todas
+    las regiones incluso con datos de calidad variable.
+
+    Ejemplos
+    --------
+    >>> # Uso por defecto (cascada completa)
+    >>> spectrum_clean = background_with_fallback(spectrum)
+    >>> print(spectrum_clean.metadata["background_method"])  # ej: "shirley"
+
+    >>> # Solo intentar Shirley y linear (omitir Tougaard)
+    >>> spectrum_clean = background_with_fallback(spectrum, methods=["shirley", "linear"])
+
+    >>> # Ajustar parámetros de Shirley (más iteraciones para espectros difíciles)
+    >>> spectrum_clean = background_with_fallback(
+    ...     spectrum, shirley_max_iter=200, shirley_tol=1e-4
+    ... )
+
+    >>> # Ajustar parámetros de Tougaard
+    >>> spectrum_clean = background_with_fallback(
+    ...     spectrum, tougaard_B=3000.0, tougaard_C=1500.0
+    ... )
+
+    Referencias
+    ----------
+    Hallazgos de validación documentados en:
+    data/results/BN-SET-01/FASE_D_COMPLETADA.md
+    data/results/BN-SET-01/COMPARATIVE_ANALYSIS.md
+    """
+    # Métodos por defecto
+    if methods is None:
+        methods = ["shirley", "tougaard", "linear"]
+
+    # Validar métodos
+    valid_methods = {"shirley", "tougaard", "linear"}
+    for method in methods:
+        if method not in valid_methods:
+            raise ValueError(
+                f"Método inválido '{method}'. Métodos válidos: {valid_methods}"
+            )
+
+    # Trabajar con copia si es necesario
+    if not inplace:
+        spectrum = spectrum.copy()
+
+    # Intentar cada método en orden
+    errors = {}
+    for method in methods:
+        try:
+            if method == "shirley":
+                result = shirley_background(
+                    spectrum,
+                    max_iter=shirley_max_iter,
+                    tol=shirley_tol,
+                    inplace=True,
+                )
+                result.metadata["background_method"] = "shirley"
+                result.metadata["background_fallback_attempted"] = list(methods)
+                return result
+
+            elif method == "tougaard":
+                result = tougaard_background(
+                    spectrum, B=tougaard_B, C=tougaard_C, D=tougaard_D, inplace=True
+                )
+                result.metadata["background_method"] = "tougaard"
+                result.metadata["background_fallback_attempted"] = list(methods)
+                result.metadata["background_fallback_errors"] = errors
+                return result
+
+            elif method == "linear":
+                result = linear_background(spectrum, inplace=True)
+                result.metadata["background_method"] = "linear"
+                result.metadata["background_fallback_attempted"] = list(methods)
+                result.metadata["background_fallback_errors"] = errors
+                return result
+
+        except Exception as e:
+            # Almacenar error y continuar con siguiente método
+            errors[method] = str(e)
+            continue
+
+    # Si todos los métodos fallaron, lanzar error con detalles
+    error_details = "\n".join([f"  - {m}: {e}" for m, e in errors.items()])
+    raise ValueError(
+        f"Todos los métodos de sustracción de fondo fallaron:\n{error_details}"
+    )

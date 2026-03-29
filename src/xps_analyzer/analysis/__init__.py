@@ -8,6 +8,7 @@ Este módulo contiene funciones para análisis avanzado de datos XPS, incluyendo
 """
 
 from xps_analyzer.analysis.background import (
+    background_with_fallback,
     linear_background,
     shirley_background,
     tougaard_background,
@@ -33,6 +34,7 @@ __all__ = [
     "shirley_background",
     "tougaard_background",
     "linear_background",
+    "background_with_fallback",
     # Peak fitting
     "fit_gaussian",
     "fit_lorentzian",

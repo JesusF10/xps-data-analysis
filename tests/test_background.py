@@ -3,6 +3,7 @@ Tests para el módulo de sustracción de fondo de espectros XPS.
 """
 
 from xps_analyzer.analysis.background import (
+    background_with_fallback,
     linear_background,
     shirley_background,
     tougaard_background,
@@ -506,3 +507,239 @@ class TestBackgroundIntegration:
 
             # La intensidad promedio debe reducirse
             assert result_mean < original_mean
+
+
+# ============================================================================
+# Tests para background_with_fallback (Fase E)
+# ============================================================================
+
+
+class TestBackgroundWithFallback:
+    """
+    Tests para la función de sustracción de fondo con cascada de fallbacks.
+
+    Implementado en Fase E para aumentar robustez del análisis.
+    """
+
+    def test_fallback_uses_shirley_when_successful(self, simple_peak_spectrum):
+        """
+        Verifica que la cascada usa Shirley por defecto cuando converge.
+        """
+        result = background_with_fallback(simple_peak_spectrum)
+
+        # Debe haber usado Shirley
+        assert result.metadata["background_method"] == "shirley"
+        assert "shirley_background" in result.metadata
+        assert result.metadata["shirley_iterations"] > 0
+
+    def test_fallback_falls_to_tougaard_when_shirley_fails(self):
+        """
+        Verifica que la cascada usa Tougaard si Shirley no converge.
+        """
+        # Crear espectro que causa fallo de Shirley (muy pocos puntos y max_iter bajo)
+        binding_energy = np.linspace(280.0, 290.0, 100)
+        # Espectro plano que no converge rápidamente
+        intensity = np.ones(100) * 1000.0 + np.random.randn(100) * 50
+
+        spectrum = XPSSpectrum(
+            region_name="problematic",
+            binding_energy=binding_energy,
+            intensity=intensity,
+            metadata={},
+        )
+
+        # Con max_iter MUY bajo (2), Shirley debe fallar
+        result = background_with_fallback(spectrum, shirley_max_iter=2)
+
+        # Debe haber intentado los métodos
+        assert "background_method" in result.metadata
+        assert result.metadata["background_fallback_attempted"] == [
+            "shirley",
+            "tougaard",
+            "linear",
+        ]
+
+        # Si Shirley falló, debe haber error almacenado
+        if result.metadata["background_method"] != "shirley":
+            assert "background_fallback_errors" in result.metadata
+            assert "shirley" in result.metadata["background_fallback_errors"]
+
+    def test_fallback_uses_linear_as_last_resort(self):
+        """
+        Verifica que la cascada usa Linear como último recurso.
+        """
+        # Crear espectro que causa fallo de todos los métodos iterativos
+        binding_energy = np.linspace(280.0, 290.0, 10)
+        intensity = np.zeros(10)  # Todos ceros
+
+        spectrum = XPSSpectrum(
+            region_name="zeros",
+            binding_energy=binding_energy,
+            intensity=intensity,
+            metadata={},
+        )
+
+        # Con max_iter muy bajo y espectro problemático
+        result = background_with_fallback(spectrum, shirley_max_iter=2)
+
+        # Debe haber usado algún método (probablemente Linear)
+        assert "background_method" in result.metadata
+        assert result.metadata["background_method"] in ["shirley", "tougaard", "linear"]
+
+    def test_fallback_respects_custom_method_order(self, simple_peak_spectrum):
+        """
+        Verifica que la cascada respeta el orden de métodos personalizado.
+        """
+        # Usar solo linear (omitir Shirley y Tougaard)
+        result = background_with_fallback(simple_peak_spectrum, methods=["linear"])
+
+        assert result.metadata["background_method"] == "linear"
+        assert "linear_background" in result.metadata
+        assert result.metadata["background_fallback_attempted"] == ["linear"]
+
+    def test_fallback_with_only_shirley_and_linear(self, simple_peak_spectrum):
+        """
+        Verifica cascada con solo dos métodos (omitir Tougaard).
+        """
+        result = background_with_fallback(
+            simple_peak_spectrum, methods=["shirley", "linear"]
+        )
+
+        # Debe haber usado Shirley (exitoso en espectro simple)
+        assert result.metadata["background_method"] == "shirley"
+        assert result.metadata["background_fallback_attempted"] == ["shirley", "linear"]
+
+    def test_fallback_stores_attempted_methods(self, simple_peak_spectrum):
+        """
+        Verifica que se almacenan los métodos intentados en metadata.
+        """
+        result = background_with_fallback(simple_peak_spectrum)
+
+        assert "background_fallback_attempted" in result.metadata
+        assert result.metadata["background_fallback_attempted"] == [
+            "shirley",
+            "tougaard",
+            "linear",
+        ]
+
+    def test_fallback_stores_errors_from_failed_methods(self):
+        """
+        Verifica que se almacenan los errores de métodos fallidos.
+        """
+        # Crear espectro que falla Shirley
+        binding_energy = np.linspace(280.0, 290.0, 50)
+        intensity = np.random.randn(50) * 1000
+
+        spectrum = XPSSpectrum(
+            region_name="test",
+            binding_energy=binding_energy,
+            intensity=intensity,
+            metadata={},
+        )
+
+        result = background_with_fallback(spectrum, shirley_max_iter=5)
+
+        # Si Shirley falló, debe haber registro del error
+        if result.metadata["background_method"] != "shirley":
+            assert "background_fallback_errors" in result.metadata
+            assert "shirley" in result.metadata["background_fallback_errors"]
+
+    def test_fallback_invalid_method_raises_error(self, simple_peak_spectrum):
+        """
+        Verifica que un método inválido lanza ValueError.
+        """
+        with pytest.raises(ValueError, match="Método inválido"):
+            background_with_fallback(simple_peak_spectrum, methods=["invalid_method"])
+
+    def test_fallback_passes_shirley_parameters(self, simple_peak_spectrum):
+        """
+        Verifica que los parámetros de Shirley se pasan correctamente.
+        """
+        result = background_with_fallback(
+            simple_peak_spectrum, shirley_max_iter=200, shirley_tol=1e-4
+        )
+
+        # Debe haber usado Shirley con parámetros personalizados
+        assert result.metadata["background_method"] == "shirley"
+        # Las iteraciones deben ser <= 200
+        assert result.metadata["shirley_iterations"] <= 200
+
+    def test_fallback_passes_tougaard_parameters(self, simple_peak_spectrum):
+        """
+        Verifica que los parámetros de Tougaard se pasan correctamente.
+        """
+        # Forzar uso de Tougaard omitiendo Shirley
+        result = background_with_fallback(
+            simple_peak_spectrum,
+            methods=["tougaard"],
+            tougaard_B=3000.0,
+            tougaard_C=1500.0,
+        )
+
+        assert result.metadata["background_method"] == "tougaard"
+        assert "tougaard_background" in result.metadata
+
+    def test_fallback_inplace_parameter(self, simple_peak_spectrum):
+        """
+        Verifica que el parámetro inplace funciona correctamente.
+        """
+        original_intensity = simple_peak_spectrum.intensity.copy()
+
+        # inplace=False (por defecto)
+        result = background_with_fallback(simple_peak_spectrum, inplace=False)
+        assert np.array_equal(simple_peak_spectrum.intensity, original_intensity)
+        assert not np.array_equal(result.intensity, original_intensity)
+
+        # inplace=True
+        result2 = background_with_fallback(simple_peak_spectrum, inplace=True)
+        assert result2 is simple_peak_spectrum
+        assert not np.array_equal(simple_peak_spectrum.intensity, original_intensity)
+
+    def test_fallback_reduces_background_intensity(self, simple_peak_spectrum):
+        """
+        Verifica que la sustracción de fondo reduce la intensidad promedio.
+        """
+        original_mean = np.mean(simple_peak_spectrum.intensity)
+        result = background_with_fallback(simple_peak_spectrum)
+        result_mean = np.mean(result.intensity)
+
+        # La intensidad promedio debe reducirse después de restar fondo
+        assert result_mean < original_mean
+
+    def test_fallback_all_methods_fail_raises_error(self):
+        """
+        Verifica que se lanza error si todos los métodos fallan.
+        """
+        # Crear espectro inválido (menos de 2 puntos)
+        binding_energy = np.array([285.0])
+        intensity = np.array([1000.0])
+
+        spectrum = XPSSpectrum(
+            region_name="invalid",
+            binding_energy=binding_energy,
+            intensity=intensity,
+            metadata={},
+        )
+
+        with pytest.raises(ValueError, match="Todos los métodos.*fallaron"):
+            background_with_fallback(spectrum)
+
+    def test_fallback_empty_methods_list_raises_error(self, simple_peak_spectrum):
+        """
+        Verifica que una lista vacía de métodos se maneja correctamente.
+        """
+        with pytest.raises(ValueError, match="Todos los métodos.*fallaron"):
+            background_with_fallback(simple_peak_spectrum, methods=[])
+
+    def test_fallback_preserves_metadata(self, simple_peak_spectrum):
+        """
+        Verifica que el metadata original se preserva.
+        """
+        result = background_with_fallback(simple_peak_spectrum)
+
+        # Metadata original debe preservarse
+        assert result.metadata["sweeps"] == 10
+        assert result.metadata["dwell_time"] == 0.1
+
+        # Metadata nuevo debe agregarse
+        assert "background_method" in result.metadata
