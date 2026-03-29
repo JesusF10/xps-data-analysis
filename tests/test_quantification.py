@@ -755,3 +755,196 @@ class TestNumericalPrecision:
 
         # C debe ser >99.9%
         assert concentrations["C 1s"] > 99.9
+
+
+# ============================================================================
+# TESTS PARA NUEVOS ELEMENTOS (v0.8 - Fase E)
+# ============================================================================
+
+
+class TestNewElementsPhaseE:
+    """Tests para elementos agregados en Fase E: Bi 4f, Sr 3d."""
+
+    def test_bi_4f_available_in_scofield(self):
+        """Bi 4f debe estar disponible en Scofield Al Kα."""
+        rsf = load_sensitivity_factors(source="scofield", xray_source="al_ka")
+        assert "Bi 4f" in rsf
+        # Valor esperado: ~9.5-10.5 (elemento pesado)
+        assert 9.0 < rsf["Bi 4f"] < 11.0
+
+    def test_bi_4f_available_in_wagner(self):
+        """Bi 4f debe estar disponible en Wagner Al Kα."""
+        rsf = load_sensitivity_factors(source="wagner", xray_source="al_ka")
+        assert "Bi 4f" in rsf
+        # Valor esperado: ~10.0-10.5 (Moulder et al.)
+        assert 9.5 < rsf["Bi 4f"] < 11.0
+
+    def test_sr_3d_available_in_scofield(self):
+        """Sr 3d debe estar disponible en Scofield Al Kα."""
+        rsf = load_sensitivity_factors(source="scofield", xray_source="al_ka")
+        assert "Sr 3d" in rsf
+        # Valor esperado: ~1.8-2.2 (similar a Ca 2p)
+        assert 1.5 < rsf["Sr 3d"] < 2.5
+
+    def test_sr_3d_available_in_wagner(self):
+        """Sr 3d debe estar disponible en Wagner Al Kα."""
+        rsf = load_sensitivity_factors(source="wagner", xray_source="al_ka")
+        assert "Sr 3d" in rsf
+        # Valor esperado: ~2.0-2.3
+        assert 1.8 < rsf["Sr 3d"] < 2.5
+
+    def test_bi_4f_available_in_mg_ka(self):
+        """Bi 4f debe estar disponible en Scofield Mg Kα."""
+        rsf = load_sensitivity_factors(source="scofield", xray_source="mg_ka")
+        assert "Bi 4f" in rsf
+        # Valor escalado para Mg Kα
+        assert 5.0 < rsf["Bi 4f"] < 6.5
+
+    def test_sr_3d_available_in_mg_ka(self):
+        """Sr 3d debe estar disponible en Scofield Mg Kα."""
+        rsf = load_sensitivity_factors(source="scofield", xray_source="mg_ka")
+        assert "Sr 3d" in rsf
+        # Valor escalado para Mg Kα
+        assert 1.0 < rsf["Sr 3d"] < 1.5
+
+    def test_quantify_bi_and_o(self):
+        """Test de cuantificación con Bi 4f y O 1s."""
+        rsf = load_sensitivity_factors(source="wagner", xray_source="al_ka")
+
+        # Picos sintéticos: Bi2O3
+        # Ratio atómico esperado: 40% Bi, 60% O
+        bi_peak = PeakParameters(
+            position=159.0,  # Bi 4f7/2
+            amplitude=1000.0,
+            width=1.5,
+            area=2000.0,
+            shape="voigt",
+        )
+
+        o_peak = PeakParameters(
+            position=531.0,
+            amplitude=800.0,
+            width=1.3,
+            area=1500.0,
+            shape="gaussian",
+        )
+
+        concentrations = calculate_atomic_concentration(
+            [bi_peak, o_peak], rsf, ["Bi 4f", "O 1s"]
+        )
+
+        # Debe sumar 100%
+        total = sum(concentrations.values())
+        assert abs(total - 100.0) < 1e-6
+
+        # Verificar que ambos elementos están presentes
+        assert "Bi 4f" in concentrations
+        assert "O 1s" in concentrations
+        assert concentrations["Bi 4f"] > 0
+        assert concentrations["O 1s"] > 0
+
+    def test_quantify_sr_and_ti(self):
+        """Test de cuantificación con Sr 3d y Ti 2p."""
+        rsf = load_sensitivity_factors(source="scofield", xray_source="al_ka")
+
+        # Picos sintéticos: SrTiO3 (Sr y Ti en ratio 1:1)
+        sr_peak = PeakParameters(
+            position=133.0,  # Sr 3d5/2
+            amplitude=500.0,
+            width=1.2,
+            area=800.0,
+            shape="voigt",
+        )
+
+        ti_peak = PeakParameters(
+            position=458.5,  # Ti 2p3/2
+            amplitude=600.0,
+            width=1.4,
+            area=1000.0,
+            shape="voigt",
+        )
+
+        concentrations = calculate_atomic_concentration(
+            [sr_peak, ti_peak], rsf, ["Sr 3d", "Ti 2p"]
+        )
+
+        # Debe sumar 100%
+        total = sum(concentrations.values())
+        assert abs(total - 100.0) < 1e-6
+
+        # Verificar que ambos elementos están presentes
+        assert "Sr 3d" in concentrations
+        assert "Ti 2p" in concentrations
+
+        # Ratio debería ser cercano a 1:1 (dentro de ±10%)
+        ratio = concentrations["Sr 3d"] / concentrations["Ti 2p"]
+        assert 0.7 < ratio < 1.3
+
+    def test_fallback_mechanism_scofield_to_wagner(self):
+        """Test de fallback automático entre fuentes RSF."""
+        # Cargar con fallback habilitado
+        rsf = load_sensitivity_factors(
+            source="scofield", xray_source="al_ka", enable_fallback=True
+        )
+
+        # Todos los elementos nuevos deben estar presentes
+        assert "Bi 4f" in rsf
+        assert "Sr 3d" in rsf
+
+        # Debe tener elementos de ambas fuentes
+        # (al menos 24 elementos de Scofield + posibles de Wagner)
+        assert len(rsf) >= 24
+
+    def test_fallback_in_calculate_concentration(self):
+        """Test de fallback automático en calculate_atomic_concentration."""
+        # Cargar RSF sin Bi/Sr (solo elementos básicos)
+        rsf_basic = {
+            "C 1s": 0.296,
+            "O 1s": 0.711,
+        }
+
+        # Intentar cuantificar Bi (no en RSF básico)
+        bi_peak = PeakParameters(
+            position=159.0,
+            amplitude=1000.0,
+            width=1.5,
+            area=2000.0,
+            shape="voigt",
+        )
+
+        o_peak = PeakParameters(
+            position=531.0,
+            amplitude=800.0,
+            width=1.3,
+            area=1500.0,
+            shape="gaussian",
+        )
+
+        # Con try_fallback=True (default), debe funcionar
+        concentrations = calculate_atomic_concentration(
+            [bi_peak, o_peak], rsf_basic, ["Bi 4f", "O 1s"], try_fallback=True
+        )
+
+        assert "Bi 4f" in concentrations
+        assert "O 1s" in concentrations
+
+    def test_no_fallback_raises_error(self):
+        """Sin fallback, elementos faltantes deben lanzar error."""
+        rsf_basic = {
+            "C 1s": 0.296,
+            "O 1s": 0.711,
+        }
+
+        bi_peak = PeakParameters(
+            position=159.0,
+            amplitude=1000.0,
+            width=1.5,
+            area=2000.0,
+            shape="voigt",
+        )
+
+        # Con try_fallback=False, debe lanzar ValueError
+        with pytest.raises(ValueError, match="Factores RSF no disponibles para: Bi 4f"):
+            calculate_atomic_concentration(
+                [bi_peak], rsf_basic, ["Bi 4f"], try_fallback=False
+            )

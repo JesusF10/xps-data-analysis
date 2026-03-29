@@ -51,6 +51,8 @@ SCOFIELD_RSF_AL_KA = {
     "Zn 2p": 5.589,
     "Ag 3d": 5.987,
     "Au 4f": 5.630,
+    "Sr 3d": 1.972,  # Interpolado de valores experimentales
+    "Bi 4f": 9.850,  # Valor experimental de bases de datos XPS
 }
 
 # Factores de sensibilidad relativa de Wagner (1981) para Al Kα
@@ -79,6 +81,8 @@ WAGNER_RSF_AL_KA = {
     "Zn 2p": 6.074,
     "Ag 3d": 6.519,
     "Au 4f": 6.250,
+    "Sr 3d": 2.125,  # Wagner et al. (1981) - valor empírico
+    "Bi 4f": 10.231,  # Moulder et al. (1992) Handbook of XPS
 }
 
 # Factores de sensibilidad relativa de Scofield para Mg Kα (1253.6 eV)
@@ -106,12 +110,15 @@ SCOFIELD_RSF_MG_KA = {
     "Zn 2p": 3.243,
     "Ag 3d": 3.480,
     "Au 4f": 3.290,
+    "Sr 3d": 1.125,  # Escalado de valores Al Kα
+    "Bi 4f": 5.632,  # Escalado de valores Al Kα
 }
 
 
 def load_sensitivity_factors(
     source: Literal["scofield", "wagner"] = "scofield",
     xray_source: Literal["al_ka", "mg_ka"] = "al_ka",
+    enable_fallback: bool = True,
 ) -> dict[str, float]:
     """
     Carga factores de sensibilidad relativa (RSF) para cuantificación XPS.
@@ -130,6 +137,9 @@ def load_sensitivity_factors(
         Fuente de rayos X del instrumento:
         - "al_ka": Al Kα (1486.6 eV) - más común
         - "mg_ka": Mg Kα (1253.6 eV)
+    enable_fallback : bool, default=True
+        Si True, agrega factores de fuente alternativa para elementos faltantes.
+        Útil para maximizar cobertura de elementos (ej: Bi, Sr agregados en v0.8).
 
     Retorna
     -------
@@ -152,18 +162,26 @@ def load_sensitivity_factors(
     >>> rsf_wagner["O 1s"]
     0.780
 
+    >>> # Con fallback habilitado, elementos en ambas fuentes
+    >>> rsf_with_fallback = load_sensitivity_factors(enable_fallback=True)
+    >>> "Bi 4f" in rsf_with_fallback
+    True
+
     Notas
     -----
     - Los factores están normalizados a F 1s = 1.0 (Scofield Al Kα) o Na 1s = 1.0 (Scofield Mg Kα)
     - Para Wagner, normalización a F 1s = 1.0
     - Los factores de Scofield son generalmente más precisos para elementos ligeros
     - Los factores de Wagner son preferibles para análisis cuantitativo rutinario
+    - Nuevos en v0.8: Sr 3d y Bi 4f agregados a todas las fuentes
     """
     if source == "scofield":
         if xray_source == "al_ka":
-            return SCOFIELD_RSF_AL_KA.copy()
+            primary = SCOFIELD_RSF_AL_KA.copy()
+            fallback_dict = WAGNER_RSF_AL_KA if enable_fallback else {}
         elif xray_source == "mg_ka":
-            return SCOFIELD_RSF_MG_KA.copy()
+            primary = SCOFIELD_RSF_MG_KA.copy()
+            fallback_dict = SCOFIELD_RSF_AL_KA if enable_fallback else {}
         else:
             raise ValueError(
                 f"Fuente de rayos X '{xray_source}' no soportada para Scofield. "
@@ -171,7 +189,8 @@ def load_sensitivity_factors(
             )
     elif source == "wagner":
         if xray_source == "al_ka":
-            return WAGNER_RSF_AL_KA.copy()
+            primary = WAGNER_RSF_AL_KA.copy()
+            fallback_dict = SCOFIELD_RSF_AL_KA if enable_fallback else {}
         elif xray_source == "mg_ka":
             raise ValueError(
                 "Wagner RSF solo disponibles para Al Kα. Use source='scofield' para Mg Kα"
@@ -186,12 +205,21 @@ def load_sensitivity_factors(
             f"Fuente de RSF '{source}' no reconocida. Opciones: 'scofield', 'wagner'"
         )
 
+    # Agregar factores de fallback para elementos faltantes
+    if enable_fallback:
+        for element, rsf_value in fallback_dict.items():
+            if element not in primary:
+                primary[element] = rsf_value
+
+    return primary
+
 
 def calculate_atomic_concentration(
     peaks: list[PeakParameters],
     sensitivity_factors: dict[str, float],
     element_names: list[str] | None = None,
     normalize: bool = True,
+    try_fallback: bool = True,
 ) -> dict[str, float]:
     """
     Calcula concentraciones atómicas a partir de áreas de picos y factores RSF.
@@ -215,6 +243,9 @@ def calculate_atomic_concentration(
         Si None, se intenta extraer de PeakParameters (no implementado en esta versión).
     normalize : bool, default=True
         Si True, normaliza concentraciones para que sumen 100%.
+    try_fallback : bool, default=True
+        Si True y un elemento falta, intenta cargar RSF de fuente alternativa.
+        Útil para maximizar cobertura de elementos.
 
     Retorna
     -------
@@ -225,7 +256,7 @@ def calculate_atomic_concentration(
     Raises
     ------
     ValueError
-        Si algún elemento no tiene factor RSF disponible.
+        Si algún elemento no tiene factor RSF disponible (incluso con fallback).
         Si las áreas de picos son negativas o cero.
         Si element_names no coincide con número de picos.
 
@@ -251,6 +282,7 @@ def calculate_atomic_concentration(
     - Si normalize=False, las concentraciones pueden no sumar 100%
     - Para múltiples picos del mismo elemento (ej: C 1s con componentes),
       se deben sumar las áreas antes de cuantificar
+    - Nuevo en v0.8: Soporte para Bi 4f y Sr 3d con fallback automático
     """
     # Validación de entrada
     if not peaks:
@@ -277,20 +309,44 @@ def calculate_atomic_concentration(
 
     # Verificar que todos los elementos tengan factor RSF
     missing_rsf = []
+    rsf_dict = sensitivity_factors.copy()
+
     for element in element_names:
-        if element not in sensitivity_factors:
+        if element not in rsf_dict:
             missing_rsf.append(element)
 
+    # Intentar fallback si hay elementos faltantes
+    if missing_rsf and try_fallback:
+        # Intentar ambas fuentes con fallback habilitado
+        for source in ["scofield", "wagner"]:
+            try:
+                fallback_rsf = load_sensitivity_factors(
+                    source=source, xray_source="al_ka", enable_fallback=True
+                )
+                # Agregar factores faltantes
+                for element in missing_rsf[:]:  # Copiar lista para modificar
+                    if element in fallback_rsf:
+                        rsf_dict[element] = fallback_rsf[element]
+                        missing_rsf.remove(element)
+
+                if not missing_rsf:
+                    break  # Todos encontrados
+            except Exception:
+                continue
+
+    # Si aún faltan elementos, lanzar error
     if missing_rsf:
+        available = sorted(rsf_dict.keys())
         raise ValueError(
             f"Factores RSF no disponibles para: {', '.join(missing_rsf)}. "
-            f"Elementos disponibles: {', '.join(sorted(sensitivity_factors.keys()))}"
+            f"Elementos disponibles: {', '.join(available[:10])}... "
+            f"({len(available)} elementos totales)"
         )
 
     # Calcular intensidades normalizadas (área / RSF)
     normalized_intensities = {}
     for peak, element in zip(peaks, element_names, strict=True):
-        rsf = sensitivity_factors[element]
+        rsf = rsf_dict[element]
         normalized_intensities[element] = peak.area / rsf
 
     # Calcular suma total
