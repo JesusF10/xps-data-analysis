@@ -17,14 +17,14 @@ Semana 3-4: Estructura jerárquica
 - ReferenceDatabase ✓ (Pydantic)
 
 Semana 5-6: Núcleo principal
-- XPSSpectrum (pendiente)
-- XPSDataset (pendiente)
-- XPSSample (pendiente)
+- XPSSpectrum ✓ (Pydantic)
+- XPSDataset ✓ (Pydantic)
+- XPSSample ✓ (Pydantic)
 
 Exports principales:
 """
 
-# Fase 2 - Semana 1-2: Dataclasses independientes (COMPLETADAS)
+# Fase 2 - Semana 1-4: Modelos de referencia y análisis (COMPLETADAS)
 from .reference import (
     PhotoelectronLine,
     CompoundReference,
@@ -33,21 +33,23 @@ from .reference import (
 )
 from .analysis import PeakParameters, FitResult
 
-# Migración gradual: mantener compatibilidad temporal con dataclasses originales
-# TODO: Eliminar una vez completada la migración completa
-from ..data_loader.core import XPSSpectrum, XPSDataset, XPSSample
+# Fase 2 - Semana 5-6: Núcleo principal (COMPLETADAS)
+from .core import XPSSpectrum, XPSDataset, XPSSample
+
+# Migración gradual: Eliminar imports de dataclasses originales
+# TODO: Remover completamente una vez validada compatibilidad
 
 __all__ = [
-    # Core data structures (pendientes de migración)
-    "XPSSpectrum",
-    "XPSDataset",
-    "XPSSample",
-    # Reference data (migración completa Semana 3-4)
+    # Core data structures (Semana 5-6 - COMPLETADAS)
+    "XPSSpectrum",  # ✓ Pydantic
+    "XPSDataset",  # ✓ Pydantic
+    "XPSSample",  # ✓ Pydantic
+    # Reference data (Semana 3-4 - COMPLETADAS)
     "PhotoelectronLine",  # ✓ Pydantic
     "CompoundReference",  # ✓ Pydantic
     "ElementReference",  # ✓ Pydantic
     "ReferenceDatabase",  # ✓ Pydantic
-    # Analysis results (migración completa)
+    # Analysis results (Semana 1-2 - COMPLETADAS)
     "PeakParameters",  # ✓ Pydantic
     "FitResult",  # ✓ Pydantic
 ]
