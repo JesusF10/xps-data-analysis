@@ -1,0 +1,101 @@
+{
+  "sample": "BN-BS-3",
+  "calibration_shift_eV": -3.3999999999999773,
+  "regions": {
+    "Bi 4f": {
+      "num_points": 601,
+      "energy_range": [
+        146.60000000000002,
+        176.60000000000002
+      ],
+      "fitting_success": true,
+      "peak": {
+        "position_eV": 158.933761890178,
+        "amplitude": 1341.7274195188922,
+        "fwhm_eV": 0.050000000054566604,
+        "area": 2937.9061582869654
+      },
+      "r_squared": 0.6315006329292571,
+      "chi_squared": 35413.23855243685
+    },
+    "C 1s": {
+      "num_points": 501,
+      "energy_range": [
+        271.6,
+        296.6
+      ],
+      "fitting_success": false
+    },
+    "Na 1s": {
+      "num_points": 401,
+      "energy_range": [
+        1062.6,
+        1082.6
+      ],
+      "fitting_success": true,
+      "peak": {
+        "position_eV": 1070.7637817022587,
+        "amplitude": 246.76458544926572,
+        "fwhm_eV": 0.8526325845830508,
+        "area": 558.3207558835519
+      },
+      "r_squared": 0.2550848749396779,
+      "chi_squared": 13724.655748188172
+    },
+    "O 1s": {
+      "num_points": 701,
+      "energy_range": [
+        511.6,
+        546.6
+      ],
+      "fitting_success": true,
+      "peak": {
+        "position_eV": 529.2216302207079,
+        "amplitude": 869.4103767360235,
+        "fwhm_eV": 0.9326126999532913,
+        "area": 2141.3966872409856
+      },
+      "r_squared": 0.8196702117854172,
+      "chi_squared": 8091.603235874387
+    },
+    "Sr 3d": {
+      "num_points": 801,
+      "energy_range": [
+        121.60000000000002,
+        161.60000000000002
+      ],
+      "fitting_success": true,
+      "peak": {
+        "position_eV": 158.99325794569882,
+        "amplitude": 3758.4714451817113,
+        "fwhm_eV": 0.6455770449406227,
+        "area": 6553.094494529782
+      },
+      "r_squared": 0.7985484362850327,
+      "chi_squared": 103755.89926192333
+    },
+    "Ti 2p": {
+      "num_points": 701,
+      "energy_range": [
+        446.6,
+        481.6
+      ],
+      "fitting_success": true,
+      "peak": {
+        "position_eV": 457.65795413144605,
+        "amplitude": 1471.2882005377032,
+        "fwhm_eV": 0.05000000000000001,
+        "area": 4480.876297423968
+      },
+      "r_squared": 0.4070739413981931,
+      "chi_squared": 63501.36111064082
+    }
+  },
+  "composition": {
+    "atomic_percent": {
+      "Na 1s": 6.132936834099195,
+      "O 1s": 50.80434468862547,
+      "Ti 2p": 43.06271847727533
+    }
+  }
+}

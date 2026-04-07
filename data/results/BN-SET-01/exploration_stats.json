@@ -1,0 +1,394 @@
+{
+  "BN-BS-1": {
+    "sample": "BN-BS-1",
+    "regions": {
+      "Bi 4f": {
+        "num_points": 601,
+        "energy_range": [
+          150.0,
+          180.0
+        ],
+        "intensity_range": [
+          227.0,
+          2134.0
+        ],
+        "intensity_mean": 615.9866888519135,
+        "intensity_std": 378.5188840466019,
+        "snr": 68.46757329389476
+      },
+      "Na 1s": {
+        "num_points": 401,
+        "energy_range": [
+          1066.0,
+          1086.0
+        ],
+        "intensity_range": [
+          10533.0,
+          12314.0
+        ],
+        "intensity_mean": 11306.518703241894,
+        "intensity_std": 381.8691597084963,
+        "snr": 171.15716483603904
+      },
+      "O 1s": {
+        "num_points": 701,
+        "energy_range": [
+          515.0,
+          550.0
+        ],
+        "intensity_range": [
+          1213.0,
+          2563.0
+        ],
+        "intensity_mean": 1511.798858773181,
+        "intensity_std": 245.40790998081386,
+        "snr": 122.97230258346713
+      },
+      "Sr 3d": {
+        "num_points": 701,
+        "energy_range": [
+          125.0,
+          160.0
+        ],
+        "intensity_range": [
+          572.0,
+          1558.0
+        ],
+        "intensity_mean": 772.3223965763195,
+        "intensity_std": 191.66693181373202,
+        "snr": 113.03958555110837
+      },
+      "Ti 2p": {
+        "num_points": 701,
+        "energy_range": [
+          450.0,
+          485.0
+        ],
+        "intensity_range": [
+          1820.0,
+          3500.0
+        ],
+        "intensity_mean": 2427.1683309557775,
+        "intensity_std": 328.45678184809555,
+        "snr": 94.79191839797797
+      },
+      "C 1s": {
+        "num_points": 501,
+        "energy_range": [
+          275.0,
+          300.0
+        ],
+        "intensity_range": [
+          1285.0,
+          2275.0
+        ],
+        "intensity_mean": 1534.804391217565,
+        "intensity_std": 208.992091410499,
+        "snr": 140.90184258721442
+      }
+    },
+    "survey": {
+      "num_points": 2201,
+      "energy_range": [
+        0.0,
+        1100.0
+      ],
+      "intensity_mean": 9422.268514311676,
+      "snr": 109.96018855530502
+    }
+  },
+  "BN-BS-2": {
+    "sample": "BN-BS-2",
+    "regions": {
+      "Bi 4f": {
+        "num_points": 601,
+        "energy_range": [
+          150.0,
+          180.0
+        ],
+        "intensity_range": [
+          239.0,
+          1676.0
+        ],
+        "intensity_mean": 587.9500831946756,
+        "intensity_std": 288.4897691876608,
+        "snr": 65.87147724883489
+      },
+      "C 1s": {
+        "num_points": 501,
+        "energy_range": [
+          275.0,
+          300.0
+        ],
+        "intensity_range": [
+          612.0,
+          1658.0
+        ],
+        "intensity_mean": 872.0319361277445,
+        "intensity_std": 223.49027534033894,
+        "snr": 79.63495112703995
+      },
+      "Na 1s": {
+        "num_points": 401,
+        "energy_range": [
+          1066.0,
+          1086.0
+        ],
+        "intensity_range": [
+          10766.0,
+          12328.0
+        ],
+        "intensity_mean": 11525.179551122195,
+        "intensity_std": 331.8959706631611,
+        "snr": 185.78953999955465
+      },
+      "O 1s": {
+        "num_points": 701,
+        "energy_range": [
+          515.0,
+          550.0
+        ],
+        "intensity_range": [
+          1260.0,
+          2610.0
+        ],
+        "intensity_mean": 1560.9728958630528,
+        "intensity_std": 228.25925172619836,
+        "snr": 94.80879080705468
+      },
+      "Sr 3d": {
+        "num_points": 801,
+        "energy_range": [
+          125.0,
+          165.0
+        ],
+        "intensity_range": [
+          633.0,
+          4881.0
+        ],
+        "intensity_mean": 1063.9388264669165,
+        "intensity_std": 759.9678585772775,
+        "snr": 233.9545735300408
+      },
+      "Ti 2p": {
+        "num_points": 701,
+        "energy_range": [
+          450.0,
+          485.0
+        ],
+        "intensity_range": [
+          1934.0,
+          3246.0
+        ],
+        "intensity_mean": 2497.1740370898715,
+        "intensity_std": 262.2856539924819,
+        "snr": 115.28725897959086
+      }
+    },
+    "survey": {
+      "num_points": 2201,
+      "energy_range": [
+        0.0,
+        1100.0
+      ],
+      "intensity_mean": 7915.276238073603,
+      "snr": 112.5006030482804
+    }
+  },
+  "BN-BS-3": {
+    "sample": "BN-BS-3",
+    "regions": {
+      "Bi 4f": {
+        "num_points": 601,
+        "energy_range": [
+          150.0,
+          180.0
+        ],
+        "intensity_range": [
+          249.0,
+          1843.0
+        ],
+        "intensity_mean": 602.8485856905158,
+        "intensity_std": 323.06180598252183,
+        "snr": 64.36101042600393
+      },
+      "C 1s": {
+        "num_points": 501,
+        "energy_range": [
+          275.0,
+          300.0
+        ],
+        "intensity_range": [
+          1254.0,
+          2455.0
+        ],
+        "intensity_mean": 1527.0778443113772,
+        "intensity_std": 254.33510029419926,
+        "snr": 130.98905669951387
+      },
+      "Na 1s": {
+        "num_points": 401,
+        "energy_range": [
+          1066.0,
+          1086.0
+        ],
+        "intensity_range": [
+          11089.0,
+          12450.0
+        ],
+        "intensity_mean": 11816.406483790524,
+        "intensity_std": 294.475308963049,
+        "snr": 204.53690715085955
+      },
+      "O 1s": {
+        "num_points": 701,
+        "energy_range": [
+          515.0,
+          550.0
+        ],
+        "intensity_range": [
+          1151.0,
+          2430.0
+        ],
+        "intensity_mean": 1437.1611982881598,
+        "intensity_std": 230.36636077721226,
+        "snr": 111.46069748362521
+      },
+      "Sr 3d": {
+        "num_points": 801,
+        "energy_range": [
+          125.0,
+          165.0
+        ],
+        "intensity_range": [
+          624.0,
+          5480.0
+        ],
+        "intensity_mean": 1080.2247191011236,
+        "intensity_std": 839.9064328354108,
+        "snr": 240.5680424864643
+      },
+      "Ti 2p": {
+        "num_points": 701,
+        "energy_range": [
+          450.0,
+          485.0
+        ],
+        "intensity_range": [
+          2651.0,
+          4670.0
+        ],
+        "intensity_mean": 3428.6333808844506,
+        "intensity_std": 411.5744807195685,
+        "snr": 114.51389018382196
+      }
+    },
+    "survey": {
+      "num_points": 2201,
+      "energy_range": [
+        0.0,
+        1100.0
+      ],
+      "intensity_mean": 9679.850522489778,
+      "snr": 110.59277277975973
+    }
+  },
+  "BN-BS-4": {
+    "sample": "BN-BS-4",
+    "regions": {
+      "Bi 4f": {
+        "num_points": 601,
+        "energy_range": [
+          150.0,
+          180.0
+        ],
+        "intensity_range": [
+          246.0,
+          1859.0
+        ],
+        "intensity_mean": 614.30615640599,
+        "intensity_std": 332.31596853065616,
+        "snr": 67.77485186243668
+      },
+      "C 1s": {
+        "num_points": 501,
+        "energy_range": [
+          275.0,
+          300.0
+        ],
+        "intensity_range": [
+          1187.0,
+          2138.0
+        ],
+        "intensity_mean": 1422.560878243513,
+        "intensity_std": 202.9239624031434,
+        "snr": 108.077228677162
+      },
+      "Na 1s": {
+        "num_points": 401,
+        "energy_range": [
+          1066.0,
+          1086.0
+        ],
+        "intensity_range": [
+          15432.0,
+          17418.0
+        ],
+        "intensity_mean": 16475.770573566086,
+        "intensity_std": 497.230145594272,
+        "snr": 236.8147713809278
+      },
+      "O 1s": {
+        "num_points": 701,
+        "energy_range": [
+          515.0,
+          550.0
+        ],
+        "intensity_range": [
+          1099.0,
+          2365.0
+        ],
+        "intensity_mean": 1389.3252496433665,
+        "intensity_std": 220.0245085657236,
+        "snr": 79.09467378033051
+      },
+      "Sr 3d": {
+        "num_points": 801,
+        "energy_range": [
+          125.0,
+          165.0
+        ],
+        "intensity_range": [
+          581.0,
+          5406.0
+        ],
+        "intensity_mean": 1068.912609238452,
+        "intensity_std": 868.5246274963071,
+        "snr": 269.40664010933625
+      },
+      "Ti 2p": {
+        "num_points": 701,
+        "energy_range": [
+          450.0,
+          485.0
+        ],
+        "intensity_range": [
+          2565.0,
+          4778.0
+        ],
+        "intensity_mean": 3414.4293865905847,
+        "intensity_std": 444.2086967508582,
+        "snr": 120.09204528271988
+      }
+    },
+    "survey": {
+      "num_points": 2201,
+      "energy_range": [
+        0.0,
+        1100.0
+      ],
+      "intensity_mean": 9151.910949568379,
+      "snr": 111.20138535971043
+    }
+  }
+}

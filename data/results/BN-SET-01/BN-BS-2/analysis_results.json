@@ -1,0 +1,75 @@
+{
+  "sample": "BN-BS-2",
+  "calibration_shift_eV": -0.9499999999999886,
+  "regions": {
+    "Bi 4f": {
+      "num_points": 601,
+      "energy_range": [
+        149.05,
+        179.05
+      ],
+      "fitting_success": false
+    },
+    "C 1s": {
+      "num_points": 501,
+      "energy_range": [
+        274.05,
+        299.05
+      ],
+      "fitting_success": true,
+      "peak": {
+        "position_eV": 285.54246394524665,
+        "amplitude": 677.046651980024,
+        "fwhm_eV": 1.680768676109702,
+        "area": 2937.2949298150315
+      },
+      "r_squared": 0.8564061829904608,
+      "chi_squared": 7153.668839349726
+    },
+    "Na 1s": {
+      "num_points": 401,
+      "energy_range": [
+        1065.05,
+        1085.05
+      ],
+      "fitting_success": false
+    },
+    "O 1s": {
+      "num_points": 701,
+      "energy_range": [
+        514.05,
+        549.05
+      ],
+      "fitting_success": false
+    },
+    "Sr 3d": {
+      "num_points": 801,
+      "energy_range": [
+        124.05000000000001,
+        164.05
+      ],
+      "fitting_success": true,
+      "peak": {
+        "position_eV": 161.37736895762146,
+        "amplitude": 3180.2726339479127,
+        "fwhm_eV": 0.6530875102633377,
+        "area": 5604.8458085571065
+      },
+      "r_squared": 0.7505416450552527,
+      "chi_squared": 97940.59508082207
+    },
+    "Ti 2p": {
+      "num_points": 701,
+      "energy_range": [
+        449.05,
+        484.05
+      ],
+      "fitting_success": false
+    }
+  },
+  "composition": {
+    "atomic_percent": {
+      "C 1s": 100.0
+    }
+  }
+}
