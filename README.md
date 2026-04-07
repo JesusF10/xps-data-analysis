@@ -28,8 +28,8 @@ Software automatizado en Python para análisis de datos de Espectroscopía de Fo
 [EN DESARROLLO] **Próxima Fase (Fase 2):**
 
 - Migración a Pydantic para validación avanzada
-- Soporte para formatos VAMAS y CASA XPS
-- Exportación a HDF5
+- GUI interactiva con Streamlit
+- Visualización avanzada con Plotly
 
 ---
 
@@ -264,12 +264,12 @@ xps-data-analysis/
 - [ ] Sistema de configuración TOML
 - [x] 87% test coverage (208 tests)
 
-### Fase 2 - Robustez
+### Fase 2 - Pydantic + GUI Interactiva
 
 - [ ] Migración a Pydantic para validación
-- [ ] Soporte VAMAS (ISO 14976)
-- [ ] Soporte CASA XPS
-- [ ] Exportación HDF5
+- [ ] GUI interactiva con Streamlit  
+- [ ] Visualización avanzada con Plotly
+- [ ] Análisis interactivo en tiempo real
 - [ ] 90% test coverage
 
 ### Fase 3 - Avanzado
@@ -367,4 +367,4 @@ Este proyecto está bajo la licencia MIT. Ver [LICENSE](LICENSE) para más detal
 
 - Shirley, D. A. (1972). "High-Resolution X-Ray Photoemission Spectrum of Valence Bands of Gold"
 - Tougaard, S. (2020). "Practical guide to the use of backgrounds in quantitative XPS"
-- ISO 14976:1998 - Formato VAMAS para datos de espectroscopía de superficie
+- NIST XPS Database - https://srdata.nist.gov/xps/

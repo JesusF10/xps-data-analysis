@@ -16,8 +16,8 @@ El desarrollo de XPS Analyzer sigue un enfoque iterativo de 5 fases principales 
 2. **Fase 1 (Completada)** - Funcionalidad core de análisis + exportación
 3. **Validación (Completada)** - Fases A-D con datos reales
 4. **Fase E (Completada)** - Mejoras de robustez: 50% → 79% éxito
-5. **Fase 2 (Planificada)** - Robustez y formatos múltiples
-6. **Fase 3 (Futura)** - Características avanzadas
+5. **Fase 2 (Planificada)** - Migración a Pydantic + GUI Interactiva
+6. **Fase 3 (Futura)** - GUI Profesional
 
 **Principios guía:**
 - Priorizar funcionalidad core sobre características avanzadas
@@ -489,64 +489,52 @@ Después de completar la implementación de Fase 1, se realizó validación exha
 
 ---
 
-## Fase 2: Robustez y Formatos Múltiples
+## Fase 2: Migración a Pydantic + GUI Interactiva
 
 **Estado:** 0% completo  
-**Objetivo:** Sistema robusto con soporte para formatos estándar de la industria
+**Objetivo:** Migrar dataclasses a Pydantic para validación robusta e implementar GUI interactiva
 
-**Duración estimada:** 3-4 meses después de completar mejoras de robustez (Fase E)
+**Duración estimada:** 8-10 semanas con trabajo en paralelo
 
-### 2.1 Migración a Pydantic
+### 2.1 Migración a Pydantic (4-6 semanas)
 
 **Prioridad:** Alta (mejora arquitectura)
 
-**Migración de data_loader:**
-- [ ] Convertir `XPSSpectrum` a Pydantic `BaseModel`
-- [ ] Convertir `XPSDataset` a Pydantic `BaseModel`
-- [ ] Convertir `XPSSample` a Pydantic `BaseModel`
-- [ ] Implementar `@field_validator` para validaciones complejas
-- [ ] Agregar custom validators para metadatos
-- [ ] Tests de migración (100% backward compatible)
+**Estrategia de migración gradual:**
+- Semana 1-2: Dataclasses independientes (PhotoelectronLine, CompoundReference, PeakParameters)  
+- Semana 3-4: Estructura jerárquica (ElementReference, ReferenceDatabase, FitResult)
+- Semana 5-6: Núcleo principal (XPSSpectrum, XPSDataset, XPSSample)
 
 **Beneficios:**
 - Validación automática robusta
-- Mensajes de error claros y estandarizados
+- Mensajes de error claros y estandarizados  
 - JSON schema generation para documentación
-- Mejor integración con múltiples formatos
-- Preparación para API web futura
+- Preparación para GUI y APIs futuras
 
-**Breaking changes:**
+**Breaking changes aceptables:**
 - `.model_dump()` en lugar de `dataclasses.asdict()`
 - `pydantic.ValidationError` en lugar de `ValueError`
-- Guía de migración incluida en CHANGELOG.md
+- Tests pueden fallar temporalmente durante migración
 
-**Ejemplo de migración:**
+**Validadores críticos:**
 ```python
-from pydantic import BaseModel, field_validator
-import numpy as np
+@field_validator('binding_energy', 'intensity')
+@classmethod
+def validate_arrays(cls, v):
+    if not isinstance(v, np.ndarray):
+        raise ValueError('Debe ser numpy.ndarray')
+    return v
 
-class XPSSpectrum(BaseModel):
-    model_config = ConfigDict(arbitrary_types_allowed=True)
-    
-    region_name: str
-    binding_energy: np.ndarray
-    intensity: np.ndarray
-    metadata: dict[str, Any]
-    
-    @field_validator('intensity')
-    def validate_arrays_match(cls, v, info):
-        be = info.data.get('binding_energy')
-        if be is not None and len(v) != len(be):
-            raise ValueError(
-                f"intensity length ({len(v)}) must match "
-                f"binding_energy length ({len(be)})"
-            )
-        return v
+@model_validator(mode='after') 
+def validate_array_consistency(self):
+    if len(self.binding_energy) != len(self.intensity):
+        raise ValueError('Arrays must have same length')
+    return self
 ```
 
-### 2.2 Formato VAMAS (ISO 14976)
+### 2.2 GUI Interactiva con Streamlit (4-6 semanas)
 
-**Prioridad:** Alta (estándar internacional)
+**Prioridad:** Alta (experiencia de usuario)
 
 **Características:**
 - [ ] Parser completo para VAMAS
@@ -559,56 +547,42 @@ class XPSSpectrum(BaseModel):
 - Módulo `data_loader/vamas_parser.py`
 - Pydantic models para metadata VAMAS
 - Documentación de campos soportados
-- Ejemplos de conversión
-
-### 2.3 Formato CASA XPS
-
-**Prioridad:** Media (interoperabilidad)
-
-**Características:**
-- [ ] Parser para archivos `.casaxps`
-- [ ] Importar regiones definidas
-- [ ] Importar ajustes de picos
-- [ ] Conversión de parámetros de CASA a xps-analyzer
-
-**Nota:** CASA XPS es formato propietario, soporte best-effort
-
-### 2.4 Formato HDF5
-
-**Prioridad:** Media (datasets grandes)
-
-**Características:**
-- [ ] Exportar datasets a HDF5
-- [ ] Importar desde HDF5
-- [ ] Schema HDF5 con jerarquía clara
-- [ ] Compresión para archivos grandes
-- [ ] Metadata embebida
-
-**Ventajas:**
-- Manejo eficiente de datasets grandes
-- Formato binario comprimido
-- Ampliamente soportado en ciencia
-
-### 2.5 Detección Automática de Formato
-
-**Prioridad:** Alta (usabilidad)
-
-**Características:**
-- [ ] `detect_file_format()` completamente implementado
-- [ ] Auto-selección de parser correcto
-- [ ] Tests para todos los formatos
-- [ ] Mensajes de error claros si formato desconocido
-
-**Implementación:**
-```python
-def detect_file_format(filepath: Path) -> str:
-    """Detecta automáticamente el formato del archivo."""
-    # Leer primeras líneas
-    # Buscar magic numbers/headers
-    # Retornar: "vamas", "casa", "text", "hdf5", etc.
+**Arquitectura:** 
+```
+src/xps_analyzer/gui/
+├── main.py              # App principal Streamlit
+├── pages/
+│   ├── data_loader.py   # Carga de archivos
+│   ├── visualization.py # Visualización interactiva  
+│   ├── analysis.py      # Análisis interactivo
+│   └── calibration.py   # Calibración
+├── components/
+│   ├── spectrum_viewer.py
+│   ├── parameter_controls.py
+│   └── results_display.py
+└── utils/
+    └── state_management.py
 ```
 
-### 2.6 Sistema de Configuración Avanzado
+**Funcionalidad:**
+- Semana 1-2: File upload, visualización básica, navegación
+- Semana 3-4: Análisis interactivo (calibración, background, fitting)  
+- Semana 5-6: Dashboard integrado, cuantificación, configuración
+
+**Dependencias:**
+- `streamlit>=1.28.0` 
+- `plotly>=5.17.0` (ya disponible)
+- `streamlit-plotly-events>=0.0.6`
+
+**Características clave:**
+- Drag & drop para archivos
+- Parámetros ajustables en tiempo real
+- Pipeline completo: cargar → calibrar → analizar → visualizar
+- Visualización interactiva con Plotly
+- Estado de sesión persistente  
+- Interface científica intuitiva
+
+### 2.3 Sistema de Configuración Avanzado
 
 **Prioridad:** Media (power users)
 
@@ -618,85 +592,92 @@ def detect_file_format(filepath: Path) -> str:
 - [ ] Configuración por proyecto
 - [ ] Plantillas de análisis comunes
 
-### 2.7 Tests y Cobertura
+### 2.4 Tests y Cobertura
 
-**Objetivo:** 80% de cobertura
+**Objetivo:** 85% de cobertura
 
 **Áreas adicionales:**
-- [ ] Tests para todos los parsers de formato
-- [ ] Tests de Pydantic validators
-- [ ] Integration tests con workflows reales
-- [ ] Tests de performance con archivos grandes
+- [ ] Tests para Pydantic validators y migration
+- [ ] Tests de GUI Streamlit (funcionalidad core)
+- [ ] Integration tests con workflows reales  
+- [ ] Tests de performance con datasets grandes
+- [ ] Tests de UI/UX (navegación, estado, errores)
 
 ---
 
-## Fase 3: Características Avanzadas
+## Fase 3: GUI Profesional
 
 **Estado:** 0% completo  
-**Objetivo:** Funcionalidad innovadora y herramientas avanzadas
+**Objetivo:** Interface profesional con arquitectura moderna
 
 **Duración estimada:** 6-8 meses después de completar Fase 2
 
-### 3.1 Machine Learning para Identificación
+### 3.1 Backend API con FastAPI
 
-**Prioridad:** Media (innovación)
+**Prioridad:** Alta (arquitectura profesional)
 
-**Características:**
-- [ ] Clasificación automática de elementos
-- [ ] Predicción de estados de oxidación
-- [ ] Detección de contaminación
-- [ ] Sugerencias de ajuste de picos
-
-**Tecnologías:**
-- scikit-learn para modelos básicos
-- Entrenamiento con base de datos NIST
-- Validación cruzada con datos reales
-
-### 3.2 Análisis de Profundidad
-
-**Prioridad:** Media (funcionalidad avanzada)
+**Tecnología:** FastAPI + Pydantic (aprovechando migración de Fase 2)
 
 **Características:**
-- [ ] Depth profiling con sputtering
-- [ ] Análisis de multicapas
-- [ ] Visualización 3D (profundidad vs energía)
+- [ ] API REST completa para análisis XPS
+- [ ] Endpoints documentados con OpenAPI/Swagger
+- [ ] Validación automática con Pydantic models
+- [ ] Autenticación y autorización
+- [ ] Rate limiting y logging
+- [ ] Tests de API comprehensivos
 
-### 3.3 GUI Interactiva
-
-**Prioridad:** Baja (accesibilidad)
-
-**Opciones de implementación:**
-- Streamlit (más rápido, menos control)
-- Dash (más flexible)
-- Qt (nativa, más compleja)
-
-**Características:**
-- [ ] Carga de archivos drag-and-drop
-- [ ] Visualización interactiva
-- [ ] Ajuste de parámetros en tiempo real
-- [ ] Exportación de reports
-
-### 3.4 API REST
-
-**Prioridad:** Baja (integración)
-
-**Tecnología:** FastAPI + Pydantic
-
-**Endpoints:**
-- `POST /analyze` - Subir archivo y analizar
+**Endpoints principales:**
+- `POST /analyze` - Subir archivo y ejecutar análisis
 - `GET /elements` - Base de datos de elementos
-- `GET /results/{id}` - Obtener resultados
+- `GET /results/{id}` - Obtener resultados de análisis
+- `POST /calibrate` - Calibración de espectros
+- `POST /background` - Sustracción de fondo
+- `POST /fitting` - Ajuste de picos
 
-### 3.5 Property-Based Testing
+### 3.2 Frontend Moderno
 
-**Prioridad:** Alta (calidad)
+**Prioridad:** Alta (experiencia profesional)
 
-**Objetivo:** 90% de cobertura
+**Tecnología:** React + TypeScript
+
+**Características:**
+- [ ] Interface moderna y responsive
+- [ ] Visualización avanzada con D3.js/Chart.js
+- [ ] File upload con progress bars
+- [ ] Real-time analysis monitoring
+- [ ] Dashboard profesional de resultados
+- [ ] Export de reports (PDF, Word)
+- [ ] Configuración de usuario persistente
+
+### 3.3 Deployment y DevOps
+
+**Prioridad:** Media (productización)
+
+**Características:**
+- [ ] Containerización con Docker
+- [ ] Deployment automatizado (CI/CD)
+- [ ] Monitoreo de aplicación
+- [ ] Backup de datos automático
+- [ ] Scaling horizontal
+- [ ] SSL/TLS y seguridad
+
+**Plataformas objetivo:**
+- [ ] Deployment local (laboratorios)
+- [ ] Cloud deployment (AWS/GCP/Azure)
+- [ ] On-premises servers
+
+### 3.4 Property-Based Testing
+
+**Prioridad:** Alta (calidad y robustez)
+
+**Objetivo:** 90% de cobertura + tests generativos
 
 **Implementación:**
-- Usar hypothesis para tests generativos
-- Invariantes del sistema
-- Fuzzing de parsers
+- [ ] Hypothesis para tests generativos
+- [ ] Invariantes del sistema de análisis XPS
+- [ ] Fuzzing de parsers y validators
+- [ ] Stress testing con datasets sintéticos
+- [ ] Performance benchmarking
 
 ---
 
@@ -828,6 +809,32 @@ Elementos cuantific.   | 23       | 25     | +2
 - Moulder et al. (1992) - Handbook of XPS
 - Bearden & Burr (1967) - Dobletes spin-órbita
 
+### Fase 2: Migración a Pydantic + GUI Interactiva [PLANIFICADA]
+
+**Criterios de éxito:**
+- [ ] Todas las dataclasses migradas a Pydantic BaseModel
+- [ ] Validación automática robusta funcionando
+- [ ] Tests restaurados al 100% (271+ tests passing)
+- [ ] GUI Streamlit completamente funcional
+- [ ] Pipeline completo en GUI: carga → calibración → análisis → visualización
+- [ ] Parámetros interactivos en tiempo real
+- [ ] Manejo robusto de errores en GUI
+- [ ] Cobertura de tests ≥85%
+- [ ] Performance aceptable (< 10% degradación vs. dataclasses)
+
+### Fase 3: GUI Profesional [FUTURA]
+
+**Criterios de éxito:**
+- [ ] API REST completa con FastAPI
+- [ ] Frontend React profesional y responsive  
+- [ ] Autenticación y autorización implementadas
+- [ ] Deployment automatizado (Docker + CI/CD)
+- [ ] Documentación OpenAPI completa
+- [ ] Monitoreo y logging de aplicación
+- [ ] Property-based testing con Hypothesis
+- [ ] Cobertura de tests ≥90%
+- [ ] Performance y escalabilidad validadas
+
 ---
 
 ## Dependencias entre Fases
@@ -837,12 +844,12 @@ Fase 0 (Fundamentos)
     |
 Fase 1 (Análisis Core) <- BLOQUEADOR: Sin esto, no hay producto útil
     |
-Fase 2 (Robustez) <- Construye sobre Fase 1
+Fase 2 (Pydantic + GUI) <- Construye sobre Fase 1, mejora usabilidad
     |
-Fase 3 (Avanzado) <- Opcional, mejora experiencia
+Fase 3 (GUI Profesional) <- Opcional, productización
 ```
 
-**Nota crítica:** Fase 1 es BLOQUEADOR absoluto. Sin sustracción de fondo y ajuste de picos, el software no es útil para investigadores XPS.
+**Nota crítica:** Fase 1 sigue siendo BLOQUEADOR absoluto. Sin sustracción de fondo y ajuste de picos, el software no es útil para investigadores XPS. Fase 2 agrega robustez y usabilidad pero no es funcionalidad core.
 
 ---
 
@@ -850,31 +857,32 @@ Fase 3 (Avanzado) <- Opcional, mejora experiencia
 
 Si deseas contribuir al proyecto:
 
-1. **Fase 1 es la prioridad máxima** - Cualquier PR relacionado con análisis core es bienvenido
-2. **Tests son críticos** - PRs sin tests no serán mergeados
-3. **Documentación en español** - Requisito obligatorio
-4. **Seguir convenciones** - Ver CONTRIBUTING.md
+1. **Fase 1 está COMPLETADA** - El análisis core ya funciona
+2. **Fase 2 es la prioridad actual** - PRs de migración a Pydantic y GUI son bienvenidos
+3. **Tests son críticos** - PRs sin tests no serán mergeados
+4. **Documentación en español** - Requisito obligatorio  
+5. **Seguir convenciones** - Ver CONTRIBUTING.md
 
 **Issues etiquetados:**
-- `Phase-1-blocker`: Funcionalidad crítica
-- `Phase-2-enhancement`: Mejoras futuras
+- `Phase-2-priority`: Migración Pydantic y GUI (prioridad actual)
+- `Phase-3-future`: GUI profesional (futuro)
 - `good-first-issue`: Para nuevos contribuidores
 
 ---
 
 ## Preguntas Frecuentes
 
-**Q: ¿Por qué Pydantic está en Fase 2 y no Fase 0?**  
-A: La validación manual es suficiente para un solo formato de archivo. Pydantic agrega valor real cuando soportamos múltiples formatos con diferentes schemas.
+**Q: ¿Por qué Pydantic está en Fase 2 y no desde el inicio?**  
+A: La validación manual con dataclasses fue suficiente para implementar la funcionalidad core. Pydantic agrega valor real para GUI interactiva y APIs futuras.
 
-**Q: ¿Puedo empezar con Fase 3 si es más interesante?**  
-A: No recomendado. El proyecto necesita funcionalidad core (Fase 1) antes que características avanzadas.
+**Q: ¿Por qué no se implementan formatos VAMAS/CASA XPS?**  
+A: El proyecto se enfoca en robustez y experiencia de usuario. Un formato bien soportado es mejor que múltiples formatos parcialmente implementados.
 
-**Q: ¿Cuándo estará listo para producción?**  
-A: Después de completar Fase 1 con cobertura de tests >=60%. Estimado: 6-8 meses desde ahora.
+**Q: ¿Cuándo estará lista la GUI?**  
+A: Después de completar Fase 2. Estimado: 8-10 semanas para GUI interactiva con Streamlit.
 
 **Q: ¿Se aceptan contribuciones de características no en el roadmap?**  
-A: Sí, pero deben discutirse primero en un issue. Asegúrate de que no compliquen el plan existente.
+A: Sí, pero deben discutirse primero en un issue. Prioridad en Pydantic y GUI actualmente.
 
 ---
 

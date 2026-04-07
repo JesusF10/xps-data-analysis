@@ -464,8 +464,6 @@ def detect_file_format(filepath: str | Path) -> str | None:
     -------
     str | None
         Tipo de formato detectado:
-        - "vamas": Formato VAMAS (ISO 14976)
-        - "casa": Formato CASA XPS
         - "multiplex": Formato multiplex propietario
         - "survey": Formato survey simple
         - "text": Formato de texto genérico
@@ -496,13 +494,6 @@ def detect_file_format(filepath: str | Path) -> str | None:
         # Concatenar para búsqueda
         content = "\n".join(first_lines)
 
-        # Detección por contenido (prioridad alta)
-        if "VAMAS" in content or "ISO 14976" in content:
-            return "vamas"
-
-        if "Casa" in content or "CASA" in content:
-            return "casa"
-
         # Detección por nombre de archivo
         filename_lower = filepath.name.lower()
         if "multiplex" in filename_lower:
@@ -525,7 +516,7 @@ def detect_file_format(filepath: str | Path) -> str | None:
         return None
 
     except UnicodeDecodeError:
-        # Archivo binario (puede ser VAMAS binario en Fase 2)
+        # Archivo binario - formato no soportado
         return None
     except Exception:
         return None

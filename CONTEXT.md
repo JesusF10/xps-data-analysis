@@ -73,7 +73,7 @@ El cargador de datos (`core.py:216-268`) auto-detecta tipos de archivo:
 - **Default** -> espectro survey único
 - **Parser:** usa delimitadores `;` para metadata, valores separados por espacio para columnas de datos
 
-**Estado actual:** Solo soporta un formato propietario de texto. **Fase 2** agregará VAMAS, CASA XPS, HDF5.
+**Estado actual:** Solo soporta un formato propietario de texto. **Fase 2** se enfocará en migración a Pydantic y GUI interactiva.
 
 ---
 
@@ -102,7 +102,7 @@ src/xps_analyzer/
 │   ├── plotting.py         # Plots básicos (survey, region)
 │   └── __init__.py         # Falta: plots avanzados, reports interactivos
 ├── export/                  # [PENDIENTE] 0% - MÓDULO VACÍO (SESIÓN 4)
-│   └── __init__.py         # Falta: exportar CSV, Excel, JSON, HDF5
+│   └── __init__.py         # Exportación completada en Fase 1
 ├── cli/                     # [EN PROGRESO] 40% completo
 │   ├── main.py             # Comandos básicos: analyze, show-element
 │   └── __init__.py         # Falta: más comandos, validación robusta
@@ -365,7 +365,6 @@ python verify_installation.py
 
 **Declaradas pero no usadas (planeadas para fases futuras):**
 - `scikit-learn` - Machine learning para identificación (Fase 3)
-- `h5py` - Exportación HDF5 (Fase 2)
 - `PyYAML` - Configuración (Fase 1 - Sesión 4)
 - `pydantic` - Validación de datos (Fase 2)
 - `tqdm` - Barras de progreso (Fase 1 - Sesión 4)
@@ -479,8 +478,8 @@ pytest tests/test_data_loader.py::test_get_spectrum_data_basic -v
 
 ### Funcionalidad Faltante (Bloqueadores para v1.0)
 
-- [PENDIENTE] Exportación de resultados (CSV, Excel, JSON) - Sesión 4
-- [PENDIENTE] Soporte para múltiples formatos (VAMAS, CASA) - Fase 2
+- [COMPLETADO] Exportación de resultados (CSV, Excel, JSON) - Sesión 4
+- [REMOVIDO] Soporte para múltiples formatos - No será implementado
 
 ### Implementaciones Stub
 
@@ -615,26 +614,25 @@ El JSON tiene `line_positions` anidados con múltiples entradas por orbital (man
 - 4 módulos completados (background, peak_fitting, quantification, export)
 - Pipeline completo: cargar → calibrar → analizar → exportar
 
-### Fase 2 - Robustez
+### Fase 2 - Pydantic + GUI Interactiva
 **Estado:** 0% completo  
-**Prioridad:** Escalabilidad + formatos estándar
+**Prioridad:** Escalabilidad + experiencia de usuario
 
 - [ ] Migración a Pydantic (validación automática)
-- [ ] Soporte VAMAS (ISO 14976)
-- [ ] Soporte CASA XPS
-- [ ] Exportación HDF5
-- [ ] Sistema de plugins para formatos
+- [ ] GUI interactiva con Streamlit
+- [ ] Visualización avanzada con Plotly
+- [ ] Análisis interactivo en tiempo real
 - [ ] Sistema de configuración avanzado
 - [ ] Tests de integración (target: 85% coverage)
 
-### Fase 3 - Avanzado
+### Fase 3 - GUI Profesional
 **Estado:** 0% completo  
-**Prioridad:** Innovación
+**Prioridad:** Experiencia profesional
 
-- [ ] Machine learning para identificación automática
-- [ ] Análisis de profundidad (depth profiling)
-- [ ] GUI con Streamlit/Dash
-- [ ] API REST con FastAPI
+- [ ] GUI profesional con FastAPI + React
+- [ ] Deployment en servidor
+- [ ] Autenticación y múltiples usuarios
+- [ ] API REST completa
 - [ ] Property-based testing (target: 90% coverage)
 
 ---
@@ -659,23 +657,23 @@ El JSON tiene `line_positions` anidados con múltiples entradas por orbital (man
 
 ### Prioridades de Implementación
 
-**Alta prioridad (bloqueadores de v1.0):**
-- Exportación de resultados (CSV, Excel, JSON) - Sesión 4 Fase 1
+**Alta prioridad (Fase 2):**
+- Migración a Pydantic para validación robusta
+- GUI interactiva con Streamlit
 
 **Media prioridad:**
 - Tests adicionales (aumentar a 90%)
-- Soporte para más formatos (VAMAS, CASA XPS)
 - Sistema de configuración avanzado
+- Visualización avanzada
 
 **Baja prioridad:**
-- GUI
 - Machine learning
-- API REST
+- GUI profesional (FastAPI + React)
+- API REST completa
 
 ### Limitaciones Conocidas
 
-- Solo un formato de archivo soportado (texto propietario) - Fase 2 agregará VAMAS, CASA
-- Sin sistema de exportación (Sesión 4 pendiente)
+- Solo un formato de archivo soportado (texto propietario) - no se agregará soporte adicional
 - Tests de módulos CLI y visualization pendientes
 - Tipo checking parcial (~60% del código)
 - Sistema de configuración documentado pero no implementado
@@ -686,9 +684,7 @@ El JSON tiene `line_positions` anidados con múltiples entradas por orbital (man
 
 ### Estándares XPS
 
-- **ISO 14976** - Formato VAMAS para datos de espectroscopía de superficie
 - **NIST XPS Database** - https://srdata.nist.gov/xps/
-- **CASA XPS** - Software comercial líder en análisis XPS
 
 ### Herramientas de Desarrollo
 

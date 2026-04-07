@@ -282,28 +282,6 @@ def test_detect_file_format_survey(tmp_path):
     assert fmt == "survey"
 
 
-def test_detect_file_format_vamas(tmp_path):
-    """Test detección de formato VAMAS."""
-    file_path = tmp_path / "vamas_sample.vms"
-    file_path.write_text(
-        "VAMAS Surface Chemical Analysis Standard Data Transfer Format\n"
-        "ISO 14976\n"
-        "Version 2.3\n"
-    )
-
-    fmt = detect_file_format(file_path)
-    assert fmt == "vamas"
-
-
-def test_detect_file_format_casa(tmp_path):
-    """Test detección de formato CASA XPS."""
-    file_path = tmp_path / "casa_sample.txt"
-    file_path.write_text("CASA XPS Data Export\nVersion 2.3.23\nSample: Test Sample\n")
-
-    fmt = detect_file_format(file_path)
-    assert fmt == "casa"
-
-
 def test_detect_file_format_text_generic(tmp_path):
     """Test detección de formato texto genérico."""
     file_path = tmp_path / "generic.txt"
