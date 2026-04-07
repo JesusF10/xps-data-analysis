@@ -5,7 +5,7 @@ Migración de dataclasses -> Pydantic BaseModel para:
 - PhotoelectronLine ✓
 - CompoundReference ✓
 - ElementReference ✓
-- ReferenceDatabase (pendiente)
+- ReferenceDatabase ✓
 
 Proporciona validación automática y serialización mejorada para datos de referencia.
 """
@@ -461,3 +461,263 @@ class ElementReference(XPSBaseModel):
             if line.line.lower() == orbital.lower():
                 return line
         return None
+
+
+class ReferenceDatabase(XPSBaseModel):
+    """
+    Base de datos completa de elementos de referencia con validación automática.
+
+    Valida automáticamente la integridad de la base de datos, símbolos únicos
+    y consistencia de versiones.
+
+    Parámetros
+    ----------
+    elements : dict[str, ElementReference]
+        Diccionario con elementos indexados por símbolo. Símbolos deben ser únicos.
+    version : str
+        Versión de la base de datos. Formato recomendado: "X.Y" o "X.Y.Z".
+    source : str
+        Fuente de los datos de referencia. Debe ser no vacía.
+
+    Ejemplos
+    --------
+    >>> # Base de datos básica
+    >>> carbon = ElementReference(
+    ...     symbol="C", element="Carbon", atomic_number=6,
+    ...     photoelectron_lines=[PhotoelectronLine(line="1s", binding_energy=284.8)],
+    ...     compounds={}
+    ... )
+    >>> db = ReferenceDatabase(
+    ...     elements={"C": carbon},
+    ...     version="1.0",
+    ...     source="NIST XPS Database"
+    ... )
+    """
+
+    elements: dict[str, ElementReference] = Field(
+        ..., description="Diccionario de elementos indexados por símbolo", min_length=1
+    )
+
+    version: str = Field(
+        default="1.0",
+        description="Versión de la base de datos",
+        min_length=1,
+        examples=["1.0", "2.1.3", "2024.03"],
+    )
+
+    source: str = Field(
+        default="Handbook of X-ray Photoelectron Spectroscopy",
+        description="Fuente de los datos de referencia",
+        min_length=1,
+        examples=[
+            "NIST XPS Database",
+            "Handbook of X-ray Photoelectron Spectroscopy",
+            "Beamson & Briggs (1992)",
+        ],
+    )
+
+    @field_validator("version")
+    @classmethod
+    def validate_version_format(cls, v: str) -> str:
+        """Valida formato básico de versión."""
+        cleaned = v.strip()
+        if not cleaned:
+            raise ValueError("version no puede estar vacía")
+
+        # Formato básico: dígitos y puntos
+        import re
+
+        if not re.match(r"^[\d\.]+$", cleaned):
+            # Permitir también formatos como "2024.03"
+            if not re.match(r"^[\d\.]+[\w]*$", cleaned):
+                raise ValueError(
+                    f"Formato de versión inválido: '{cleaned}'. Use formato X.Y o X.Y.Z"
+                )
+
+        return cleaned
+
+    @model_validator(mode="after")
+    def validate_element_symbol_consistency(self) -> "ReferenceDatabase":
+        """Valida que las claves coincidan con los símbolos de elementos."""
+        for symbol, element in self.elements.items():
+            if symbol != element.symbol:
+                raise ValueError(
+                    f"Inconsistencia de símbolo: clave '{symbol}' no coincide "
+                    f"con element.symbol '{element.symbol}'"
+                )
+        return self
+
+    @model_validator(mode="after")
+    def validate_unique_atomic_numbers(self) -> "ReferenceDatabase":
+        """Valida que no haya números atómicos duplicados."""
+        atomic_numbers = {}
+        for symbol, element in self.elements.items():
+            z = element.atomic_number
+            if z in atomic_numbers:
+                raise ValueError(
+                    f"Número atómico duplicado: Z={z} para elementos "
+                    f"'{atomic_numbers[z]}' y '{symbol}'"
+                )
+            atomic_numbers[z] = symbol
+        return self
+
+    def get_element(self, symbol: str) -> ElementReference | None:
+        """
+        Obtiene datos de un elemento por símbolo.
+
+        Parámetros
+        ----------
+        symbol : str
+            Símbolo del elemento (case-insensitive).
+
+        Retorna
+        -------
+        ElementReference | None
+            Referencia del elemento si existe, None de lo contrario.
+        """
+        return self.elements.get(symbol.upper())
+
+    def search_by_binding_energy(
+        self, energy: float, tolerance: float = 2.0
+    ) -> list[tuple[str, str]]:
+        """
+        Busca elementos/compuestos por energía de enlace.
+
+        Parámetros
+        ----------
+        energy : float
+            Energía de enlace a buscar en eV.
+        tolerance : float, default=2.0
+            Tolerancia de búsqueda en eV.
+
+        Retorna
+        -------
+        list[tuple[str, str]]
+            Lista de tuplas (símbolo_elemento, orbital/compuesto).
+
+        Ejemplos
+        --------
+        >>> db.search_by_binding_energy(284.8, tolerance=1.0)
+        [('C', '1s'), ('C', 'graphite')]
+        """
+        if energy <= 0:
+            raise ValueError("energy debe ser positiva")
+        if tolerance <= 0:
+            raise ValueError("tolerance debe ser positiva")
+
+        matches = []
+
+        for element in self.elements.values():
+            # Buscar en líneas fotoeléctronicas
+            for line in element.photoelectron_lines:
+                if abs(line.binding_energy - energy) <= tolerance:
+                    matches.append((element.symbol, line.line))
+
+            # Buscar en compuestos con peak_position definido
+            for compound_name, compound in element.compounds.items():
+                if (
+                    compound.peak_position is not None
+                    and abs(compound.peak_position - energy) <= tolerance
+                ):
+                    matches.append((element.symbol, compound_name))
+
+        return matches
+
+    def get_chemical_shifts(self, element_symbol: str) -> dict[str, float]:
+        """
+        Obtiene todos los desplazamientos químicos de un elemento.
+
+        Parámetros
+        ----------
+        element_symbol : str
+            Símbolo del elemento.
+
+        Retorna
+        -------
+        dict[str, float]
+            Diccionario con compuesto -> desplazamiento químico.
+        """
+        element = self.get_element(element_symbol)
+        if not element:
+            return {}
+
+        return {
+            comp_name: comp.chemical_shift
+            for comp_name, comp in element.compounds.items()
+            if comp.chemical_shift is not None
+        }
+
+    def list_elements(self) -> list[str]:
+        """
+        Lista todos los elementos disponibles ordenados por número atómico.
+
+        Retorna
+        -------
+        list[str]
+            Lista de símbolos de elementos ordenados por Z.
+        """
+        return sorted(
+            self.elements.keys(), key=lambda symbol: self.elements[symbol].atomic_number
+        )
+
+    def get_statistics(self) -> dict[str, int]:
+        """
+        Obtiene estadísticas de la base de datos.
+
+        Retorna
+        -------
+        dict[str, int]
+            Diccionario con estadísticas de contenido.
+        """
+        total_lines = sum(len(el.photoelectron_lines) for el in self.elements.values())
+        total_compounds = sum(len(el.compounds) for el in self.elements.values())
+
+        return {
+            "total_elements": len(self.elements),
+            "total_photoelectron_lines": total_lines,
+            "total_compounds": total_compounds,
+            "elements_with_compounds": sum(
+                1 for el in self.elements.values() if el.compounds
+            ),
+        }
+
+    def validate_integrity(self) -> dict[str, list[str]]:
+        """
+        Valida la integridad completa de la base de datos.
+
+        Retorna
+        -------
+        dict[str, list[str]]
+            Diccionario con warnings/errores encontrados por categoría.
+        """
+        warnings = {
+            "missing_most_useful": [],
+            "no_compounds": [],
+            "inconsistent_energies": [],
+        }
+
+        for symbol, element in self.elements.items():
+            # Elementos sin energía más útil
+            if element.binding_energy_most_useful is None:
+                warnings["missing_most_useful"].append(symbol)
+
+            # Elementos sin compuestos
+            if not element.compounds:
+                warnings["no_compounds"].append(symbol)
+
+            # Energías inconsistentes entre líneas y compuestos
+            for comp_name, compound in element.compounds.items():
+                if compound.peak_position is not None:
+                    # Buscar línea del mismo orbital
+                    matching_line = element.get_line_by_orbital(compound.orbital)
+                    if matching_line is not None:
+                        diff = abs(
+                            matching_line.binding_energy - compound.peak_position
+                        )
+                        if diff > 10.0:  # Diferencia muy grande es sospechosa
+                            warnings["inconsistent_energies"].append(
+                                f"{symbol} {compound.orbital}: línea={matching_line.binding_energy:.1f}, "
+                                f"compuesto {comp_name}={compound.peak_position:.1f} (diff={diff:.1f})"
+                            )
+
+        return warnings

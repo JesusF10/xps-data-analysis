@@ -13,8 +13,8 @@ Semana 1-2: Dataclasses independientes
 - FitResult ✓ (Pydantic)
 
 Semana 3-4: Estructura jerárquica
-- ElementReference (pendiente)
-- ReferenceDatabase (pendiente)
+- ElementReference ✓ (Pydantic)
+- ReferenceDatabase ✓ (Pydantic)
 
 Semana 5-6: Núcleo principal
 - XPSSpectrum (pendiente)
@@ -25,7 +25,12 @@ Exports principales:
 """
 
 # Fase 2 - Semana 1-2: Dataclasses independientes (COMPLETADAS)
-from .reference import PhotoelectronLine, CompoundReference, ElementReference
+from .reference import (
+    PhotoelectronLine,
+    CompoundReference,
+    ElementReference,
+    ReferenceDatabase,
+)
 from .analysis import PeakParameters, FitResult
 
 # Migración gradual: mantener compatibilidad temporal con dataclasses originales
@@ -41,6 +46,7 @@ __all__ = [
     "PhotoelectronLine",  # ✓ Pydantic
     "CompoundReference",  # ✓ Pydantic
     "ElementReference",  # ✓ Pydantic
+    "ReferenceDatabase",  # ✓ Pydantic
     # Analysis results (migración completa)
     "PeakParameters",  # ✓ Pydantic
     "FitResult",  # ✓ Pydantic

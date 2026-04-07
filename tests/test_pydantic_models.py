@@ -12,6 +12,7 @@ from xps_analyzer.models.reference import (
     PhotoelectronLine,
     CompoundReference,
     ElementReference,
+    ReferenceDatabase,
 )
 from xps_analyzer.models.analysis import PeakParameters, FitResult
 
@@ -324,6 +325,205 @@ class TestFitResult:
                 success=True,
                 message="Test",
             )
+
+
+class TestReferenceDatabase:
+    """Tests para ReferenceDatabase Pydantic."""
+
+    def test_valid_creation(self):
+        """Test creación válida de base de datos."""
+        c1s = PhotoelectronLine(line="1s", binding_energy=284.8)
+        carbon = ElementReference(
+            symbol="C",
+            element="Carbon",
+            atomic_number=6,
+            photoelectron_lines=[c1s],
+            compounds={},
+        )
+
+        db = ReferenceDatabase(
+            elements={"C": carbon}, version="1.0", source="Test Database"
+        )
+
+        assert len(db.elements) == 1
+        assert "C" in db.elements
+        assert db.version == "1.0"
+        assert db.source == "Test Database"
+
+    def test_empty_elements_fails(self):
+        """Test que base de datos vacía falla."""
+        with pytest.raises(ValueError):
+            ReferenceDatabase(
+                elements={},  # Vacía
+                version="1.0",
+                source="Test",
+            )
+
+    def test_inconsistent_symbol_fails(self):
+        """Test que símbolos inconsistentes fallan."""
+        c1s = PhotoelectronLine(line="1s", binding_energy=284.8)
+        carbon = ElementReference(
+            symbol="C",
+            element="Carbon",
+            atomic_number=6,
+            photoelectron_lines=[c1s],
+            compounds={},
+        )
+
+        with pytest.raises(ValueError, match="Inconsistencia de símbolo"):
+            ReferenceDatabase(
+                elements={"O": carbon},  # Clave "O" pero element.symbol="C"
+                version="1.0",
+                source="Test",
+            )
+
+    def test_duplicate_atomic_numbers_fails(self):
+        """Test que números atómicos duplicados fallan."""
+        c1s = PhotoelectronLine(line="1s", binding_energy=284.8)
+        carbon1 = ElementReference(
+            symbol="C",
+            element="Carbon",
+            atomic_number=6,
+            photoelectron_lines=[c1s],
+            compounds={},
+        )
+        carbon2 = ElementReference(
+            symbol="C2",  # Símbolo diferente
+            element="Carbon Isotope",
+            atomic_number=6,  # Mismo número atómico
+            photoelectron_lines=[c1s],
+            compounds={},
+        )
+
+        with pytest.raises(ValueError, match="Número atómico duplicado"):
+            ReferenceDatabase(
+                elements={"C": carbon1, "C2": carbon2}, version="1.0", source="Test"
+            )
+
+    def test_get_element(self):
+        """Test obtención de elemento por símbolo."""
+        c1s = PhotoelectronLine(line="1s", binding_energy=284.8)
+        carbon = ElementReference(
+            symbol="C",
+            element="Carbon",
+            atomic_number=6,
+            photoelectron_lines=[c1s],
+            compounds={},
+        )
+
+        db = ReferenceDatabase(elements={"C": carbon}, version="1.0", source="Test")
+
+        # Case-insensitive
+        assert db.get_element("C") is not None
+        assert db.get_element("c") is not None
+        assert db.get_element("C").symbol == "C"
+        assert db.get_element("O") is None
+
+    def test_search_by_binding_energy(self):
+        """Test búsqueda por energía de enlace."""
+        c1s = PhotoelectronLine(line="1s", binding_energy=284.8)
+        o1s = PhotoelectronLine(line="1s", binding_energy=531.0)
+
+        carbon = ElementReference(
+            symbol="C",
+            element="Carbon",
+            atomic_number=6,
+            photoelectron_lines=[c1s],
+            compounds={},
+        )
+        oxygen = ElementReference(
+            symbol="O",
+            element="Oxygen",
+            atomic_number=8,
+            photoelectron_lines=[o1s],
+            compounds={},
+        )
+
+        db = ReferenceDatabase(
+            elements={"C": carbon, "O": oxygen}, version="1.0", source="Test"
+        )
+
+        # Búsqueda exacta
+        matches = db.search_by_binding_energy(284.8, tolerance=0.1)
+        assert ("C", "1s") in matches
+        assert len(matches) == 1
+
+        # Búsqueda con tolerancia
+        matches = db.search_by_binding_energy(285.0, tolerance=1.0)
+        assert ("C", "1s") in matches
+
+    def test_invalid_search_parameters_fail(self):
+        """Test que parámetros inválidos de búsqueda fallan."""
+        c1s = PhotoelectronLine(line="1s", binding_energy=284.8)
+        carbon = ElementReference(
+            symbol="C",
+            element="Carbon",
+            atomic_number=6,
+            photoelectron_lines=[c1s],
+            compounds={},
+        )
+
+        db = ReferenceDatabase(elements={"C": carbon}, version="1.0", source="Test")
+
+        with pytest.raises(ValueError, match="energy debe ser positiva"):
+            db.search_by_binding_energy(-100.0)
+
+        with pytest.raises(ValueError, match="tolerance debe ser positiva"):
+            db.search_by_binding_energy(284.8, tolerance=-1.0)
+
+    def test_list_elements_ordered(self):
+        """Test que elementos se listen ordenados por Z."""
+        h1s = PhotoelectronLine(line="1s", binding_energy=13.6)  # Hidrógeno realista
+        c1s = PhotoelectronLine(line="1s", binding_energy=284.8)
+
+        hydrogen = ElementReference(
+            symbol="H",
+            element="Hydrogen",
+            atomic_number=1,
+            photoelectron_lines=[h1s],
+            compounds={},
+        )
+        carbon = ElementReference(
+            symbol="C",
+            element="Carbon",
+            atomic_number=6,
+            photoelectron_lines=[c1s],
+            compounds={},
+        )
+
+        db = ReferenceDatabase(
+            elements={"C": carbon, "H": hydrogen},  # Orden aleatorio
+            version="1.0",
+            source="Test",
+        )
+
+        elements = db.list_elements()
+        assert elements == ["H", "C"]  # Ordenados por Z
+
+    def test_get_statistics(self):
+        """Test estadísticas de base de datos."""
+        c1s = PhotoelectronLine(line="1s", binding_energy=284.8)
+        c2s = PhotoelectronLine(line="2s", binding_energy=200.0)
+
+        oxide_compound = CompoundReference(
+            orbital="1s", binding_energy_range=(286.0, 290.0)
+        )
+
+        carbon = ElementReference(
+            symbol="C",
+            element="Carbon",
+            atomic_number=6,
+            photoelectron_lines=[c1s, c2s],
+            compounds={"oxide": oxide_compound},
+        )
+
+        db = ReferenceDatabase(elements={"C": carbon}, version="1.0", source="Test")
+
+        stats = db.get_statistics()
+        assert stats["total_elements"] == 1
+        assert stats["total_photoelectron_lines"] == 2
+        assert stats["total_compounds"] == 1
+        assert stats["elements_with_compounds"] == 1
 
 
 if __name__ == "__main__":
