@@ -1,6 +1,6 @@
 # Guía de Instalación - XPS Analyzer
 
-**Versión:** 0.1.0  
+**Versión:** 0.8.0-beta  
 **Sistemas soportados:** Linux, macOS, Windows  
 **Python requerido:** 3.10+
 
@@ -15,11 +15,13 @@ La forma más rápida de instalar XPS Analyzer es usando **uv**, el gestor de pa
 ### Paso 1: Instalar uv
 
 **Linux / macOS:**
+
 ```bash
 curl -LsSf https://astral.sh/uv/install.sh | sh
 ```
 
 **Windows:**
+
 ```powershell
 powershell -c "irm https://astral.sh/uv/install.ps1 | iex"
 ```
@@ -38,13 +40,27 @@ uv sync --group dev --group jupyter
 uv run xps-analyzer --version
 ```
 
-**¡Listo!** En 2 comandos tienes todo configurado.
+---
+
+## Ejecutar la Interfaz Gráfica (GUI)
+
+Una vez instalado, puedes lanzar la aplicación interactiva de Streamlit para visualizar y procesar tus datos de forma sencilla.
+
+**Con uv (Recomendado):**
+```bash
+uv run streamlit run src/xps_analyzer/gui/app.py
+```
+
+**Con pip/conda:**
+```bash
+streamlit run src/xps_analyzer/gui/app.py
+```
 
 ---
 
 ## Instalación con Conda
 
-Si ya usas conda para ciencia de datos, esta opción te permite integrar XPS Analyzer con tu stack existente.
+Si ya usas **conda**, esta opción te permite integrar XPS Analyzer con tu stack existente.
 
 ### Paso 1: Crear Ambiente
 
@@ -113,11 +129,13 @@ python verify_installation.py
 Si solo quieres usar el software sin desarrollo:
 
 **Con uv:**
+
 ```bash
 uv sync  # Sin grupos dev/jupyter
 ```
 
 **Con pip:**
+
 ```bash
 pip install .  # Sin [dev]
 ```
@@ -127,6 +145,7 @@ pip install .  # Sin [dev]
 ## Requisitos del Sistema
 
 ### Python
+
 - **Versión mínima:** 3.10
 - **Recomendada:** 3.11 o 3.12
 - **No soportado:** 3.9 o inferior
@@ -134,22 +153,26 @@ pip install .  # Sin [dev]
 ### Dependencias Principales
 
 **Obligatorias (instaladas automáticamente):**
+
 - numpy >= 1.21.0
 - pandas >= 1.3.0
 - matplotlib >= 3.4.0
 - scipy >= 1.7.0
+- scikit-learn >= 1.0.0
+- lmfit >= 1.0.0
+- PyYAML >= 6.0
 - click >= 8.0.0
+- tqdm >= 4.60.0
+- pydantic >= 2.12.4
+- openpyxl >= 3.1.5
+- streamlit >= 1.31.0
 
 **Opcionales (para desarrollo):**
+
 - pytest >= 6.0.0
 - pytest-cov >= 2.12.0
 - ruff >= 0.1.0
 - jupyter >= 1.0.0
-
-### Espacio en Disco
-- **Instalación básica:** ~100 MB
-- **Con dependencias dev:** ~300 MB
-- **Con datos de ejemplo:** ~500 MB
 
 ---
 
@@ -162,17 +185,15 @@ python verify_installation.py
 ```
 
 **Salida esperada:**
-```
-[OK] Python 3.11.5 detectado
-[OK] numpy 1.24.3 instalado
-[OK] pandas 2.0.3 instalado
-[OK] matplotlib 3.7.2 instalado
-[OK] scipy 1.11.1 instalado
-[OK] click 8.1.6 instalado
-[OK] Comando xps-analyzer disponible
-[OK] Directorio data/ existe
 
-Instalación correcta!
+```
+...
+Instalación EXITOSA.
+
+Comandos disponibles:
+  xps-analyzer --help           # Ayuda general
+  xps-analyzer show-element <S> # Ver base de datos de elementos
+  python -c 'import xps_analyzer'  # Usar en scripts
 ```
 
 ---
@@ -190,6 +211,7 @@ Esto ejecutará automáticamente ruff y otros checks antes de cada commit.
 ### 2. Configurar Editor
 
 **VS Code (recomendado):**
+
 ```json
 {
   "python.defaultInterpreterPath": ".venv/bin/python",
@@ -219,6 +241,7 @@ ls data/raw/samples/
 **Causa:** No instalaste el paquete en modo desarrollo.
 
 **Solución:**
+
 ```bash
 pip install -e .
 ```
@@ -228,11 +251,13 @@ pip install -e .
 **Causa:** El script CLI no está en PATH.
 
 **Solución con uv:**
+
 ```bash
 uv run xps-analyzer --help
 ```
 
 **Solución con pip:**
+
 ```bash
 # Reinstalar
 pip install -e .
@@ -246,18 +271,9 @@ python -m xps_analyzer.cli.main --help
 **Causa:** numpy no compilado correctamente.
 
 **Solución:**
+
 ```bash
 pip install --force-reinstall numpy
-```
-
-### Problemas con Conda en macOS ARM (M1/M2)
-
-**Problema:** Algunas librerías científicas no optimizadas para ARM.
-
-**Solución:** Usar Rosetta o instalar versión nativa:
-```bash
-# Forzar arquitectura ARM64
-CONDA_SUBDIR=osx-arm64 conda env create -f environment.yml
 ```
 
 ### Tests Fallan con Error de Cobertura
@@ -265,6 +281,7 @@ CONDA_SUBDIR=osx-arm64 conda env create -f environment.yml
 **Causa:** pytest-cov no encuentra el módulo.
 
 **Solución:**
+
 ```bash
 # Reinstalar con coverage
 pip install -e ".[dev]"
@@ -276,16 +293,19 @@ pytest --no-cov  # Ejecutar sin cobertura temporalmente
 ## Desinstalación
 
 **Con uv:**
+
 ```bash
 rm -rf .venv
 ```
 
 **Con conda:**
+
 ```bash
 conda env remove -n xps-analysis
 ```
 
 **Con pip:**
+
 ```bash
 pip uninstall xps-analyzer
 rm -rf .venv
@@ -298,18 +318,21 @@ rm -rf .venv
 ### Actualizar a Nueva Versión
 
 **Con uv:**
+
 ```bash
 git pull
 uv sync
 ```
 
 **Con conda:**
+
 ```bash
 git pull
 conda env update -f environment.yml
 ```
 
 **Con pip:**
+
 ```bash
 git pull
 pip install -e ".[dev]" --upgrade
@@ -318,16 +341,6 @@ pip install -e ".[dev]" --upgrade
 ---
 
 ## Instalación en Entornos Especiales
-
-### Clúster de HPC
-
-```bash
-# Usar python del módulo del sistema
-module load python/3.11
-
-# Instalación sin sudo
-pip install --user -e .
-```
 
 ### Docker
 
@@ -357,9 +370,8 @@ CMD ["xps-analyzer", "--help"]
 Después de instalar exitosamente:
 
 1. **Lee el README.md** para ejemplos de uso básico
-2. **Explora `examples/`** para notebooks de Jupyter
-3. **Consulta API_DOCS.md** para referencia completa
-4. **Lee DEVELOPMENT.md** si quieres contribuir
+2. **Consulta API_DOCS.md** para referencia completa
+3. **Lee DEVELOPMENT.md** si quieres contribuir
 
 ---
 

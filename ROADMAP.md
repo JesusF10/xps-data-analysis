@@ -1,8 +1,8 @@
 # XPS Analyzer - Roadmap de Desarrollo
 
-**Versión actual:** 0.8.0-beta  
-**Estado:** Fase 1 COMPLETADA + Validación COMPLETADA (Fases A-D) + Fase E COMPLETADA  
-**Actualización:** Marzo 28, 2026
+**Versión actual:** 0.9.0-alpha  
+**Estado:** Fase 2 en PROGRESO (Migración Pydantic COMPLETADA)  
+**Actualización:** Abril 17, 2026
 
 Este documento describe el plan de desarrollo del proyecto XPS Analyzer organizado en fases progresivas. Cada fase construye sobre la anterior, agregando funcionalidad crítica y mejorando la robustez del software.
 
@@ -16,7 +16,7 @@ El desarrollo de XPS Analyzer sigue un enfoque iterativo de 5 fases principales 
 2. **Fase 1 (Completada)** - Funcionalidad core de análisis + exportación
 3. **Validación (Completada)** - Fases A-D con datos reales
 4. **Fase E (Completada)** - Mejoras de robustez: 50% → 79% éxito
-5. **Fase 2 (Planificada)** - Migración a Pydantic + GUI Interactiva
+5. **Fase 2 (En Progreso)** - Migración a Pydantic (100%) + GUI Interactiva (20%)
 6. **Fase 3 (Futura)** - GUI Profesional
 
 **Principios guía:**
@@ -822,8 +822,8 @@ Elementos cuantific.   | 23       | 25     | +2
 - [x] **57 tests Pydantic (100% passing)** - validación automática superior a dataclasses
 - [x] **API compatible** - sin cambios breaking, coexistencia gradual mantenida
 
-**GUI INTERACTIVA [PENDIENTE]** - Próximas 6-8 semanas:
-- [ ] GUI Streamlit completamente funcional  
+**GUI INTERACTIVA [EN PROGRESO]** - Semanas 7-10:
+- [x] **GUI inicial con Streamlit** (Estilo científico, gráficas condicionales)
 - [ ] Pipeline completo en GUI: carga → calibración → análisis → visualización
 - [ ] Parámetros interactivos en tiempo real
 - [ ] Manejo robusto de errores en GUI

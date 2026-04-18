@@ -73,7 +73,7 @@ def shirley_background(
     if inplace:
         result = spectrum
     else:
-        result = spectrum.copy()
+        result = spectrum.model_copy(deep=True)
 
     # Extraer datos (ordenar por energía creciente para el algoritmo)
     energy = result.binding_energy
@@ -167,9 +167,9 @@ def tougaard_background(
     spectrum : XPSSpectrum
         El espectro al cual sustraer el fondo.
     B : float, default=2866.0
-        Parámetro B de Tougaard (eV²).
+        Parámetro B de Tougaard (eV2).
     C : float, default=1643.0
-        Parámetro C de Tougaard (eV²).
+        Parámetro C de Tougaard (eV2).
     D : float, default=1.0
         Parámetro D de Tougaard (adimensional).
     inplace : bool, default=False
@@ -216,7 +216,7 @@ def tougaard_background(
     if inplace:
         result = spectrum
     else:
-        result = spectrum.copy()
+        result = spectrum.model_copy(deep=True)
 
     # Extraer datos
     energy = result.binding_energy
@@ -313,7 +313,7 @@ def linear_background(spectrum: XPSSpectrum, inplace: bool = False) -> XPSSpectr
     if inplace:
         result = spectrum
     else:
-        result = spectrum.copy()
+        result = spectrum.model_copy(deep=True)
 
     # Calcular fondo lineal entre extremos
     intensity = result.intensity
@@ -357,9 +357,9 @@ def background_with_fallback(
     shirley_tol : float, default=1e-5
         Tolerancia de convergencia para Shirley.
     tougaard_B : float, default=2866.0
-        Parámetro B de Tougaard (eV²).
+        Parámetro B de Tougaard (eV2).
     tougaard_C : float, default=1643.0
-        Parámetro C de Tougaard (eV²).
+        Parámetro C de Tougaard (eV2).
     tougaard_D : float, default=1.0
         Parámetro D de Tougaard (adimensional).
     inplace : bool, default=False
@@ -384,7 +384,7 @@ def background_with_fallback(
     2. Tougaard - Más robusto para fondos con estructura
     3. Linear - Siempre funciona pero menos preciso
 
-    En validación con dataset BN-SET-01, esta estrategia aumentó la tasa de
+    En validación con dataset BN-SET-1, esta estrategia aumentó la tasa de
     éxito de sustracción de fondo del 54% al 100%, permitiendo procesar todas
     las regiones incluso con datos de calidad variable.
 
@@ -410,8 +410,8 @@ def background_with_fallback(
     Referencias
     ----------
     Hallazgos de validación documentados en:
-    data/results/BN-SET-01/FASE_D_COMPLETADA.md
-    data/results/BN-SET-01/COMPARATIVE_ANALYSIS.md
+    data/results/BN-SET-1/FASE_D_COMPLETADA.md
+    data/results/BN-SET-1/COMPARATIVE_ANALYSIS.md
     """
     # Métodos por defecto
     if methods is None:
@@ -427,7 +427,7 @@ def background_with_fallback(
 
     # Trabajar con copia si es necesario
     if not inplace:
-        spectrum = spectrum.copy()
+        spectrum = spectrum.model_copy(deep=True)
 
     # Intentar cada método en orden
     errors = {}

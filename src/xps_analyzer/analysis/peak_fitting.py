@@ -18,10 +18,10 @@ Referencias:
 
 from __future__ import annotations
 
-from dataclasses import dataclass
 from typing import Literal
 
 from xps_analyzer.data_loader import XPSSpectrum
+from xps_analyzer.utils.models import XPSBaseModel
 
 import numpy as np
 from scipy.optimize import curve_fit
@@ -29,8 +29,7 @@ from scipy.signal import find_peaks
 from scipy.special import voigt_profile
 
 
-@dataclass
-class PeakParameters:
+class PeakParameters(XPSBaseModel):
     """
     Parámetros de un pico ajustado.
 
@@ -67,8 +66,7 @@ class PeakParameters:
     width_error: float | None = None
 
 
-@dataclass
-class FitResult:
+class FitResult(XPSBaseModel):
     """
     Resultado de un ajuste de pico(s).
 

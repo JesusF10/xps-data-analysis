@@ -3,25 +3,25 @@ Clases principales para manejo de datos de referencia XPS.
 """
 
 import json
-from dataclasses import dataclass
 from pathlib import Path
+
+from xps_analyzer.utils.models import XPSBaseModel
 
 _reference_db_cache = None
 
 
-@dataclass
-class PhotoelectronLine:
+class PhotoelectronLine(XPSBaseModel):
     """
     Representa una línea fotoeléctrica de un orbital específico.
 
-    Parameters
+    Attributes
     ----------
     line : str
         Designación de la línea (ej: "1s", "2p1/2", "2p3/2", "KLL")
     binding_energy : float
         Energía de enlace en eV
     x_ray_source : str, optional
-        Fuente de rayos X utilizada (ej: "Mg_Ka", "Al_Ka
+        Fuente de rayos X utilizada (ej: "Mg_Ka", "Al_Ka")
     type : str, default="core"
         Tipo de línea ("core" o "Auger")
     kinetic_energy : float, optional
@@ -35,12 +35,11 @@ class PhotoelectronLine:
     kinetic_energy: float | None = None
 
 
-@dataclass
-class CompoundReference:
+class CompoundReference(XPSBaseModel):
     """
     Datos de referencia para un compuesto específico.
 
-    Parameters
+    Attributes
     ----------
     orbital : str
         Orbital asociado (ej: "1s", "2p")
@@ -58,12 +57,11 @@ class CompoundReference:
     chemical_shift: float | None = None
 
 
-@dataclass
-class ElementReference:
+class ElementReference(XPSBaseModel):
     """
     Base de datos completa de un elemento químico.
 
-    Parameters
+    Attributes
     ----------
     symbol : str
         Símbolo del elemento (ej: "Li", "C", "O")
@@ -71,10 +69,10 @@ class ElementReference:
         Nombre completo del elemento
     atomic_number : int
         Número atómico
-    photoelectron_lines : List[PhotoelectronLine]
+    photoelectron_lines : list[PhotoelectronLine]
         Lista con las líneas fotoeléctronicas por orbital
-    compounds : list
-        Lista de compuestos de referencia
+    compounds : dict[str, CompoundReference]
+        Diccionario de compuestos de referencia
     binding_energy_most_useful : float, optional
         Energía de enlace más útil en eV
     spin_orbital_splitting : float, optional
@@ -134,12 +132,11 @@ class ElementReference:
         return self.compounds.get(name)
 
 
-@dataclass
-class ReferenceDatabase:
+class ReferenceDatabase(XPSBaseModel):
     """
     Base de datos completa de elementos de referencia.
 
-    Parameters
+    Attributes
     ----------
     elements : dict
         Diccionario con elementos indexados por símbolo

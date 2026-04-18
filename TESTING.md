@@ -1,11 +1,12 @@
 # XPS Analyzer - Estrategia de Testing
 
-**Versión:** 0.7.0-beta  
-**Estado:** Fase 1 (75% completado)  
-**Cobertura actual:** 87% (208 tests existentes)  
-**Última actualización:** Marzo 2026
+**Versión:** 0.8.0-beta  
+**Estado:** Fase 1 COMPLETADA (100%)  
+**Cobertura actual:** 72% (326 tests existentes)  
+**Última actualización:** Abril 2026
 
-Este documento describe la estrategia completa de testing del proyecto XPS Analyzer, incluyendo convenciones, roadmap de cobertura, y ejemplos prácticos.
+Este documento describe la estrategia completa de testing del proyecto XPS Analyzer,
+incluyendo convenciones, roadmap de cobertura, y ejemplos prácticos.
 
 ---
 
@@ -31,17 +32,18 @@ Este documento describe la estrategia completa de testing del proyecto XPS Analy
 **Ubicación:** `tests/`
 
 ```python
-# 208 tests implementados (todos pasan):
+# 326 tests implementados (todos pasan):
 
-## tests/test_data_loader.py (4 tests)
+## tests/test_data_loader.py (18 tests)
 1. test_parse_metadata_basic()           # Parsing de metadata básica
 2. test_parse_metadata_header()          # Parsing de header con 3 líneas
 3. test_get_spectrum_data_basic()        # Carga de espectro desde texto
 4. test_get_spectrum_data_malformed_line_raises()  # Validación de errores
+... (más tests de carga de archivos y formatos)
 
 ## tests/test_background.py (30 tests)
 - Tests de shirley_background (15 tests)
-- Tests de tougaard_background (10 tests) 
+- Tests de tougaard_background (10 tests)
 - Tests de linear_background (5 tests)
 
 ## tests/test_peak_fitting.py (45 tests)
@@ -54,7 +56,7 @@ Este documento describe la estrategia completa de testing del proyecto XPS Analy
 - Tests de calculate_atomic_concentration (20 tests)
 - Tests de normalize_to_100 (8 tests)
 
-## tests/test_reference_data.py (86 tests)
+## tests/test_reference_data.py (29 tests)
 - Tests de carga de base de datos
 - Tests de búsqueda de elementos
 ```
@@ -75,10 +77,11 @@ visualization/            | 0%        | 0     | Baja
 cli/                      | 0%        | 0     | Baja
 export/                   | 92%       | 19    | Completado (Sesión 4)
 --------------------------|-----------|-------|----------
-TOTAL                     | 87%       | 227   | -
+TOTAL                     | 72%       | 326   | -
 ```
 
 **Meta de cobertura:**
+
 - **Fase 0 (completada):** 20% cobertura significativa ✓ (alcanzado 87%)
 - **Fase 1 (COMPLETADA 100%):** 80% ✓ (alcanzado 87%)
 - **Fase 2:** 85% (incluir integración multi-formato)
@@ -99,17 +102,20 @@ TOTAL                     | 87%       | 227   | -
 ### Qué Testear
 
 **Alta prioridad:**
+
 - [COMPLETADO] API pública de cada módulo
 - [COMPLETADO] Validación de inputs
 - [COMPLETADO] Casos límite (edge cases)
 - [COMPLETADO] Manejo de errores
 
 **Media prioridad:**
+
 - [EN PROGRESO] Funciones internas complejas
 - [EN PROGRESO] Integración entre módulos
 - [EN PROGRESO] Performance (tests de benchmark)
 
 **Baja prioridad:**
+
 - [PENDIENTE] Getters/setters simples
 - [PENDIENTE] Código trivial sin lógica
 - [PENDIENTE] Código de terceros (ya testeado)
@@ -143,7 +149,7 @@ def test_calibrate_spectrum_basic():
         binding_energy=energy,
         intensity=intensity
     )
-    
+
     # Act: calibrar con C 1s @ 284.8 eV
     # (peak actual en 284.0 -> shift = +0.8 eV)
     calibrated = calibrate_spectrum(
@@ -151,7 +157,7 @@ def test_calibrate_spectrum_basic():
         reference_element="C",
         inplace=False
     )
-    
+
     # Assert
     np.testing.assert_array_almost_equal(
         calibrated.binding_energy,
@@ -170,9 +176,9 @@ def test_calibrate_spectrum_inplace():
         binding_energy=np.array([280.0, 284.0]),
         intensity=np.array([100, 200])
     )
-    
+
     result = calibrate_spectrum(spectrum, "C", inplace=True)
-    
+
     # Debe modificar el original
     assert result is spectrum
     assert spectrum.binding_energy[1] == pytest.approx(284.8, abs=0.1)
@@ -184,7 +190,7 @@ def test_calibrate_spectrum_invalid_element():
         binding_energy=np.array([280.0, 284.0]),
         intensity=np.array([100, 200])
     )
-    
+
     with pytest.raises(ValueError, match="Elemento.*no encontrado"):
         calibrate_spectrum(spectrum, "Xx")  # Elemento inexistente
 ```
@@ -224,21 +230,21 @@ Element C 1s; Region 1; Sweeps 5;
 286.0 200
 288.0 100
     """.strip())
-    
+
     # 2. Cargar datos
     dataset = load_single_file(test_file)
     assert "C 1s" in dataset.spectra
-    
+
     # 3. Calibrar
     calibrate_dataset(dataset, reference_element="C", inplace=True)
-    
+
     # 4. Preprocesar
     spectrum = dataset.spectra["C 1s"]
     clean = subtract_background(spectrum, method="linear")
-    
+
     # 5. Analizar
     peaks = find_peaks(clean, threshold=0.3)
-    
+
     # 6. Verificar
     assert len(peaks) >= 1
     assert any(284.5 < p < 285.0 for p in peaks)  # Peak cerca de C 1s
@@ -265,7 +271,7 @@ from xps_analyzer.data_loader import XPSSpectrum, XPSDataset
 
 class TestXPSSpectrumValidation:
     """Tests de validación de XPSSpectrum."""
-    
+
     def test_valid_spectrum(self):
         """Espectro válido debe crearse sin errores."""
         spectrum = XPSSpectrum(
@@ -274,7 +280,7 @@ class TestXPSSpectrumValidation:
             intensity=np.array([100.0, 200.0])
         )
         assert spectrum.region_name == "C 1s"
-    
+
     def test_empty_arrays_raise_error(self):
         """Arrays vacíos deben lanzar ValueError."""
         with pytest.raises(ValueError, match="no pueden estar vacíos"):
@@ -283,7 +289,7 @@ class TestXPSSpectrumValidation:
                 binding_energy=np.array([]),
                 intensity=np.array([])
             )
-    
+
     def test_mismatched_lengths_raise_error(self):
         """Arrays con longitudes diferentes deben fallar."""
         with pytest.raises(ValueError, match="misma longitud"):
@@ -292,7 +298,7 @@ class TestXPSSpectrumValidation:
                 binding_energy=np.array([280.0, 281.0]),
                 intensity=np.array([100.0])  # Solo 1 elemento
             )
-    
+
     def test_negative_energies_raise_error(self):
         """Energías negativas deben fallar."""
         with pytest.raises(ValueError, match="valores positivos"):
@@ -301,7 +307,7 @@ class TestXPSSpectrumValidation:
                 binding_energy=np.array([-280.0, 281.0]),
                 intensity=np.array([100.0, 200.0])
             )
-    
+
     def test_empty_region_name_raise_error(self):
         """Nombre de región vacío debe fallar."""
         with pytest.raises(ValueError, match="no puede estar vacío"):
@@ -310,7 +316,7 @@ class TestXPSSpectrumValidation:
                 binding_energy=np.array([280.0]),
                 intensity=np.array([100.0])
             )
-    
+
     def test_whitespace_only_region_name_raise_error(self):
         """Nombre con solo espacios debe fallar."""
         with pytest.raises(ValueError, match="no puede estar vacío"):
@@ -322,12 +328,12 @@ class TestXPSSpectrumValidation:
 
 class TestXPSDatasetValidation:
     """Tests de validación de XPSDataset."""
-    
+
     def test_empty_filename_raise_error(self):
         """Filename vacío debe fallar."""
         with pytest.raises(ValueError, match="filename no puede estar vacío"):
             XPSDataset(filename="", spectra={})
-    
+
     def test_empty_spectra_raise_error(self):
         """Spectra vacío debe fallar."""
         with pytest.raises(ValueError, match="debe contener al menos un espectro"):
@@ -352,10 +358,10 @@ import pytest
 def test_identify_element_by_energy(energy, expected_element):
     """Test identificación para múltiples elementos."""
     from xps_analyzer.reference_data import load_reference_database, identify_element
-    
+
     db = load_reference_database()
     matches = db.find_element_by_energy(energy, tolerance=1.0)
-    
+
     symbols = [symbol for symbol, _ in matches]
     assert expected_element in symbols
 
@@ -382,13 +388,13 @@ def test_background_subtraction_methods(method, expected_reduction):
 def test_calibration_with_missing_reference_element():
     """
     Test calibración cuando elemento de referencia no existe en dataset.
-    
+
     Regression test for Issue #42.
     Anteriormente lanzaba IndexError, ahora debe lanzar ValueError descriptivo.
     """
     from xps_analyzer.data_loader import XPSSpectrum, XPSDataset
     from xps_analyzer.preprocessing import calibrate_dataset
-    
+
     # Dataset solo con O 1s (sin C 1s)
     o1s = XPSSpectrum(
         region_name="O 1s",
@@ -399,7 +405,7 @@ def test_calibration_with_missing_reference_element():
         filename="test.txt",
         spectra={"O 1s": o1s}
     )
-    
+
     # Intentar calibrar con C (que no existe)
     with pytest.raises(ValueError, match="Elemento de referencia.*no encontrado"):
         calibrate_dataset(dataset, reference_element="C")
@@ -581,10 +587,10 @@ def test_example():
     # Arrange: preparar datos y estado inicial
     spectrum = XPSSpectrum(...)
     expected_result = 42
-    
+
     # Act: ejecutar la función a testear
     result = process_spectrum(spectrum)
-    
+
     # Assert: verificar resultados
     assert result == expected_result
 ```
@@ -613,13 +619,13 @@ def test_fit():
 # [COMPLETADO] BUENO - cada assert verifica un concepto diferente
 def test_calibrate_spectrum():
     calibrated = calibrate_spectrum(spectrum, "C")
-    
+
     # Concepto 1: energías cambiaron correctamente
     assert calibrated.binding_energy[0] == pytest.approx(280.8)
-    
+
     # Concepto 2: intensidades no cambiaron
     np.testing.assert_array_equal(calibrated.intensity, spectrum.intensity)
-    
+
     # Concepto 3: original no modificado
     assert spectrum.binding_energy[0] == 280.0
 
@@ -782,6 +788,7 @@ def assert_peak_near(found_position: float, expected: float, tolerance: float = 
 Ver sección "Tests de Validación" arriba para ejemplos completos.
 
 **Estrategia:**
+
 1. Test casos válidos (happy path)
 2. Test cada tipo de error (empty, mismatch, negative, etc.)
 3. Test edge cases (arrays de 1 elemento, valores extremos)
@@ -815,13 +822,13 @@ def test_calibration_is_reversible(energy, shift):
         binding_energy=energy,
         intensity=intensity
     )
-    
+
     # Calibrar con shift
     calibrated = calibrate_spectrum(spectrum, shift=shift, inplace=False)
-    
+
     # Descalibrar
     uncalibrated = calibrate_spectrum(calibrated, shift=-shift, inplace=False)
-    
+
     # Debe volver al original
     np.testing.assert_allclose(
         uncalibrated.binding_energy,
@@ -844,9 +851,9 @@ def test_background_subtraction_reduces_intensity(spectrum_data):
         binding_energy=energy,
         intensity=np.array(spectrum_data)
     )
-    
+
     cleaned = subtract_background(spectrum, method="shirley")
-    
+
     # Intensidad total debe reducirse
     assert cleaned.intensity.sum() < spectrum.intensity.sum()
 ```
@@ -936,17 +943,20 @@ uv run ptw tests/
 ## Referencias
 
 ### Documentos Relacionados
+
 - `DEVELOPMENT.md` - Workflow de desarrollo completo
 - `ARCHITECTURE.md` - Arquitectura técnica
 - `CONTRIBUTING.md` - Guía de contribución
 
 ### Herramientas
+
 - **pytest** - https://docs.pytest.org/
 - **pytest-cov** - https://pytest-cov.readthedocs.io/
 - **hypothesis** - https://hypothesis.readthedocs.io/
 - **pytest-xdist** - https://pytest-xdist.readthedocs.io/
 
 ### Best Practices
+
 - **pytest good practices** - https://docs.pytest.org/en/stable/goodpractices.html
 - **Testing Best Practices** - https://testdriven.io/blog/testing-best-practices/
 

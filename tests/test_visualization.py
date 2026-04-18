@@ -101,12 +101,12 @@ def test_plot_spectrum_default_title(mock_plt, mock_show, simple_spectrum):
 @patch("xps_analyzer.visualization.plotting.plt.show")
 @patch("xps_analyzer.visualization.plotting.plt")
 def test_plot_spectrum_sets_labels(mock_plt, mock_show, simple_spectrum):
-    """Test que plot_spectrum configura etiquetas de ejes en español."""
+    """Test que plot_spectrum configura etiquetas de ejes."""
     plot_spectrum(simple_spectrum)
 
-    # Verificar que se llamaron xlabel y ylabel
-    mock_plt.xlabel.assert_called_once_with("Energía de enlace (eV)")
-    mock_plt.ylabel.assert_called_once_with("Intensidad")
+    # Verificar que se llamaron xlabel y ylabel (en inglés según plotting.py)
+    mock_plt.xlabel.assert_called_once_with("Binding Energy (eV)")
+    mock_plt.ylabel.assert_called_once_with("Intensity (counts)")
 
 
 # Tests para plot_survey_spectrum
@@ -158,12 +158,12 @@ def test_plot_survey_spectrum_default_title(mock_plt, mock_show, survey_spectrum
 @patch("xps_analyzer.visualization.plotting.plt.show")
 @patch("xps_analyzer.visualization.plotting.plt")
 def test_plot_survey_spectrum_sets_labels(mock_plt, mock_show, survey_spectrum):
-    """Test que plot_survey_spectrum configura etiquetas en español."""
+    """Test que plot_survey_spectrum configura etiquetas."""
     plot_survey_spectrum(survey_spectrum)
 
-    # Verificar que se llamaron xlabel y ylabel
-    mock_plt.xlabel.assert_called_once_with("Energía de enlace (eV)")
-    mock_plt.ylabel.assert_called_once_with("Intensidad")
+    # Verificar que se llamaron xlabel y ylabel (en inglés según plotting.py)
+    mock_plt.xlabel.assert_called_once_with("Binding Energy (eV)")
+    mock_plt.ylabel.assert_called_once_with("intensity (counts)")
 
 
 @patch("xps_analyzer.visualization.plotting.plt.show")

@@ -6,8 +6,8 @@
 
 Software automatizado en Python para análisis de datos de Espectroscopía de Fotoelectrones de Rayos X (XPS).
 
-**Estado:** Beta v0.8.0 - Fase 1 COMPLETADA  
-**Fase:** 1 (Análisis Core) - 100% completado
+**Estado:** Beta v0.8.0-beta - Fase 2 EN PROGRESO  
+**Fase:** 2 (Pydantic + GUI Interactiva) - 60% completado
 
 ---
 
@@ -20,16 +20,18 @@ Software automatizado en Python para análisis de datos de Espectroscopía de Fo
 - Visualización básica de espectros
 - Base de datos de ~25 elementos comunes
 - CLI para operaciones básicas
-- **Sustracción de fondo (Shirley, Tougaard, Linear)**
-- **Ajuste de picos (Gaussian, Lorentzian, Voigt)**
-- **Cuantificación atómica con factores RSF (Scofield, Wagner)**
-- **Exportación a CSV/Excel/JSON con metadata completa**
+- Sustracción de fondo (Shirley, Tougaard, Linear)
+- Ajuste de picos (Gaussian, Lorentzian, Voigt, Pseudo-Voigt, GL)
+- Cuantificación atómica con factores RSF (Scofield, Wagner)
+- **Exportación completa a CSV, Excel y JSON**
+- **Migración total a Pydantic v2** para validación robusta
+- **Interfaz gráfica interactiva (Streamlit)** con estilo científico
 
-[EN DESARROLLO] **Próxima Fase (Fase 2):**
+[EN DESARROLLO] **Próximamente:**
 
-- Migración a Pydantic para validación avanzada
-- GUI interactiva con Streamlit
 - Visualización avanzada con Plotly
+- Análisis interactivo en tiempo real en la GUI
+- Reportes automáticos en PDF
 
 ---
 
@@ -53,39 +55,15 @@ uv run xps-analyzer --version
 
 ## Uso Básico
 
-### Cargar y Visualizar Datos
+### Interfaz Gráfica (GUI) - ¡Nuevo!
 
-```python
-from xps_analyzer import load_single_file
+La forma más sencilla de usar XPS Analyzer es a través de su interfaz interactiva:
 
-# Cargar archivo XPS
-dataset = load_single_file("data/raw/samples/muestra1.txt")
-
-# Listar regiones disponibles
-print(dataset.list_regions())
-# ['survey', 'C 1s', 'O 1s', 'N 1s']
-
-# Obtener espectro específico
-spectrum = dataset.get_spectrum("C 1s")
-print(f"Región: {spectrum.region_name}")
-print(f"Puntos de datos: {len(spectrum.binding_energy)}")
+```bash
+uv run streamlit run src/xps_analyzer/gui/app.py
 ```
 
-### Calibración de Energía
-
-```python
-from xps_analyzer.preprocessing import calibrate_spectrum
-
-# Calibrar usando C 1s como referencia (284.8 eV)
-spectrum_calibrated = calibrate_spectrum(
-    spectrum,
-    reference_element="C",
-    reference_energy=284.8,
-    inplace=False
-)
-```
-
-### Análisis Completo de XPS (NUEVO en v0.7.0)
+### Ejemplo de Script de Análisis
 
 ```python
 from xps_analyzer import load_single_file
@@ -95,116 +73,18 @@ from xps_analyzer.analysis import (
     load_sensitivity_factors,
     calculate_atomic_concentration
 )
+from xps_analyzer.export import export_to_excel
 
-# 1. Cargar datos
+# 1. Cargar y calibrar
 dataset = load_single_file("data/raw/samples/muestra1.txt")
-c1s_spectrum = dataset.get_spectrum("C 1s")
-o1s_spectrum = dataset.get_spectrum("O 1s")
+c1s = dataset.get_spectrum("C 1s")
 
-# 2. Sustracción de fondo
-c1s_nobg = shirley_background(c1s_spectrum, inplace=False)
-o1s_nobg = shirley_background(o1s_spectrum, inplace=False)
+# 2. Procesar (Fondo + Ajuste)
+c1s_nobg = shirley_background(c1s, inplace=False)
+fit_result = fit_gaussian(c1s_nobg, position=284.8)
 
-# 3. Ajuste de picos
-c_fit = fit_gaussian(c1s_nobg, position=284.8)
-o_fit = fit_gaussian(o1s_nobg, position=531.0)
-
-print(f"R² C 1s: {c_fit.r_squared:.4f}")
-print(f"Área C 1s: {c_fit.peaks[0].area:.2f}")
-
-# 4. Cuantificación atómica
-rsf = load_sensitivity_factors(source="scofield", xray_source="al_ka")
-concentrations = calculate_atomic_concentration(
-    peaks=[c_fit.peaks[0], o_fit.peaks[0]],
-    sensitivity_factors=rsf,
-    element_names=["C 1s", "O 1s"]
-)
-
-print("\nComposición atómica:")
-for element, conc in concentrations.items():
-    print(f"  {element}: {conc:.2f}%")
-# Salida:
-#   C 1s: 75.02%
-#   O 1s: 24.98%
-```
-
-### Exportación de Resultados (NUEVO en v0.8.0)
-
-```python
-from xps_analyzer.export import export_to_csv, export_to_excel, export_to_json
-
-# 1. Exportar espectro individual a CSV
-export_to_csv(
-    c1s_spectrum,
-    "output/c1s_spectrum.csv",
-    include_metadata=True
-)
-# Crea: c1s_spectrum.csv + c1s_spectrum.metadata.csv
-
-# 2. Exportar dataset completo a Excel
-export_to_excel(
-    dataset,
-    "output/muestra1.xlsx",
-    include_metadata=True
-)
-# Crea archivo Excel con múltiples hojas:
-# - C_1s: datos del espectro C 1s
-# - O_1s: datos del espectro O 1s  
-# - Dataset_Metadata: metadata del dataset
-# - Spectra_Metadata: metadata de cada espectro
-
-# 3. Exportar a JSON para procesamiento posterior
-export_to_json(
-    dataset,
-    "output/muestra1.json",
-    indent=2
-)
-# Crea archivo JSON con estructura jerárquica completa
-
-# 4. Controlar precisión decimal en CSV
-export_to_csv(
-    c1s_spectrum,
-    "output/c1s_high_precision.csv",
-    decimal_places=10
-)
-```
-
-### Ajuste de Múltiples Picos
-
-```python
-from xps_analyzer.analysis import fit_multiple_peaks
-
-# Ajustar espectro C 1s con 3 componentes
-result = fit_multiple_peaks(
-    c1s_spectrum,
-    n_peaks=3,
-    peak_shape="voigt",
-    initial_positions=[284.8, 286.2, 288.5]  # C-C, C-O, C=O
-)
-
-print(f"Picos encontrados: {len(result.peaks)}")
-for i, peak in enumerate(result.peaks):
-    print(f"Pico {i+1}: {peak.position:.2f} eV, Área: {peak.area:.2f}")
-```
-
-### Visualización
-
-```python
-from xps_analyzer.visualization import plot_spectrum
-
-# Plotear espectro
-plot_spectrum(spectrum)
-
-```
-
-### CLI
-
-```bash
-# Analizar directorio de datos
-xps-analyzer analyze data/raw/samples/
-
-# Mostrar información de elemento
-xps-analyzer show-element C
+# 3. Exportar resultados
+export_to_excel(dataset, "resultados_analisis.xlsx")
 ```
 
 ---
@@ -216,107 +96,47 @@ xps-data-analysis/
 ├── src/xps_analyzer/        # Código fuente
 │   ├── data_loader/         # Carga de datos
 │   ├── preprocessing/       # Calibración, normalización
-│   ├── analysis/            # Análisis core (COMPLETADO 75%)
-│   │   ├── background.py    # Sustracción de fondo
-│   │   ├── peak_fitting.py  # Ajuste de picos
-│   │   └── quantification.py # Cuantificación atómica
+│   ├── analysis/            # Análisis core (COMPLETADO 100%)
+│   ├── gui/                 # Interfaz gráfica (Streamlit)
+│   ├── export/              # Exportación (CSV, Excel, JSON)
 │   ├── reference_data/      # Base de datos de elementos
-│   ├── visualization/       # Plotting
+│   ├── visualization/       # Plotting estilo científico
 │   └── cli/                 # Interfaz CLI
-├── config/                  # Archivos de configuración TOML
-├── data/                    # Datos y resultados
-├── tests/                   # Tests (cobertura 87%)
-└── docs/                    # Documentación adicional
+├── tests/                   # Tests (326 tests, 72% coverage)
+└── config/                  # Archivos de configuración TOML
 ```
-
----
-
-## Documentación
-
-- **[INSTALLATION.md](INSTALLATION.md)** - Guía de instalación detallada
-- **[CONTEXT.md](CONTEXT.md)** - Contexto completo del proyecto
-- **[ROADMAP.md](ROADMAP.md)** - Plan de desarrollo por fases
-- **[CONTRIBUTING.md](CONTRIBUTING.md)** - Cómo contribuir
-- **[DEVELOPMENT.md](DEVELOPMENT.md)** - Guía para desarrolladores
-- **[API_DOCS.md](API_DOCS.md)** - Referencia completa de API
-- **[TESTING.md](TESTING.md)** - Estrategia de testing
-- **[CHANGELOG.md](CHANGELOG.md)** - Historial de cambios
 
 ---
 
 ## Roadmap
 
-### Fase 0 - Fundamentos [COMPLETADO]
+### Fase 1 - Análisis Core [100% COMPLETADO]
 
-- [x] Carga básica de datos
-- [x] Calibración de energía
-- [x] Visualización simple
-- [x] CLI básico
-- [x] Validación manual de datos
-- [x] Tests básicos (90 tests, 80% coverage)
+- [x] Sustracción de fondo (Shirley, Tougaard, Linear)
+- [x] Ajuste de picos (Gaussian, Lorentzian, Voigt)
+- [x] Cuantificación atómica (RSF Scofield/Wagner)
+- [x] Exportación (CSV, Excel, JSON)
+- [x] 326 tests unitarios pasando
 
-### Fase 1 - Análisis Core [75% COMPLETADO]
+### Fase 2 - Pydantic + GUI Interactiva [EN PROGRESO]
 
-- [x] Sustracción de fondo (Shirley, Tougaard, Linear) - 96% cobertura
-- [x] Ajuste de picos (Gaussian, Lorentzian, Voigt) - 95% cobertura
-- [x] Cuantificación atómica (RSF Scofield/Wagner) - 85% cobertura
-- [ ] Exportación (CSV, Excel, JSON) - **Próxima sesión**
-- [ ] Sistema de configuración TOML
-- [x] 87% test coverage (208 tests)
-
-### Fase 2 - Pydantic + GUI Interactiva
-
-- [ ] Migración a Pydantic para validación
-- [ ] GUI interactiva con Streamlit  
+- [x] Migración a Pydantic para validación (100%)
+- [x] GUI inicial con Streamlit (Estilo científico)
 - [ ] Visualización avanzada con Plotly
 - [ ] Análisis interactivo en tiempo real
-- [ ] 90% test coverage
-
-### Fase 3 - Avanzado
-
-- [ ] Machine learning para identificación automática
-- [ ] Análisis de profundidad (depth profiling)
-- [ ] GUI con Streamlit/Dash
-- [ ] API REST con FastAPI
-
-**Ver roadmap completo:** [ROADMAP.md](ROADMAP.md)
+- [ ] Target: 85% test coverage
 
 ---
 
 ## Contribuir
 
-¡Las contribuciones son bienvenidas! Especialmente para funcionalidad Fase 1.
+**Prioridades actuales:**
 
-**Prioridades:**
-
-1. [COMPLETADO] ~~Sustracción de fondo, ajuste de picos, cuantificación~~
-2. **Alta:** Exportación (CSV, Excel, JSON) - **Próxima sesión**
-3. **Media:** Sistema de configuración TOML
-4. **Baja:** Características avanzadas (Fase 3)
-
-**Proceso:**
-
-1. Fork el repositorio
-2. Crea una rama feature (`git checkout -b feature/nueva-funcionalidad`)
-3. Commit tus cambios (`git commit -m 'Agregar nueva funcionalidad'`)
-4. Push a la rama (`git push origin feature/nueva-funcionalidad`)
-5. Abre un Pull Request
+1. **Alta:** Mejoras en la interactividad de la GUI (Streamlit).
+2. **Media:** Visualización avanzada con Plotly.
+3. **Baja:** Documentación de API avanzada.
 
 **Lee:** [CONTRIBUTING.md](CONTRIBUTING.md) antes de contribuir.
-
----
-
-## Dependencias Principales
-
-- **numpy** (>=1.21.0) - Arrays numéricos
-- **pandas** (>=1.3.0) - DataFrames
-- **matplotlib** (>=3.4.0) - Visualización
-- **scipy** (>=1.7.0) - Procesamiento de señales, ajuste de picos
-- **click** (>=8.0.0) - Framework CLI
-- **lmfit** (>=1.2.0) - Ajuste de picos avanzado (planeado)
-- **openpyxl** (>=3.1.0) - Exportación Excel (próxima sesión)
-
-**Ver lista completa:** [pyproject.toml](pyproject.toml)
 
 ---
 
@@ -327,14 +147,11 @@ xps-data-analysis/
 uv run pytest tests/
 
 # Con cobertura
-uv run pytest tests/ --cov=src --cov-report=html
-
-# Ver reporte
-open htmlcov/index.html
+uv run pytest tests/ --cov=src --cov-report=term-missing
 ```
 
-**Estado actual:** 87% coverage (208 tests pasando) [OBJETIVO SUPERADO]  
-**Objetivo Fase 1:** >=80% coverage [COMPLETADO]
+**Estado actual:** 72% coverage (326 tests pasando)  
+**Objetivo Fase 2:** >=85% coverage
 
 ---
 
@@ -344,27 +161,5 @@ Este proyecto está bajo la licencia MIT. Ver [LICENSE](LICENSE) para más detal
 
 ---
 
-## Contacto
-
 **Autor:** Jesus Flores Lacarra  
-**Email:** jss.263.fsc@gmail.com  
-**GitHub:** [@JesusF10](https://github.com/JesusF10)
-
-**Repositorio:** https://github.com/JesusF10/xps-data-analysis  
-**Issues:** https://github.com/JesusF10/xps-data-analysis/issues
-
----
-
-## Agradecimientos
-
-- **NIST XPS Database** - Datos de referencia de elementos
-- **Comunidad XPS** - Feedback y sugerencias
-- **Astral (uv, ruff)** - Herramientas de desarrollo modernas
-
----
-
-## Referencias
-
-- Shirley, D. A. (1972). "High-Resolution X-Ray Photoemission Spectrum of Valence Bands of Gold"
-- Tougaard, S. (2020). "Practical guide to the use of backgrounds in quantitative XPS"
-- NIST XPS Database - https://srdata.nist.gov/xps/
+**Email:** jss.263.fsc@gmail.com

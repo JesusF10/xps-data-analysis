@@ -1,3 +1,5 @@
+from pydantic import ValidationError
+
 from xps_analyzer.data_loader.core import (
     XPSSpectrum,
     detect_file_format,
@@ -17,8 +19,8 @@ def test_parse_metadata_header_basic():
     """
     lines = [
         "Sample Name Sample1; Date 2023-10-01; Operator John Doe;",
-        "C 1s O 1s N 1s;",
-        "284.8 531.0 399.0;",
+        "C 1s\tO 1s\tN 1s;",
+        "284.8\t531.0\t399.0;",
     ]
     meta = parse_metadata(lines, header=True)
 
@@ -82,7 +84,7 @@ def test_get_spectrum_data_malformed_line_raises():
         "285.0",  # línea mal formada
         "286.0 80.0",
     ]
-    with pytest.raises(ValueError):
+    with pytest.raises((ValueError, ValidationError)):
         get_spectrum_data(data_lines)
 
 

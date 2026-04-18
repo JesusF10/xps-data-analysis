@@ -25,7 +25,7 @@ def calibrate_spectrum(
         El espectro calibrado.
     """
     if not inplace:
-        calibrated_spectrum = spectrum.copy()
+        calibrated_spectrum = spectrum.model_copy(deep=True)
         calibrated_spectrum.binding_energy += shift
         return calibrated_spectrum
     spectrum.binding_energy += shift
@@ -87,7 +87,7 @@ def calibrate_sample(
     shift = ref_element.binding_energy_most_useful - observed_peak_energy
 
     if not inplace:
-        calibrated_dataset = dataset.copy()
+        calibrated_dataset = dataset.model_copy(deep=True)
         calibrate_sample(calibrated_dataset, ref_element, inplace=True)
         return calibrated_dataset
     for _, spectrum in dataset.spectra.items():

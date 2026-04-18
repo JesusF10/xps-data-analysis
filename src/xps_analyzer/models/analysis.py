@@ -13,10 +13,10 @@ from __future__ import annotations
 
 from typing import Literal
 
+from .base import NumpyArrayValidator, XPSBaseModel
+
 import numpy as np
 from pydantic import Field, field_validator, model_validator
-
-from .base import XPSBaseModel, NumpyArrayValidator
 
 
 class PeakParameters(XPSBaseModel):

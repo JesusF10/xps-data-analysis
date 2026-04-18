@@ -52,7 +52,7 @@
 
 - Python: 3.11.5
 - SO: Ubuntu 22.04
-- xps-analyzer: 0.1.0
+- xps-analyzer: 0.8.0-beta
 ```
 
 ### Sugerir Nuevas Características
@@ -61,7 +61,7 @@
 
 1. Revisa el [ROADMAP.md](ROADMAP.md)
 2. Busca en issues existentes
-3. Considera si pertenece a Fase 1, 2 o 3
+3. Considera si pertenece a Fase 2 o 3
 
 **Template:**
 
@@ -292,30 +292,23 @@ def test_nombre_descriptivo_del_caso():
 
 ## Prioridades de Contribución
 
-### 🔥 Alta Prioridad (Fase 1 - Bloqueadores)
+### 🔥 Alta Prioridad (Fase 2 - GUI & Robustez)
 
 **Buscamos activamente contribuciones para:**
+
+- Mejoras en la interfaz interactiva de Streamlit (`src/xps_analyzer/gui/app.py`)
+- Migración de modelos de datos restantes a Pydantic
+- Validación de resultados con nuevos datasets experimentales
+- Tests de integración para el pipeline completo
+
+**Impacto:** Crítico para v0.9.0
+
+### [COMPLETADO] Media Prioridad
 
 - Sustracción de fondo (Shirley, Tougaard)
 - Ajuste de picos (Gaussian, Lorentzian, Voigt)
 - Cuantificación con factores de sensibilidad
-- Tests para módulos existentes
-
-**Impacto:** Crítico para v0.5.0
-
-### [EN PROGRESO] Media Prioridad
-
 - Exportación a CSV/Excel/JSON
-- Sistema de configuración TOML
-- Documentación adicional
-- Ejemplos en notebooks
-
-### [COMPLETADO] Baja Prioridad (Fase 2-3)
-
-- Formatos adicionales (VAMAS, CASA)
-- Machine learning
-- GUI
-- API REST
 
 **Recomendación:** Enfócate primero en Fase 1.
 

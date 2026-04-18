@@ -4,16 +4,17 @@ Funciones principales de carga de datos XPS.
 
 from __future__ import annotations
 
-from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 
+from xps_analyzer.utils.models import XPSBaseModel
+
 import numpy as np
 import pandas as pd
+from pydantic import Field, field_validator, model_validator
 
 
-@dataclass
-class XPSSpectrum:
+class XPSSpectrum(XPSBaseModel):
     """Representa un espectro XPS individual."""
 
     region_name: str
@@ -21,32 +22,43 @@ class XPSSpectrum:
     intensity: np.ndarray
     metadata: dict[str, Any]
 
-    def __post_init__(self):
-        """Validación básica después de inicialización."""
-        # Validar tipos
-        if not isinstance(self.binding_energy, np.ndarray):
-            raise TypeError("binding_energy debe ser un numpy.ndarray")
-        if not isinstance(self.intensity, np.ndarray):
-            raise TypeError("intensity debe ser un numpy.ndarray")
+    @field_validator("binding_energy", "intensity")
+    @classmethod
+    def validate_arrays(cls, v: np.ndarray) -> np.ndarray:
+        """Validar que los campos sean arrays de NumPy y no estén vacíos."""
+        if not isinstance(v, np.ndarray):
+            raise TypeError(
+                f"El campo debe ser un numpy.ndarray, no {type(v).__name__}"
+            )
+        if len(v) == 0:
+            raise ValueError("Los arrays no pueden estar vacíos")
+        return v
 
-        # Validar longitudes coincidentes
+    @field_validator("binding_energy")
+    @classmethod
+    def validate_positive_energies(cls, v: np.ndarray) -> np.ndarray:
+        """Validar que las energías sean positivas."""
+        if np.any(v < 0):
+            raise ValueError("Los valores de binding_energy deben ser positivos")
+        return v
+
+    @field_validator("region_name")
+    @classmethod
+    def validate_region_name(cls, v: str) -> str:
+        """Validar que el nombre de la región no esté vacío."""
+        if not v or not v.strip():
+            raise ValueError("region_name no puede estar vacío")
+        return v
+
+    @model_validator(mode="after")
+    def validate_matching_lengths(self) -> XPSSpectrum:
+        """Validar que los arrays tengan la misma longitud."""
         if len(self.binding_energy) != len(self.intensity):
             raise ValueError(
                 f"binding_energy ({len(self.binding_energy)} puntos) e intensity "
                 f"({len(self.intensity)} puntos) deben tener la misma longitud"
             )
-
-        # Validar que no estén vacíos
-        if len(self.binding_energy) == 0:
-            raise ValueError("Los arrays no pueden estar vacíos")
-
-        # Validar energías positivas
-        if np.any(self.binding_energy < 0):
-            raise ValueError("Los valores de binding_energy deben ser positivos")
-
-        # Validar region_name
-        if not self.region_name or not self.region_name.strip():
-            raise ValueError("region_name no puede estar vacío")
+        return self
 
     @property
     def data(self) -> pd.DataFrame:
@@ -55,33 +67,31 @@ class XPSSpectrum:
             {"binding_energy": self.binding_energy, "intensity": self.intensity}
         ).set_index("binding_energy")
 
-    def copy(self) -> XPSSpectrum:
-        """Retorna una copia del espectro."""
-        return XPSSpectrum(
-            region_name=self.region_name,
-            binding_energy=self.binding_energy.copy(),
-            intensity=self.intensity.copy(),
-            metadata=self.metadata.copy(),
-        )
 
-
-@dataclass
-class XPSDataset:
+class XPSDataset(XPSBaseModel):
     """Representa un archivo XPS completo."""
 
     filename: str
     header: dict[str, Any]
     spectra: dict[str, XPSSpectrum]
 
-    def __post_init__(self):
-        """Validación básica después de inicialización."""
-        if not self.filename or not self.filename.strip():
+    @field_validator("filename")
+    @classmethod
+    def validate_filename(cls, v: str) -> str:
+        """Validar que el nombre de archivo no esté vacío."""
+        if not v or not v.strip():
             raise ValueError("filename no puede estar vacío")
+        return v
 
-        if not self.spectra:
+    @field_validator("spectra")
+    @classmethod
+    def validate_spectra(cls, v: dict[str, XPSSpectrum]) -> dict[str, XPSSpectrum]:
+        """Validar que el diccionario de espectros no esté vacío."""
+        if not v:
             raise ValueError(
                 "spectra no puede estar vacío - debe contener al menos un espectro"
             )
+        return v
 
     def get_spectrum(self, region_name: str) -> XPSSpectrum | None:
         """Obtiene un espectro específico."""
@@ -91,31 +101,30 @@ class XPSDataset:
         """Lista todas las regiones disponibles."""
         return list(self.spectra.keys())
 
-    def copy(self) -> XPSDataset:
-        """Retorna una copia del dataset."""
-        return XPSDataset(
-            filename=self.filename,
-            header=self.header.copy(),
-            spectra={name: spec.copy() for name, spec in self.spectra.items()},
-        )
 
-
-@dataclass
-class XPSSample:
+class XPSSample(XPSBaseModel):
     """Representa una muestra XPS que puede contener múltiples archivos."""
 
     sample_name: str
     datasets: dict[str, XPSDataset]
 
-    def __post_init__(self):
-        """Validación básica después de inicialización."""
-        if not self.sample_name or not self.sample_name.strip():
+    @field_validator("sample_name")
+    @classmethod
+    def validate_sample_name(cls, v: str) -> str:
+        """Validar que el nombre de muestra no esté vacío."""
+        if not v or not v.strip():
             raise ValueError("sample_name no puede estar vacío")
+        return v
 
-        if not self.datasets:
+    @field_validator("datasets")
+    @classmethod
+    def validate_datasets(cls, v: dict[str, XPSDataset]) -> dict[str, XPSDataset]:
+        """Validar que el diccionario de datasets no esté vacío."""
+        if not v:
             raise ValueError(
                 "datasets no puede estar vacío - debe contener al menos un dataset"
             )
+        return v
 
     def get_dataset(self, filename: str) -> XPSDataset | None:
         """Obtiene un dataset específico.
@@ -140,19 +149,6 @@ class XPSSample:
             Lista de nombres de archivos de los datasets.
         """
         return list(self.datasets.keys())
-
-    def copy(self) -> XPSSample:
-        """Retorna una copia de la muestra.
-
-        Returns
-        -------
-        XPSSample
-            Copia de la muestra.
-        """
-        return XPSSample(
-            sample_name=self.sample_name,
-            datasets={name: ds.copy() for name, ds in self.datasets.items()},
-        )
 
 
 def parse_metadata(lines: list | str, header: bool = False) -> dict[str, Any]:
