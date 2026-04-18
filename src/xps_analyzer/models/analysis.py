@@ -136,14 +136,14 @@ class PeakParameters(XPSBaseModel):
     )
 
     @model_validator(mode="after")
-    def validate_voigt_gamma(self) -> "PeakParameters":
+    def validate_voigt_gamma(self) -> PeakParameters:
         """Valida que picos Voigt tengan parámetro gamma."""
         if self.shape == "voigt" and self.gamma is None:
             raise ValueError("Perfil Voigt requiere parámetro gamma")
         return self
 
     @model_validator(mode="after")
-    def validate_area_consistency(self) -> "PeakParameters":
+    def validate_area_consistency(self) -> PeakParameters:
         """Valida consistencia entre área, amplitud y ancho."""
         amplitude = self.amplitude
         width = self.width
@@ -251,7 +251,7 @@ class FitResult(XPSBaseModel):
         return NumpyArrayValidator.validate_finite_array(v, "residual")
 
     @model_validator(mode="after")
-    def validate_array_lengths(self) -> "FitResult":
+    def validate_array_lengths(self) -> FitResult:
         """Valida que fitted_spectrum y residual tengan la misma longitud."""
         NumpyArrayValidator.validate_matching_lengths(
             self.fitted_spectrum, self.residual, "fitted_spectrum", "residual"

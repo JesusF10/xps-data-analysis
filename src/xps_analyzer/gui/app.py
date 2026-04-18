@@ -71,28 +71,39 @@ def _save_uploaded_file_to_temp(uploaded_file: Any) -> Path:
     return tmp_path
 
 
-def _slice_spectrum_inplace(
-    spectrum: XPSSpectrum, min_be: float, max_be: float
-) -> None:
-    """Recorta un espectro in-place al rango de energía dado y limpia metadatos."""
+def _slice_spectrum(spectrum: XPSSpectrum, min_be: float, max_be: float) -> XPSSpectrum:
+    """Recorta un espectro al rango de energía dado y devuelve una copia."""
     min_val, max_val = sorted([min_be, max_be])
     mask = (spectrum.binding_energy >= min_val) & (spectrum.binding_energy <= max_val)
 
-    spectrum.binding_energy = spectrum.binding_energy[mask]
-    spectrum.intensity = spectrum.intensity[mask]
+    new_metadata = spectrum.metadata.copy()
+
+    # Si ya existía una intensidad original, debemos recortarla también para mantener consistencia
+    if "background_original_intensity" in new_metadata:
+        orig_intensity = np.asarray(new_metadata["background_original_intensity"])
+        if len(orig_intensity) == len(spectrum.binding_energy):
+            new_metadata["background_original_intensity"] = orig_intensity[mask]
 
     # Limpiar metadata de procesamientos previos que ya no coinciden en longitud
     keys_to_remove = [
         "shirley_background",
         "tougaard_background",
         "linear_background",
-        "background_original_intensity",
         "background_method",
         "fit_result",
     ]
     for k in keys_to_remove:
-        if k in spectrum.metadata:
-            del spectrum.metadata[k]
+        if k in new_metadata:
+            del new_metadata[k]
+
+    return spectrum.model_copy(
+        deep=True,
+        update={
+            "binding_energy": spectrum.binding_energy[mask],
+            "intensity": spectrum.intensity[mask],
+            "metadata": new_metadata,
+        },
+    )
 
 
 @st.cache_data(show_spinner=False)
@@ -263,6 +274,13 @@ def _plot_spectrum_streamlit(
     bg, bg_label = _get_background_data(spectrum_proc)
     has_fit = "fit_result" in spectrum_proc.metadata
     original_intensity = spectrum_proc.metadata.get("background_original_intensity")
+    print(
+        "Shapes:",
+        spectrum_proc.binding_energy.shape,
+        np.asarray(original_intensity).shape
+        if original_intensity is not None
+        else "None",
+    )
 
     if original_intensity is None:
         if spectrum_raw is not None and len(spectrum_raw.intensity) == len(
@@ -462,7 +480,7 @@ def main() -> None:
                 st.error("El objeto cargado no es un XPSDataset válido.")
                 return
             st.session_state.raw_dataset = raw
-            st.session_state.processed_dataset = raw.copy()
+            st.session_state.processed_dataset = raw.model_copy(deep=True)
             st.session_state.file_name = uploaded.name
             st.session_state.selected_region = (
                 list(raw.spectra.keys())[0] if raw.spectra else None
@@ -504,8 +522,10 @@ def main() -> None:
                 st.sidebar.error(f"Error al calibrar: {e}")
 
         if st.button("Reiniciar Calibración"):
-            # Restaurar desde el dataset crudo
-            st.session_state.processed_dataset = st.session_state.raw_dataset.copy()
+            # Restaurar desde el dataset crudo usando model_copy(deep=True) para Pydantic v2
+            st.session_state.processed_dataset = (
+                st.session_state.raw_dataset.model_copy(deep=True)
+            )
             st.sidebar.info("Calibración y fondos reiniciados.")
             st.rerun()
 
@@ -570,7 +590,7 @@ def main() -> None:
             with col1:
                 if st.button("Aplicar Recorte", disabled=not rango_valido):
                     try:
-                        _slice_spectrum_inplace(spectrum, slice_min, slice_max)
+                        dataset_proc.spectra[reg] = _slice_spectrum(spectrum, slice_min, slice_max)
                         st.sidebar.success(f"Espectro {reg} recortado.")
                         st.rerun()
                     except Exception as e:
@@ -578,9 +598,9 @@ def main() -> None:
             with col2:
                 if st.button("Restaurar Rango"):
                     try:
-                        # Restaurar solo esta región desde raw_dataset
+                        # Restaurar solo esta región desde raw_dataset con deep copy
                         raw_spectrum = st.session_state.raw_dataset.get_spectrum(reg)
-                        dataset_proc.spectra[reg] = raw_spectrum.copy()
+                        dataset_proc.spectra[reg] = raw_spectrum.model_copy(deep=True)
                         st.sidebar.info(f"Rango de {reg} restaurado.")
                         st.rerun()
                     except Exception as e:
@@ -590,6 +610,12 @@ def main() -> None:
 
     # -- 2. SUSTRACCIÓN DE FONDO --
     with st.sidebar.expander("Sustracción de Fondo", expanded=False):
+        if st.session_state.get("selected_region"):
+            reg = st.session_state.selected_region
+            spectrum_current = dataset_proc.get_spectrum(reg)
+            rec_method, reason = _recommend_background_method(spectrum_current)
+            st.info(f"💡 **Recomendado:** {rec_method}\n\n_{reason}_")
+
         bg_method = st.selectbox("Método", ["Shirley", "Tougaard", "Lineal"])
 
         shirley_tol = 1e-5
@@ -758,10 +784,16 @@ def main() -> None:
                         else:
                             # Integración cruda si no hay ajuste
                             # (Asume que el usuario ya restó el fondo)
-                            total_area = abs(
-                                np.trapezoid(
-                                    spectrum.intensity, spectrum.binding_energy
+                            # Nota: np.trapezoid es NumPy 2.0+, np.trapz es <2.0
+                            trapz_func = getattr(
+                                np, "trapezoid", getattr(np, "trapz", None)
+                            )
+                            if trapz_func is None:
+                                raise AttributeError(
+                                    "No se encontró np.trapezoid ni np.trapz."
                                 )
+                            total_area = abs(
+                                trapz_func(spectrum.intensity, spectrum.binding_energy)
                             )
 
                         # Dummy PeakParameter solo para pasar el área

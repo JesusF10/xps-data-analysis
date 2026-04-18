@@ -25,16 +25,16 @@ Exports principales:
 """
 
 # Fase 2 - Semana 1-4: Modelos de referencia y análisis (COMPLETADAS)
-from .reference import (
-    PhotoelectronLine,
-    CompoundReference,
-    ElementReference,
-    ReferenceDatabase,
-)
-from .analysis import PeakParameters, FitResult
+from .analysis import FitResult, PeakParameters
 
 # Fase 2 - Semana 5-6: Núcleo principal (COMPLETADAS)
-from .core import XPSSpectrum, XPSDataset, XPSSample
+from .core import XPSDataset, XPSSample, XPSSpectrum
+from .reference import (
+    CompoundReference,
+    ElementReference,
+    PhotoelectronLine,
+    ReferenceDatabase,
+)
 
 # Migración gradual: Eliminar imports de dataclasses originales
 # TODO: Remover completamente una vez validada compatibilidad

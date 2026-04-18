@@ -29,7 +29,7 @@ class PhotoelectronLine(XPSBaseModel):
     """
 
     line: str
-    binding_energy: float
+    binding_energy: float | None = None
     x_ray_source: str | None = None
     type: str = "core"
     kinetic_energy: float | None = None
@@ -52,7 +52,7 @@ class CompoundReference(XPSBaseModel):
     """
 
     orbital: str
-    binding_energy_range: tuple[float, float]
+    binding_energy_range: tuple[float, float] | float
     peak_position: float | None = None
     chemical_shift: float | None = None
 
@@ -109,7 +109,10 @@ class ElementReference(XPSBaseModel):
         # Si existe binding_energy_most_useful, buscar la línea correspondiente
         if self.binding_energy_most_useful is not None:
             for line in self.photoelectron_lines:
-                if abs(line.binding_energy - self.binding_energy_most_useful) < 0.1:
+                if (
+                    line.binding_energy is not None
+                    and abs(line.binding_energy - self.binding_energy_most_useful) < 0.1
+                ):
                     return line
 
         # Fallback: retornar la primera línea disponible
@@ -188,7 +191,10 @@ class ReferenceDatabase(XPSBaseModel):
         for element in self.elements.values():
             # Buscar en líneas fotoeléctronicas
             for line in element.photoelectron_lines:
-                if abs(line.binding_energy - energy) <= tolerance:
+                if (
+                    line.binding_energy is not None
+                    and abs(line.binding_energy - energy) <= tolerance
+                ):
                     matches.append((element.symbol, line.line))
 
             # Buscar en compuestos

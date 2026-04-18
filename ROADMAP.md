@@ -1,8 +1,8 @@
 # XPS Analyzer - Roadmap de Desarrollo
 
-**Versión actual:** 0.9.0-alpha  
-**Estado:** Fase 2 en PROGRESO (Migración Pydantic COMPLETADA)  
-**Actualización:** Abril 17, 2026
+**Versión actual:** 0.8.0-beta  
+**Estado:** Fase 1 COMPLETADA + Validación COMPLETADA (Fases A-D) + Fase E COMPLETADA  
+**Actualización:** Marzo 28, 2026
 
 Este documento describe el plan de desarrollo del proyecto XPS Analyzer organizado en fases progresivas. Cada fase construye sobre la anterior, agregando funcionalidad crítica y mejorando la robustez del software.
 
@@ -16,10 +16,11 @@ El desarrollo de XPS Analyzer sigue un enfoque iterativo de 5 fases principales 
 2. **Fase 1 (Completada)** - Funcionalidad core de análisis + exportación
 3. **Validación (Completada)** - Fases A-D con datos reales
 4. **Fase E (Completada)** - Mejoras de robustez: 50% → 79% éxito
-5. **Fase 2 (En Progreso)** - Migración a Pydantic (100%) + GUI Interactiva (20%)
+5. **Fase 2 (Planificada)** - Migración a Pydantic + GUI Interactiva
 6. **Fase 3 (Futura)** - GUI Profesional
 
 **Principios guía:**
+
 - Priorizar funcionalidad core sobre características avanzadas
 - Mantener alta cobertura de tests (>80% desde Fase 1, actualmente 87%)
 - Documentación exhaustiva en español
@@ -36,29 +37,35 @@ El desarrollo de XPS Analyzer sigue un enfoque iterativo de 5 fases principales 
 ### Completado [COMPLETADO]
 
 **Carga de Datos**
+
 - [x] Parser para formato propietario de texto
 - [x] Detección básica de formato (multiplex vs survey)
 - [x] Estructuras `XPSSpectrum`, `XPSDataset`, `XPSSample`
 - [x] Validación manual con `__post_init__`
 
 **Visualización**
+
 - [x] Plots básicos de espectros (survey y regiones)
 - [x] Convenciones XPS (eje x invertido)
 
 **Calibración**
+
 - [x] Calibración por elemento de referencia (C 1s)
 - [x] Aplicación de shift a todos los espectros
 
 **CLI**
+
 - [x] Comando `analyze` para análisis básico
 - [x] Comando `show-element` para info de referencia
 
 **Datos de Referencia**
+
 - [x] Base de datos JSON de ~25 elementos comunes
 - [x] Carga con patrón singleton/cache
 - [x] Búsqueda por energía de enlace con tolerancia
 
 **Configuración**
+
 - [x] Archivos TOML documentados (`config/`)
 - [x] Perfiles de instrumentos XPS
 - [x] Base de datos extendida de elementos
@@ -66,6 +73,7 @@ El desarrollo de XPS Analyzer sigue un enfoque iterativo de 5 fases principales 
 ### Completado (Fase 0 finalizada)
 
 **Testing**
+
 - [x] Aumentar cobertura a 87% (superando objetivo de 20%)
 - [x] Tests para validación de `XPSSpectrum`
 - [x] Tests para validación de `XPSDataset`
@@ -73,6 +81,7 @@ El desarrollo de XPS Analyzer sigue un enfoque iterativo de 5 fases principales 
 - [x] 208 tests totales (100% passing)
 
 **Documentación**
+
 - [x] CONTEXT.md completo
 - [x] ROADMAP.md (este archivo)
 - [x] Todos los docs principales completados
@@ -86,8 +95,9 @@ El desarrollo de XPS Analyzer sigue un enfoque iterativo de 5 fases principales 
 **Objetivo:** Implementar funcionalidad esencial de análisis XPS y exportación de resultados
 
 **Commits principales:**
+
 - `fa8bcb8` - Sesión 1: Background Subtraction
-- `da698d2` - Sesión 2: Peak Fitting  
+- `da698d2` - Sesión 2: Peak Fitting
 - `097c3ca` - Sesión 3: Quantification
 - `[PENDIENTE]` - Sesión 4: Export System
 
@@ -96,22 +106,22 @@ El desarrollo de XPS Analyzer sigue un enfoque iterativo de 5 fases principales 
 **Prioridad:** Alta (bloqueador para análisis cuantitativo)
 
 **Métodos implementados:**
+
 - [x] **Shirley background** (prioridad máxima)
   - Método iterativo estándar de la industria
   - Parámetros: max_iterations, tolerance
   - Validación con datos de referencia
   - 96% cobertura de tests
-  
 - [x] **Tougaard background**
   - Para análisis más preciso de profundidad
   - Parámetros B, C, D configurables
-  - 4 variantes implementadas (B, C, D, D*)
-  
+  - 4 variantes implementadas (B, C, D, D\*)
 - [x] **Linear background**
   - Para regiones planas sin picos intensos
   - Implementación completa
 
 **API implementada:**
+
 ```python
 from xps_analyzer.analysis import shirley_background, tougaard_background, linear_background
 
@@ -133,6 +143,7 @@ spectrum_clean = linear_background(spectrum)
 ```
 
 **Entregables completados:**
+
 - [x] Módulo `analysis/background.py` (498 líneas)
 - [x] 30 tests (100% passing)
 - [x] 96% cobertura
@@ -143,6 +154,7 @@ spectrum_clean = linear_background(spectrum)
 **Prioridad:** Alta (funcionalidad core)
 
 **Formas de pico implementadas:**
+
 - [x] **Gaussian** (más simple, para pruebas)
 - [x] **Lorentzian** (XPS típico)
 - [x] **Voigt** (convolución Gaussian-Lorentzian, más realista)
@@ -150,6 +162,7 @@ spectrum_clean = linear_background(spectrum)
 - [x] **Gaussian-Lorentzian Sum (GL)** (combinación lineal)
 
 **Características implementadas:**
+
 - [x] Ajuste de picos individuales
 - [x] Deconvolución de múltiples picos
 - [x] Constraints en parámetros (FWHM, posición, amplitud)
@@ -158,10 +171,12 @@ spectrum_clean = linear_background(spectrum)
 - [x] Análisis de residuales (R², χ²)
 
 **Dependencias:**
+
 - [x] Usa `lmfit` para fitting robusto
 - [x] Integración con base de datos de elementos
 
 **API implementada:**
+
 ```python
 from xps_analyzer.analysis import fit_gaussian, fit_lorentzian, fit_voigt, fit_multiple_peaks
 from xps_analyzer.analysis import PeakParameters, FitResult
@@ -190,6 +205,7 @@ result = fit_multiple_peaks(
 ```
 
 **Entregables completados:**
+
 - [x] Módulo `analysis/peak_fitting.py` (849 líneas)
 - [x] Dataclasses `PeakParameters`, `FitResult`
 - [x] 45 tests (100% passing)
@@ -201,6 +217,7 @@ result = fit_multiple_peaks(
 **Prioridad:** Alta (análisis fundamental)
 
 **Características implementadas:**
+
 - [x] Cálculo de concentraciones atómicas
 - [x] Factores de sensibilidad de Scofield (completos para 89 elementos)
 - [x] Factores de Wagner (empíricos, 18 elementos comunes)
@@ -209,6 +226,7 @@ result = fit_multiple_peaks(
 - [x] Validación de inputs robusta
 
 **API implementada:**
+
 ```python
 from xps_analyzer.analysis import (
     load_sensitivity_factors,
@@ -232,6 +250,7 @@ normalized = normalize_to_100(concentrations)
 ```
 
 **Entregables completados:**
+
 - [x] Módulo `analysis/quantification.py` (498 líneas)
 - [x] Base de datos RSF Scofield (89 elementos) y Wagner (18 elementos)
 - [x] 43 tests (100% passing)
@@ -243,21 +262,24 @@ normalized = normalize_to_100(concentrations)
 **Prioridad:** Media (última sesión de Fase 1)
 
 **Formatos soportados:**
+
 - [x] **CSV** (datos tabulares con metadata opcional)
 - [x] **Excel** (múltiples hojas para datasets con metadata)
 - [x] **JSON** (metadata + datos con estructura jerárquica)
 
 **Características implementadas:**
+
 - [x] Exportar espectros individuales (`XPSSpectrum`)
 - [x] Exportar datasets completos (`XPSDataset`)
 - [x] Configuración de precisión decimal
 - [x] Inclusión de metadata (parámetro `include_metadata`)
 - [x] Creación automática de directorios padres
 - [x] Validación de tipos y extensiones
-- [x] Nombres de archivo seguros (caracteres especiales → "_")
+- [x] Nombres de archivo seguros (caracteres especiales → "\_")
 - [x] `NumpyEncoder` personalizado para JSON (manejo NaN/Inf)
 
 **API implementada:**
+
 ```python
 from xps_analyzer.export import export_to_csv, export_to_excel, export_to_json
 
@@ -273,6 +295,7 @@ export_to_json(dataset, "output/sample1.json", indent=2)
 ```
 
 **Entregables completados:**
+
 - [x] Módulo `export/exporters.py` (561 líneas, 10 funciones)
 - [x] Soporte para 3 formatos estándar
 - [x] Tests comprehensivos (19 tests, 92% cobertura)
@@ -281,6 +304,7 @@ export_to_json(dataset, "output/sample1.json", indent=2)
 - [x] Ejemplos en README.md
 
 **Decisiones de diseño:**
+
 - Función pública + helpers privados (consistente con otros módulos)
 - Polimorfismo via `isinstance()` (XPSSpectrum vs XPSDataset)
 - CSV: directorio para datasets, archivo único para espectros
@@ -292,6 +316,7 @@ export_to_json(dataset, "output/sample1.json", indent=2)
 **Prioridad:** Media (mejora usabilidad)
 
 **Características planeadas:**
+
 - [ ] Leer archivos TOML de `config/`
 - [ ] Override con variables de entorno
 - [ ] Override con argumentos CLI
@@ -299,11 +324,13 @@ export_to_json(dataset, "output/sample1.json", indent=2)
 - [ ] Perfiles de usuario
 
 **Implementación:**
+
 - Usar `tomllib` (Python 3.11+) o `tomli` (backport)
 - Validación básica de tipos y rangos
 - Sistema de precedencia claro
 
 **Entregables:**
+
 - Módulo `config/loader.py`
 - Tests de carga y validación
 - Documentación de todas las opciones
@@ -317,6 +344,7 @@ export_to_json(dataset, "output/sample1.json", indent=2)
 **Objetivo alcanzado:** 87% de cobertura (superando objetivo de 80%)
 
 **Áreas testeadas:**
+
 - [x] Background subtraction (30 tests, 96% cobertura)
 - [x] Peak fitting (45 tests, 95% cobertura)
 - [x] Quantification (43 tests, 85% cobertura)
@@ -326,6 +354,7 @@ export_to_json(dataset, "output/sample1.json", indent=2)
 - [ ] CLI commands (planeado para Fase 2)
 
 **Tipos de tests implementados:**
+
 - [x] Unit tests para funciones individuales (137 tests)
 - [x] Tests paramétricos para múltiples escenarios
 - [x] Tests de validación de inputs
@@ -333,13 +362,14 @@ export_to_json(dataset, "output/sample1.json", indent=2)
 - [x] Tests de round-trip (export → reimport)
 
 **Estadísticas finales Fase 1 (4 sesiones completadas):**
+
 - **Total tests:** 227 (100% passing)
 - **Cobertura global:** 87%
 - **Cobertura por módulo:**
-  * analysis/background: 96%
-  * analysis/peak_fitting: 95%
-  * analysis/quantification: 85%
-  * export/exporters: 92%
+  - analysis/background: 96%
+  - analysis/peak_fitting: 95%
+  - analysis/quantification: 85%
+  - export/exporters: 92%
 - **Líneas de código agregadas:** ~3,000 (análisis) + ~600 (export) = ~3,600
 - **Funciones implementadas:** ~50
 - **Dependencias agregadas:** openpyxl, et-xmlfile
@@ -347,18 +377,21 @@ export_to_json(dataset, "output/sample1.json", indent=2)
 ### Resumen de Fase 1
 
 **Hito alcanzado:** Sistema funcional de análisis XPS con capacidades completas de:
-- ✅ Sustracción de fondo (3 métodos)
-- ✅ Ajuste de picos (5 perfiles)
-- ✅ Cuantificación atómica (2 fuentes RSF, 23+ elementos)
-- ✅ Exportación (3 formatos estándar)
+
+- Sustracción de fondo (3 métodos)
+- Ajuste de picos (5 perfiles)
+- Cuantificación atómica (2 fuentes RSF, 23+ elementos)
+- Exportación (3 formatos estándar)
 
 **Capacidades del sistema:**
+
 - Pipeline completo: cargar → calibrar → restar fondo → ajustar picos → cuantificar → exportar
 - Alta cobertura de tests (87%) con 227 tests pasando
 - Documentación exhaustiva (API_DOCS, README, CHANGELOG)
 - CLI funcional para operaciones básicas
 
 **Próximos pasos:**
+
 - Migración a Pydantic para validación avanzada (Fase 2)
 - Soporte para formatos VAMAS y CASA XPS (Fase 2)
 - Sistema de configuración avanzado (Fase 2)
@@ -378,12 +411,14 @@ Después de completar la implementación de Fase 1, se realizó validación exha
 **Objetivo:** Caracterizar calidad de datos y calcular métricas de SNR
 
 **Entregables:**
+
 - [x] Script `explore_bn_data.py` (486 líneas)
 - [x] 11 plots exploratorios (SNR, distribuciones, espectros representativos)
 - [x] `exploration_stats.json` con estadísticas de SNR
 - [x] `FASE_A_COMPLETADA.md` (documentación)
 
 **Hallazgos:**
+
 - SNR promedio por región: 67-237 (alta variabilidad)
 - 6 regiones identificadas: Bi 4f, C 1s, Na 1s, O 1s, Sr 3d, Ti 2p
 - 4 muestras procesables con 24 espectros totales
@@ -393,12 +428,14 @@ Después de completar la implementación de Fase 1, se realizó validación exha
 **Objetivo:** Validar pipeline completo con muestra de alta calidad (BN-BS-3)
 
 **Entregables:**
+
 - [x] Script `analyze_single_sample.py` (546 líneas)
 - [x] 7 plots de análisis por región (300 DPI)
 - [x] `analysis_results.json` con resultados cuantitativos
 - [x] `ANALYSIS_SUMMARY.md` y `FASE_B_COMPLETADA.md`
 
 **Hallazgos:**
+
 - 83% de éxito (5/6 regiones procesadas exitosamente)
 - Composición: O 1s (50.8%), Ti 2p (43.1%), Na 1s (6.1%)
 - Calidad de ajuste: R² promedio 0.67 (moderado)
@@ -409,6 +446,7 @@ Después de completar la implementación de Fase 1, se realizó validación exha
 **Objetivo:** Procesar las 4 muestras del dataset completo automáticamente
 
 **Entregables:**
+
 - [x] Script `analyze_bn_batch.py` (564 líneas)
 - [x] 28 plots totales (7 por muestra, 10.4 MB)
 - [x] 4 archivos `analysis_results.json` individuales
@@ -416,6 +454,7 @@ Después de completar la implementación de Fase 1, se realizó validación exha
 - [x] `FASE_C_COMPLETADA.md` (450+ líneas)
 
 **Bugs corregidos durante validación:**
+
 - Bug #4: Encoding incorrecto en `core.py:338` (latin-1)
 - Bug #5: Parsing de header multiplex con tabs
 - Bug #6: Precedencia en loop de procesamiento
@@ -423,6 +462,7 @@ Después de completar la implementación de Fase 1, se realizó validación exha
 - Bug #8: Atributo incorrecto en FitResult
 
 **Hallazgos:**
+
 - Tasa de éxito global: 54% (13/24 regiones)
 - Alta variabilidad entre muestras (33-83% éxito)
 - BN-BS-3 es outlier positivo (83% vs. 33-50% otras)
@@ -433,6 +473,7 @@ Después de completar la implementación de Fase 1, se realizó validación exha
 **Objetivo:** Análisis estadístico profundo para identificar causas de fallas
 
 **Entregables:**
+
 - [x] Script `compare_samples.py` (678 líneas)
 - [x] 8 plots comparativos (heatmaps, correlaciones, overlays, 2.3 MB)
 - [x] `comparative_summary.json` con métricas estadísticas
@@ -440,17 +481,20 @@ Después de completar la implementación de Fase 1, se realizó validación exha
 - [x] `FASE_D_COMPLETADA.md` (resumen ejecutivo)
 
 **Hallazgos críticos:**
+
 1. **Tasa de éxito real: 50%** (12/24 regiones procesadas exitosamente)
 2. **No hay correlación SNR vs. éxito** - complejidad espectral más determinante
 3. **Regiones problemáticas (75% fallo):** Na 1s, O 1s, Ti 2p
 4. **Alta variabilidad en calibración:** CV=40% (shifts -0.95 a -3.95 eV)
 
 **Causas raíz identificadas:**
+
 - **Shirley sin fallback** (46% fallas) → necesita cascada Shirley→Tougaard→Linear
 - **Ajuste de pico único inadecuado** → dobletes (Ti 2p, Bi 4f) no resueltos, R²<0.50
 - **RSF faltantes** → Bi y Sr excluidos de cuantificación
 
 **Recomendaciones para v1.0:**
+
 - Implementar fallback automático en sustracción de fondo
 - Ajuste multi-pico con constraints de dobletes spin-órbita
 - Agregar RSF de Wagner/Moulder (18 elementos adicionales)
@@ -460,6 +504,7 @@ Después de completar la implementación de Fase 1, se realizó validación exha
 ### Resumen de Validación + Fase E
 
 **Logros de Validación (Fases A-D):**
+
 - ✅ 4 fases de validación completadas (100%)
 - ✅ 4 scripts de análisis (2,274 líneas totales)
 - ✅ 47 plots generados (13.0 MB)
@@ -468,6 +513,7 @@ Después de completar la implementación de Fase 1, se realizó validación exha
 - ✅ Documentación exhaustiva (2,500+ líneas)
 
 **Logros de Fase E (Mejoras de Robustez):**
+
 - ✅ 3 mejoras críticas implementadas (100%)
 - ✅ 44 tests nuevos (227 totales, 100% passing)
 - ✅ Script de re-validación (752 líneas)
@@ -475,15 +521,18 @@ Después de completar la implementación de Fase 1, se realizó validación exha
 - ✅ Documentación completa (FASE_E_COMPLETADA.md, 13 páginas)
 
 **Impacto Medido:**
+
 - Background: **54% → 100%** (+46%) - eliminación completa de fallos
 - Peak fitting: **50% → 79%** (+29%) - mejora significativa
 - R² dobletes: **0.50 → 0.82** (+64%) - calidad mejorada
 - Elementos cuantificables: **23 → 25** (+8.7%)
 
 **Objetivo alcanzado:** ✅ 79% éxito (target era 80%)
+
 - Si excluimos Na 1s (requiere módulo especializado): **95% éxito**
 
 **Próximos pasos:**
+
 - Fase F (opcional): Módulo especializado para Na 1s + detección sensible Ti 2p
 - Fase 2: Migración a Pydantic + formatos múltiples (VAMAS, CASA XPS)
 
@@ -501,22 +550,26 @@ Después de completar la implementación de Fase 1, se realizó validación exha
 **Prioridad:** Alta (mejora arquitectura)
 
 **Estrategia de migración gradual:**
-- Semana 1-2: Dataclasses independientes (PhotoelectronLine, CompoundReference, PeakParameters)  
+
+- Semana 1-2: Dataclasses independientes (PhotoelectronLine, CompoundReference, PeakParameters)
 - Semana 3-4: Estructura jerárquica (ElementReference, ReferenceDatabase, FitResult)
 - Semana 5-6: Núcleo principal (XPSSpectrum, XPSDataset, XPSSample)
 
 **Beneficios:**
+
 - Validación automática robusta
-- Mensajes de error claros y estandarizados  
+- Mensajes de error claros y estandarizados
 - JSON schema generation para documentación
 - Preparación para GUI y APIs futuras
 
 **Breaking changes aceptables:**
+
 - `.model_dump()` en lugar de `dataclasses.asdict()`
 - `pydantic.ValidationError` en lugar de `ValueError`
 - Tests pueden fallar temporalmente durante migración
 
 **Validadores críticos:**
+
 ```python
 @field_validator('binding_energy', 'intensity')
 @classmethod
@@ -525,7 +578,7 @@ def validate_arrays(cls, v):
         raise ValueError('Debe ser numpy.ndarray')
     return v
 
-@model_validator(mode='after') 
+@model_validator(mode='after')
 def validate_array_consistency(self):
     if len(self.binding_energy) != len(self.intensity):
         raise ValueError('Arrays must have same length')
@@ -537,6 +590,7 @@ def validate_array_consistency(self):
 **Prioridad:** Alta (experiencia de usuario)
 
 **Características:**
+
 - [ ] Parser completo para VAMAS
 - [ ] Soporte para metadata extendida
 - [ ] Conversión a estructuras internas
@@ -544,16 +598,18 @@ def validate_array_consistency(self):
 - [ ] Tests con archivos VAMAS reales
 
 **Entregables:**
+
 - Módulo `data_loader/vamas_parser.py`
 - Pydantic models para metadata VAMAS
 - Documentación de campos soportados
-**Arquitectura:** 
+  **Arquitectura:**
+
 ```
 src/xps_analyzer/gui/
 ├── main.py              # App principal Streamlit
 ├── pages/
 │   ├── data_loader.py   # Carga de archivos
-│   ├── visualization.py # Visualización interactiva  
+│   ├── visualization.py # Visualización interactiva
 │   ├── analysis.py      # Análisis interactivo
 │   └── calibration.py   # Calibración
 ├── components/
@@ -565,21 +621,24 @@ src/xps_analyzer/gui/
 ```
 
 **Funcionalidad:**
+
 - Semana 1-2: File upload, visualización básica, navegación
-- Semana 3-4: Análisis interactivo (calibración, background, fitting)  
+- Semana 3-4: Análisis interactivo (calibración, background, fitting)
 - Semana 5-6: Dashboard integrado, cuantificación, configuración
 
 **Dependencias:**
-- `streamlit>=1.28.0` 
+
+- `streamlit>=1.28.0`
 - `plotly>=5.17.0` (ya disponible)
 - `streamlit-plotly-events>=0.0.6`
 
 **Características clave:**
+
 - Drag & drop para archivos
 - Parámetros ajustables en tiempo real
 - Pipeline completo: cargar → calibrar → analizar → visualizar
 - Visualización interactiva con Plotly
-- Estado de sesión persistente  
+- Estado de sesión persistente
 - Interface científica intuitiva
 
 ### 2.3 Sistema de Configuración Avanzado
@@ -587,6 +646,7 @@ src/xps_analyzer/gui/
 **Prioridad:** Media (power users)
 
 **Características:**
+
 - [ ] Validación de configuración con Pydantic Settings
 - [ ] Perfiles de usuario guardados
 - [ ] Configuración por proyecto
@@ -597,9 +657,10 @@ src/xps_analyzer/gui/
 **Objetivo:** 85% de cobertura
 
 **Áreas adicionales:**
+
 - [ ] Tests para Pydantic validators y migration
 - [ ] Tests de GUI Streamlit (funcionalidad core)
-- [ ] Integration tests con workflows reales  
+- [ ] Integration tests con workflows reales
 - [ ] Tests de performance con datasets grandes
 - [ ] Tests de UI/UX (navegación, estado, errores)
 
@@ -619,6 +680,7 @@ src/xps_analyzer/gui/
 **Tecnología:** FastAPI + Pydantic (aprovechando migración de Fase 2)
 
 **Características:**
+
 - [ ] API REST completa para análisis XPS
 - [ ] Endpoints documentados con OpenAPI/Swagger
 - [ ] Validación automática con Pydantic models
@@ -627,6 +689,7 @@ src/xps_analyzer/gui/
 - [ ] Tests de API comprehensivos
 
 **Endpoints principales:**
+
 - `POST /analyze` - Subir archivo y ejecutar análisis
 - `GET /elements` - Base de datos de elementos
 - `GET /results/{id}` - Obtener resultados de análisis
@@ -641,6 +704,7 @@ src/xps_analyzer/gui/
 **Tecnología:** React + TypeScript
 
 **Características:**
+
 - [ ] Interface moderna y responsive
 - [ ] Visualización avanzada con D3.js/Chart.js
 - [ ] File upload con progress bars
@@ -654,6 +718,7 @@ src/xps_analyzer/gui/
 **Prioridad:** Media (productización)
 
 **Características:**
+
 - [ ] Containerización con Docker
 - [ ] Deployment automatizado (CI/CD)
 - [ ] Monitoreo de aplicación
@@ -662,6 +727,7 @@ src/xps_analyzer/gui/
 - [ ] SSL/TLS y seguridad
 
 **Plataformas objetivo:**
+
 - [ ] Deployment local (laboratorios)
 - [ ] Cloud deployment (AWS/GCP/Azure)
 - [ ] On-premises servers
@@ -673,6 +739,7 @@ src/xps_analyzer/gui/
 **Objetivo:** 90% de cobertura + tests generativos
 
 **Implementación:**
+
 - [ ] Hypothesis para tests generativos
 - [ ] Invariantes del sistema de análisis XPS
 - [ ] Fuzzing de parsers y validators
@@ -684,11 +751,13 @@ src/xps_analyzer/gui/
 ## Criterios de Éxito por Fase
 
 ### Fase 0 [COMPLETADO]
+
 - [x] Documentación completa (10 docs principales)
 - [x] Validación básica implementada
 - [x] Cobertura de tests 87% (superado objetivo de 20%)
 
 ### Fase 1 [COMPLETADO]
+
 - [x] Background subtraction implementado (Shirley, Tougaard, Linear)
 - [x] Peak fitting implementado (Gaussian, Lorentzian, Voigt, Pseudo-Voigt, GL)
 - [x] Quantification implementado (RSF Scofield, Wagner)
@@ -698,6 +767,7 @@ src/xps_analyzer/gui/
 - [x] ~4,400 líneas de código implementadas
 
 ### Validación con Datos Reales [COMPLETADO]
+
 - [x] Fase A: Exploración dataset BN-SET-01 (4 muestras)
 - [x] Fase B: Análisis muestra individual (BN-BS-3, 83% éxito)
 - [x] Fase C: Batch processing (4 muestras, 5 bugs corregidos)
@@ -707,6 +777,7 @@ src/xps_analyzer/gui/
 - [x] **Tasa de éxito real: 50%** con datos experimentales variables
 
 **Hallazgos críticos de validación:**
+
 - Software funciona bien con datos ideales (83% éxito)
 - Limitaciones con datos variables (50% éxito global)
 - Necesidad de mejoras: fallbacks, multi-pico, RSF adicionales
@@ -717,12 +788,14 @@ src/xps_analyzer/gui/
 **Objetivo:** Aumentar éxito de procesamiento de 50% → 80%+ mediante mejoras dirigidas
 
 **Commits principales:**
+
 - `22b7e15` - Mejora #1: Background fallback cascade
 - `3ecd962` - Mejora #2: Doublet fitting con constraints físicos
 - `35faf1d` - Mejora #3: RSF extendidos (Bi, Sr) con fallback
 - `d39c2e9` - Documentación y validación completa
 
 **Resultados alcanzados:**
+
 ```
 Métrica                | Fase C/D | Fase E | Mejora
 -----------------------|----------|--------|--------
@@ -733,6 +806,7 @@ Elementos cuantific.   | 23       | 25     | +2
 ```
 
 #### Mejora #1: Cascada de Fallbacks para Background [COMPLETADO]
+
 - [x] Función `background_with_fallback()` implementada
 - [x] Cascada: Shirley (54% uso) → Tougaard (46% uso) → Linear (0% uso)
 - [x] Metadata detallada almacenada en spectrum
@@ -740,11 +814,13 @@ Elementos cuantific.   | 23       | 25     | +2
 - [x] **Impacto:** 54% → 100% éxito (eliminación completa de fallos)
 
 **Archivos modificados:**
+
 - `src/xps_analyzer/analysis/background.py` (+133 líneas)
 - `tests/test_background.py` (+202 líneas)
 - Cobertura: 96% → 100%
 
 #### Mejora #2: Ajuste de Dobletes con Constraints Físicos [COMPLETADO]
+
 - [x] Función `fit_doublet()` implementada
 - [x] Constraints físicos: splitting fijo, ratio de intensidad fijo
 - [x] Soporte para Ti 2p, Bi 4f, Sr 3d con parámetros correctos
@@ -753,15 +829,18 @@ Elementos cuantific.   | 23       | 25     | +2
 - [x] **Impacto:** R² dobletes 0.50 → 0.82 (+64%)
 
 **Casos específicos:**
+
 - Bi 4f: R²=0.60 → 0.86 (+43%)
 - Ti 2p: R²=0.41 → 0.85 (+107%)
 - Sr 3d: Nuevo, R²=0.79
 
 **Archivos modificados:**
+
 - `src/xps_analyzer/analysis/peak_fitting.py` (+395 líneas)
 - `tests/test_peak_fitting.py` (+333 líneas)
 
 #### Mejora #3: RSF Extendidos con Fallback Automático [COMPLETADO]
+
 - [x] Agregar Bi 4f y Sr 3d a todas las fuentes RSF
   - Scofield Al Kα: Bi=9.850, Sr=1.972
   - Wagner Al Kα: Bi=10.231, Sr=2.125
@@ -772,32 +851,38 @@ Elementos cuantific.   | 23       | 25     | +2
 - [x] **Impacto:** 23 → 25 elementos (+8.7% cobertura)
 
 **Archivos modificados:**
+
 - `src/xps_analyzer/analysis/quantification.py` (+70 líneas)
 - `tests/test_quantification.py` (+237 líneas)
 - Cobertura: 73% → 85%
 
 #### Validación con BN-SET-01 [COMPLETADO]
+
 - [x] Script `analyze_bn_batch_phase_e.py` (752 líneas)
 - [x] 4 muestras × 6 regiones = 24 regiones procesadas
 - [x] Resultados JSON + 24 PNG plots generados
 - [x] Documentación completa en `FASE_E_COMPLETADA.md` (13 páginas)
 
 **Estadísticas globales:**
+
 - Total regiones: 24
 - Background exitoso: 24/24 (100%)
 - Fits exitosos: 19/24 (79.2%)
 - Dobletes ajustados: 10/10 (100%)
 
 **Muestra destacada (BN-BS-3):**
+
 - 6/6 regiones exitosas (100%)
 - R² promedio: 0.73
 - Único caso con Na 1s detectado (R²=0.26, bajo SNR)
 
 #### Problemas Identificados para Fase F
+
 1. **Na 1s:** 5/5 fallos (SNR < 5) - requiere módulo especializado
 2. **Ti 2p:** 2/4 éxito (50%) - detección más sensible necesaria
 
 **Entregables completados:**
+
 - [x] 3 mejoras implementadas y testeadas
 - [x] 44 tests nuevos (227 totales, 100% passing)
 - [x] Script de validación completo
@@ -805,6 +890,7 @@ Elementos cuantific.   | 23       | 25     | +2
 - [x] 31 archivos de resultados (JSON + PNG)
 
 **Referencias:**
+
 - Wagner et al. (1981) - RSF empíricos
 - Moulder et al. (1992) - Handbook of XPS
 - Bearden & Burr (1967) - Dobletes spin-órbita
@@ -814,21 +900,24 @@ Elementos cuantific.   | 23       | 25     | +2
 **Progreso actual:**
 
 **MIGRACIÓN PYDANTIC [COMPLETADA]** - Semanas 1-6:
+
 - [x] **Modelos base:** XPSBaseModel, validadores personalizados XPS
-- [x] **Modelos de referencia (4):** PhotoelectronLine, CompoundReference, ElementReference, ReferenceDatabase  
+- [x] **Modelos de referencia (4):** PhotoelectronLine, CompoundReference, ElementReference, ReferenceDatabase
 - [x] **Modelos de análisis (2):** PeakParameters, FitResult
 - [x] **Modelos core (3):** XPSSpectrum, XPSDataset, XPSSample
 - [x] **Total: 8/8 modelos principales migrados** con validación robusta
 - [x] **57 tests Pydantic (100% passing)** - validación automática superior a dataclasses
 - [x] **API compatible** - sin cambios breaking, coexistencia gradual mantenida
 
-**GUI INTERACTIVA [EN PROGRESO]** - Semanas 7-10:
-- [x] **GUI inicial con Streamlit** (Estilo científico, gráficas condicionales)
+**GUI INTERACTIVA [PENDIENTE]** - Próximas 6-8 semanas:
+
+- [ ] GUI Streamlit completamente funcional
 - [ ] Pipeline completo en GUI: carga → calibración → análisis → visualización
 - [ ] Parámetros interactivos en tiempo real
 - [ ] Manejo robusto de errores en GUI
 
 **Criterios de éxito Fase 2:**
+
 - [x] ~~Todas las dataclasses migradas a Pydantic BaseModel~~
 - [x] ~~Validación automática robusta funcionando~~
 - [x] ~~Tests al 100% (274 tests passing: 227 core + 47 Pydantic)~~
@@ -841,8 +930,9 @@ Elementos cuantific.   | 23       | 25     | +2
 ### Fase 3: GUI Profesional [FUTURA]
 
 **Criterios de éxito:**
+
 - [ ] API REST completa con FastAPI
-- [ ] Frontend React profesional y responsive  
+- [ ] Frontend React profesional y responsive
 - [ ] Autenticación y autorización implementadas
 - [ ] Deployment automatizado (Docker + CI/CD)
 - [ ] Documentación OpenAPI completa
@@ -876,10 +966,11 @@ Si deseas contribuir al proyecto:
 1. **Fase 1 está COMPLETADA** - El análisis core ya funciona
 2. **Fase 2 es la prioridad actual** - PRs de migración a Pydantic y GUI son bienvenidos
 3. **Tests son críticos** - PRs sin tests no serán mergeados
-4. **Documentación en español** - Requisito obligatorio  
+4. **Documentación en español** - Requisito obligatorio
 5. **Seguir convenciones** - Ver CONTRIBUTING.md
 
 **Issues etiquetados:**
+
 - `Phase-2-priority`: Migración Pydantic y GUI (prioridad actual)
 - `Phase-3-future`: GUI profesional (futuro)
 - `good-first-issue`: Para nuevos contribuidores

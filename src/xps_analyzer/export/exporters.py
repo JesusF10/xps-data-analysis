@@ -11,10 +11,10 @@ import json
 from pathlib import Path
 from typing import Any
 
+from xps_analyzer.data_loader import XPSDataset, XPSSpectrum
+
 import numpy as np
 import pandas as pd
-
-from xps_analyzer.data_loader import XPSDataset, XPSSpectrum
 
 
 def export_to_csv(

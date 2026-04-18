@@ -13,11 +13,11 @@ from __future__ import annotations
 
 from typing import Any
 
+from .base import NumpyArrayValidator, XPSBaseModel, XPSValidators
+
 import numpy as np
 import pandas as pd
 from pydantic import Field, field_validator, model_validator
-
-from .base import XPSBaseModel, XPSValidators, NumpyArrayValidator
 
 
 class XPSSpectrum(XPSBaseModel):
@@ -104,7 +104,7 @@ class XPSSpectrum(XPSBaseModel):
         return XPSValidators.validate_intensity(v)
 
     @model_validator(mode="after")
-    def validate_array_consistency(self) -> "XPSSpectrum":
+    def validate_array_consistency(self) -> XPSSpectrum:
         """Valida consistencia entre arrays."""
         NumpyArrayValidator.validate_matching_lengths(
             self.binding_energy, self.intensity, "binding_energy", "intensity"
@@ -112,7 +112,7 @@ class XPSSpectrum(XPSBaseModel):
         return self
 
     @model_validator(mode="after")
-    def validate_realistic_data_range(self) -> "XPSSpectrum":
+    def validate_realistic_data_range(self) -> XPSSpectrum:
         """Valida que los datos estén en rangos físicamente realistas."""
         # Energías de enlace típicas en XPS: 0-2000 eV
         if self.binding_energy.max() > 2000:
@@ -150,7 +150,7 @@ class XPSSpectrum(XPSBaseModel):
             {"binding_energy": self.binding_energy, "intensity": self.intensity}
         ).set_index("binding_energy")
 
-    def copy(self) -> "XPSSpectrum":
+    def copy(self) -> XPSSpectrum:
         """
         Retorna una copia completa del espectro.
 
@@ -256,7 +256,7 @@ class XPSDataset(XPSBaseModel):
         return cleaned
 
     @model_validator(mode="after")
-    def validate_spectra_consistency(self) -> "XPSDataset":
+    def validate_spectra_consistency(self) -> XPSDataset:
         """Valida consistencia entre espectros y claves del diccionario."""
         for region_name, spectrum in self.spectra.items():
             if region_name != spectrum.region_name:
@@ -293,7 +293,7 @@ class XPSDataset(XPSBaseModel):
         """
         return sorted(self.spectra.keys())
 
-    def copy(self) -> "XPSDataset":
+    def copy(self) -> XPSDataset:
         """
         Retorna una copia completa del dataset.
 
@@ -385,7 +385,7 @@ class XPSSample(XPSBaseModel):
         return cleaned
 
     @model_validator(mode="after")
-    def validate_datasets_consistency(self) -> "XPSSample":
+    def validate_datasets_consistency(self) -> XPSSample:
         """Valida consistencia entre datasets y claves del diccionario."""
         for filename, dataset in self.datasets.items():
             if filename != dataset.filename:

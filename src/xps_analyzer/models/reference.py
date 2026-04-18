@@ -14,9 +14,9 @@ from __future__ import annotations
 
 from typing import Literal
 
-from pydantic import Field, field_validator, model_validator
-
 from .base import XPSBaseModel, XPSValidators
+
+from pydantic import Field, field_validator, model_validator
 
 
 class PhotoelectronLine(XPSBaseModel):
@@ -100,7 +100,7 @@ class PhotoelectronLine(XPSBaseModel):
         return cleaned
 
     @model_validator(mode="after")
-    def validate_auger_kinetic_energy(self) -> "PhotoelectronLine":
+    def validate_auger_kinetic_energy(self) -> PhotoelectronLine:
         """Valida que líneas Auger tengan energía cinética."""
         if self.type == "Auger" and self.kinetic_energy is None:
             raise ValueError("Líneas Auger requieren kinetic_energy")
@@ -191,7 +191,7 @@ class CompoundReference(XPSBaseModel):
         return v
 
     @model_validator(mode="after")
-    def validate_peak_in_range(self) -> "CompoundReference":
+    def validate_peak_in_range(self) -> CompoundReference:
         """Valida que la posición del pico esté dentro del rango."""
         if self.peak_position is not None:
             min_energy, max_energy = self.binding_energy_range
@@ -328,7 +328,7 @@ class ElementReference(XPSBaseModel):
         return cleaned.title()  # Primera letra mayúscula
 
     @model_validator(mode="after")
-    def validate_symbol_atomic_number_consistency(self) -> "ElementReference":
+    def validate_symbol_atomic_number_consistency(self) -> ElementReference:
         """Valida consistencia básica entre símbolo y número atómico."""
         # Validación básica de elementos comunes en XPS
         common_elements = {
@@ -385,7 +385,7 @@ class ElementReference(XPSBaseModel):
         return self
 
     @model_validator(mode="after")
-    def validate_most_useful_energy_exists(self) -> "ElementReference":
+    def validate_most_useful_energy_exists(self) -> ElementReference:
         """Valida que la energía más útil corresponda a una línea existente."""
         if self.binding_energy_most_useful is not None:
             # Buscar si existe una línea con energía similar (±1 eV)
@@ -537,7 +537,7 @@ class ReferenceDatabase(XPSBaseModel):
         return cleaned
 
     @model_validator(mode="after")
-    def validate_element_symbol_consistency(self) -> "ReferenceDatabase":
+    def validate_element_symbol_consistency(self) -> ReferenceDatabase:
         """Valida que las claves coincidan con los símbolos de elementos."""
         for symbol, element in self.elements.items():
             if symbol != element.symbol:
@@ -548,7 +548,7 @@ class ReferenceDatabase(XPSBaseModel):
         return self
 
     @model_validator(mode="after")
-    def validate_unique_atomic_numbers(self) -> "ReferenceDatabase":
+    def validate_unique_atomic_numbers(self) -> ReferenceDatabase:
         """Valida que no haya números atómicos duplicados."""
         atomic_numbers = {}
         for symbol, element in self.elements.items():

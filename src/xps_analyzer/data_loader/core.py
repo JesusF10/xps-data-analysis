@@ -11,7 +11,7 @@ from xps_analyzer.utils.models import XPSBaseModel
 
 import numpy as np
 import pandas as pd
-from pydantic import Field, field_validator, model_validator
+from pydantic import field_validator, model_validator
 
 
 class XPSSpectrum(XPSBaseModel):
