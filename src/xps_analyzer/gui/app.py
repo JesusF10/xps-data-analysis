@@ -274,13 +274,6 @@ def _plot_spectrum_streamlit(
     bg, bg_label = _get_background_data(spectrum_proc)
     has_fit = "fit_result" in spectrum_proc.metadata
     original_intensity = spectrum_proc.metadata.get("background_original_intensity")
-    print(
-        "Shapes:",
-        spectrum_proc.binding_energy.shape,
-        np.asarray(original_intensity).shape
-        if original_intensity is not None
-        else "None",
-    )
 
     if original_intensity is None:
         if spectrum_raw is not None and len(spectrum_raw.intensity) == len(
@@ -833,7 +826,7 @@ def main() -> None:
                 "% Atómico": [f"{v:.2f}" for v in conc.values()],
             }
         )
-        st.dataframe(df, hide_index=True, use_container_width=True)
+        st.dataframe(df, hide_index=True, width="stretch")
 
     # Mostrar metadatos globales en un expansor
     with st.expander("Metadatos del archivo", expanded=False):
