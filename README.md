@@ -124,7 +124,7 @@ xps-data-analysis/
 - [x] GUI inicial con Streamlit (Estilo científico)
 - [ ] Visualización avanzada con Plotly
 - [ ] Análisis interactivo en tiempo real
-- [ ] Target: 85% test coverage
+- [x] Target: 85% test coverage (Alcanzado 93%)
 
 ---
 
