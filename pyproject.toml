@@ -114,6 +114,12 @@ python_classes = ["Test*"]
 python_functions = ["test_*"]
 addopts = "--cov=src --cov-report=html --cov-report=term-missing"
 
+[tool.coverage.run]
+omit = [
+    "src/xps_analyzer/gui/*",
+    "src/xps_analyzer/cli/*",
+]
+
 [tool.ty.rules]
 index-out-of-bounds = "warn"
 possibly-missing-attribute = "error"

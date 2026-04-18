@@ -11,7 +11,33 @@ y este proyecto adhiere a [Semantic Versioning](https://semver.org/lang/es/).
 
 ### Próximos Pasos - Fase 2
 
-**En planificación:** Migración a Pydantic, soporte VAMAS, formato CASA XPS
+**En progreso:** Soporte VAMAS, formato CASA XPS y GUI Streamlit (visualización e iteración de fitting)
+
+---
+
+## [0.9.1-beta] - 2026-04-17
+
+**Hito:** Incremento masivo de Cobertura (Fase 2)
+
+### Añadido
+- `tests/test_models_base.py`: Pruebas exhaustivas para la inmutabilidad y validación cruzada en `XPSBaseModel`.
+- `tests/test_models_core.py`: Pruebas de borde para las validaciones en `XPSSpectrum`, `XPSDataset` y `XPSSample` (dimensiones, valores negativos).
+- `tests/test_models_analysis.py`: Pruebas para `PeakParameters` y `FitResult` en el módulo de análisis.
+- `tests/test_data_loader_extra.py`: Pruebas para fallbacks, parseos erróneos de metadata y manejo de excepciones.
+- `tests/test_reference_data_loader.py`: Tests cargando un base de datos JSON falsa y verificando caché y errores de decode.
+- `tests/test_reference_identification.py`: Tests para la implementación fallback manual de búsqueda de picos (`_find_peaks_basic`).
+- `tests/test_export_errors.py`: Tests para verificación de tipos de los exportadores y evaluación completa del codificador `NumpyEncoder` JSON.
+
+### Mejorado
+- Configuración de exclusión en `pyproject.toml` para ignorar los directorios `gui/` y `cli/` temporalmente en reportes de cobertura (al enfocarnos en el Core Científico).
+
+### Cobertura de Tests
+- Tests totales: 326 → 355 (+29 tests)
+- Cobertura total (Core): 87% → 93%
+- Cobertura por módulo:
+  * `export`: 100%
+  * `reference_data`: 100%
+  * `data_loader`: 87%
 
 ---
 
@@ -91,7 +117,7 @@ core de análisis XPS automatizado.
 
 **Tests**
 - Total: 227 tests (100% passing)
-- Cobertura global: 87%
+- Cobertura global: 93%
 - Cobertura por módulo:
   * analysis/background: 96%
   * analysis/peak_fitting: 95%

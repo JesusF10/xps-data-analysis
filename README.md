@@ -102,7 +102,7 @@ xps-data-analysis/
 │   ├── reference_data/      # Base de datos de elementos
 │   ├── visualization/       # Plotting estilo científico
 │   └── cli/                 # Interfaz CLI
-├── tests/                   # Tests (326 tests, 72% coverage)
+├── tests/                   # Tests (355 tests, 93% coverage)
 └── config/                  # Archivos de configuración TOML
 ```
 
@@ -116,7 +116,7 @@ xps-data-analysis/
 - [x] Ajuste de picos (Gaussian, Lorentzian, Voigt)
 - [x] Cuantificación atómica (RSF Scofield/Wagner)
 - [x] Exportación (CSV, Excel, JSON)
-- [x] 326 tests unitarios pasando
+- [x] 355 tests unitarios pasando
 
 ### Fase 2 - Pydantic + GUI Interactiva [EN PROGRESO]
 
@@ -150,7 +150,7 @@ uv run pytest tests/
 uv run pytest tests/ --cov=src --cov-report=term-missing
 ```
 
-**Estado actual:** 72% coverage (326 tests pasando)  
+**Estado actual:** 93% coverage (355 tests pasando)  
 **Objetivo Fase 2:** >=85% coverage
 
 ---

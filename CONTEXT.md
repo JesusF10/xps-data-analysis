@@ -124,7 +124,7 @@ src/xps_analyzer/
 | `gui`          | 50%  | 12 tests | 40% |
 | `cli`          | 90%  | 11 tests | 96% |
 
-**Total tests:** 326 (100% passing)  
+**Total tests:** 355 (100% passing)  
 **Cobertura total:** 87%  
 **Líneas de código:** ~5,200
 

@@ -105,7 +105,7 @@ xps-data-analysis/
 │   ├── config/                # Sistema de configuración (TOML)
 │   └── utils/                 # Utilidades generales
 │
-├── tests/                      # Tests (326 tests unitarios)
+├── tests/                      # Tests (355 tests unitarios)
 │   ├── test_data_loader.py
 │   ├── test_background.py
 │   ├── test_peak_fitting.py
@@ -124,7 +124,7 @@ xps-data-analysis/
 ├── README.md                  # Quick start
 ├── ARCHITECTURE.md            # Arquitectura técnica
 ├── DEVELOPMENT.md             # Esta guía
-├── TESTING.md                 # Estrategia de testing (Cobertura 72%)
+├── TESTING.md                 # Estrategia de testing (Cobertura 93%)
 ├── CONTRIBUTING.md            # Guía de contribución
 ├── CHANGELOG.md               # Historial de cambios
 ├── ROADMAP.md                 # Plan de desarrollo
@@ -199,7 +199,7 @@ Al modificar archivos en `src/xps_analyzer/data_loader/core.py`, priorizar el us
 
 ## Testing
 
-Ver `TESTING.md` para estrategia completa. Actualmente contamos con **326 tests pasando** y una cobertura global del **72%**.
+Ver `TESTING.md` para estrategia completa. Actualmente contamos con **355 tests pasando** y una cobertura global del **93%**.
 
 ### Ejecutar Tests
 

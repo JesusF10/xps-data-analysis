@@ -2,7 +2,7 @@
 
 **Versión:** 0.8.0-beta  
 **Estado:** Fase 1 COMPLETADA (100%)  
-**Cobertura actual:** 72% (326 tests existentes)  
+**Cobertura actual:** 93% (355 tests existentes)  
 **Última actualización:** Abril 2026
 
 Este documento describe la estrategia completa de testing del proyecto XPS Analyzer,
@@ -32,7 +32,7 @@ incluyendo convenciones, roadmap de cobertura, y ejemplos prácticos.
 **Ubicación:** `tests/`
 
 ```python
-# 326 tests implementados (todos pasan):
+# 355 tests implementados (todos pasan):
 
 ## tests/test_data_loader.py (18 tests)
 1. test_parse_metadata_basic()           # Parsing de metadata básica
@@ -77,7 +77,7 @@ visualization/            | 0%        | 0     | Baja
 cli/                      | 0%        | 0     | Baja
 export/                   | 92%       | 19    | Completado (Sesión 4)
 --------------------------|-----------|-------|----------
-TOTAL                     | 72%       | 326   | -
+TOTAL                     | 93%       | 326   | -
 ```
 
 **Meta de cobertura:**
