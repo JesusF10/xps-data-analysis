@@ -580,7 +580,7 @@ Cada resultado incluye:
 **Prioridad Baja:**
 6. ML para detección automática de picos débiles
 7. Análisis de profundidad (depth profiling)
-8. Exportación a formatos estándar (VAMAS, ISO 14976)
+
 
 ---
 

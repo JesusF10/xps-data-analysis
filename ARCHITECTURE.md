@@ -31,7 +31,7 @@ XPS Analyzer sigue estos principios fundamentales:
 2. **Separación de responsabilidades** - Cada módulo tiene una función clara y bien definida
 3. **Validación robusta en runtime** - Uso de Pydantic para garantizar la integridad física de los datos espectrales
 4. **Configuración explícita** - Todos los parámetros tienen valores por defecto documentados
-5. **Extensibilidad** - Arquitectura preparada para plugins y nuevos formatos
+5. **Extensibilidad** - Arquitectura preparada para plugins 
 
 ### Stack Tecnológico
 

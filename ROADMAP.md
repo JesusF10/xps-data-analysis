@@ -393,7 +393,7 @@ export_to_json(dataset, "output/sample1.json", indent=2)
 **Próximos pasos:**
 
 - Migración a Pydantic para validación avanzada (Fase 2)
-- Soporte para formatos VAMAS y CASA XPS (Fase 2)
+
 - Sistema de configuración avanzado (Fase 2)
 
 ---
@@ -534,7 +534,7 @@ Después de completar la implementación de Fase 1, se realizó validación exha
 **Próximos pasos:**
 
 - Fase F (opcional): Módulo especializado para Na 1s + detección sensible Ti 2p
-- Fase 2: Migración a Pydantic + formatos múltiples (VAMAS, CASA XPS)
+- Fase 2: Migración a Pydantic + formatos múltiples 
 
 ---
 
@@ -591,16 +591,16 @@ def validate_array_consistency(self):
 
 **Características:**
 
-- [ ] Parser completo para VAMAS
+
 - [ ] Soporte para metadata extendida
 - [ ] Conversión a estructuras internas
 - [ ] Validación con Pydantic schemas
-- [ ] Tests con archivos VAMAS reales
+
 
 **Entregables:**
 
-- Módulo `data_loader/vamas_parser.py`
-- Pydantic models para metadata VAMAS
+
+
 - Documentación de campos soportados
   **Arquitectura:**
 
@@ -982,8 +982,6 @@ Si deseas contribuir al proyecto:
 **Q: ¿Por qué Pydantic está en Fase 2 y no desde el inicio?**  
 A: La validación manual con dataclasses fue suficiente para implementar la funcionalidad core. Pydantic agrega valor real para GUI interactiva y APIs futuras.
 
-**Q: ¿Por qué no se implementan formatos VAMAS/CASA XPS?**  
-A: El proyecto se enfoca en robustez y experiencia de usuario. Un formato bien soportado es mejor que múltiples formatos parcialmente implementados.
 
 **Q: ¿Cuándo estará lista la GUI?**  
 A: Después de completar Fase 2. Estimado: 8-10 semanas para GUI interactiva con Streamlit.

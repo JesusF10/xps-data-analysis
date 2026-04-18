@@ -11,7 +11,7 @@ y este proyecto adhiere a [Semantic Versioning](https://semver.org/lang/es/).
 
 ### Próximos Pasos - Fase 2
 
-**En progreso:** Soporte VAMAS, formato CASA XPS y GUI Streamlit (visualización e iteración de fitting)
+**En progreso:** GUI Streamlit (visualización e iteración de fitting)
 
 ---
 
@@ -302,7 +302,7 @@ stub, suite de tests comprehensiva, y documentación completa para usuarios.
 
 **Funcionalidad Core**
 - `load_all_data()`: Carga recursiva de directorios completos con manejo robusto de errores
-- `detect_file_format()`: Detección automática de formatos (multiplex, survey, vamas, casa, text)
+- `detect_file_format()`: Detección automática de formatos (multiplex, survey, text)
 - Soporte para campos opcionales en `CompoundReference`: `peak_position` y `chemical_shift`
 
 **Testing** (57 → 90 tests, +33 tests)
@@ -358,7 +358,7 @@ stub, suite de tests comprehensiva, y documentación completa para usuarios.
   * Retorna datasets exitosos incluso con errores parciales
 - `detect_file_format()`: Detección multi-criterio (contenido + nombre + estructura)
   * Manejo de archivos binarios (retorna `None`)
-  * Prioridad: VAMAS > CASA > multiplex > survey > text
+  * Prioridad: multiplex > survey > text
 
 **Validación**
 - Validación manual mejorada en `__post_init__` para dataclasses
@@ -481,7 +481,7 @@ Lanzamiento inicial alpha del proyecto XPS Analyzer.
 - Ajuste de picos - Bloqueador para Fase 1
 - Cuantificación - Bloqueador para Fase 1
 - Exportación de resultados (CSV, Excel, JSON)
-- Soporte para múltiples formatos (VAMAS, CASA XPS, HDF5)
+
 - Sistema de configuración (leer TOML)
 
 **Implementaciones Stub**
@@ -515,9 +515,7 @@ Lanzamiento inicial alpha del proyecto XPS Analyzer.
 ### Agregado
 
 **Formatos Adicionales**
-- Soporte para VAMAS ISO 14976
-- Soporte para CASA XPS
-- Soporte para HDF5
+
 - Detección automática de formato implementada
 
 **Validación Robusta**

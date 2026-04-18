@@ -200,8 +200,7 @@ print(f"Formato detectado: {formato}")
 - `text`: Formato de texto genérico
 
 **Formatos planeados (Fase 2):**
-- `vamas`: Formato VAMAS (ISO 14976)
-- `casa`: Formato CASA XPS
+
 
 ---
 

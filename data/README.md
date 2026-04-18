@@ -43,8 +43,7 @@ data/
 - Formato survey (espectro completo)
 
 **Formatos planeados (Fase 2):**
-- VAMAS (`.vms`) - ISO 14976
-- CASA XPS (`.casa`)
+
 - HDF5 (`.h5`)
 
 **Ejemplo de estructura:**

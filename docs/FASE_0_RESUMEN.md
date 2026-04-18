@@ -116,7 +116,7 @@ La Fase 0 del proyecto XPS Analyzer ha sido completada exitosamente. Se establec
    - Retorna `dict[str, XPSDataset]`
 
 2. **`detect_file_format(filepath)`** - `core.py:447-524`
-   - Detección automática de formatos: vamas, casa, multiplex, survey, text
+   - Detección automática de formatos: multiplex, survey, text
    - Análisis multi-criterio: contenido + nombre + estructura
    - Manejo de archivos binarios
 

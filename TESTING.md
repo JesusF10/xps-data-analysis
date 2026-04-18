@@ -545,8 +545,6 @@ def test_calibrate_spectrum_invalid_element():
 **Total:** 19 tests (100% passing), 92% cobertura
 
 # tests/integration/test_multi_format.py - PLANEADO FASE 2
-- test_load_vamas() (5 tests)
-- test_load_casa_xps() (5 tests)
 - test_format_detection() (3 tests)
 
 # tests/unit/test_pydantic_validation.py - PLANEADO FASE 2

@@ -1510,8 +1510,6 @@ xps-analyzer calibrate data/raw/muestra1.txt --element C --output calibrated.txt
 
 ### Recursos Externos
 - **NIST XPS Database** - https://srdata.nist.gov/xps/
-- **CASA XPS** - http://www.casaxps.com/
-- **ISO 14976** - Estándar VAMAS
 
 ---
 
