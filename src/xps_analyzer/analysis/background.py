@@ -470,3 +470,94 @@ def background_with_fallback(
     raise ValueError(
         f"Todos los métodos de sustracción de fondo fallaron:\n{error_details}"
     )
+
+
+def subtract_background(
+    spectrum: XPSSpectrum,
+    method: str = "shirley",
+    energy_range: tuple[float, float] | None = None,
+    inplace: bool = False,
+    **kwargs: float,
+) -> XPSSpectrum:
+    """
+    Sustrae fondo de un espectro XPS usando el método especificado.
+
+    Parámetros
+    ----------
+    spectrum : XPSSpectrum
+        El espectro al cual sustraer el fondo.
+    method : str, default="shirley"
+        Método de sustracción: "shirley", "tougaard", "linear".
+    energy_range : tuple[float, float] | None, default=None
+        Rango de energía (min_energy, max_energy) en eV. Si no es None,
+        el fondo solo se calculará y sustraerá en este rango.
+    inplace : bool, default=False
+        Si True, modifica el espectro original. Si False, retorna una copia.
+    **kwargs
+        Parámetros adicionales pasados a la función de fondo específica.
+        (Ej: tol, max_iter para shirley; B, C, D para tougaard).
+
+    Retorna
+    -------
+    XPSSpectrum
+        Espectro con el fondo sustraído en la región indicada.
+    """
+    valid_methods = {"shirley", "tougaard", "linear"}
+    if method not in valid_methods:
+        raise ValueError(f"Método '{method}' inválido. Opciones: {valid_methods}")
+
+    if not inplace:
+        result = spectrum.model_copy(deep=True)
+    else:
+        result = spectrum
+
+    energy = result.binding_energy
+    intensity = result.intensity
+
+    if energy_range is not None:
+        min_e, max_e = sorted(energy_range)
+        # Identificar índices dentro del rango
+        mask = (energy >= min_e) & (energy <= max_e)
+        if not np.any(mask):
+            raise ValueError(
+                f"El rango de energía {energy_range} no intersecta con los datos del espectro."
+            )
+
+        # Crear un espectro temporal recortado para pasar a la función base
+        temp_spec = XPSSpectrum(
+            region_name=f"{result.region_name}_temp",
+            binding_energy=energy[mask],
+            intensity=intensity[mask],
+            metadata={},
+        )
+
+        if method == "shirley":
+            temp_spec = shirley_background(temp_spec, inplace=True, **kwargs)
+        elif method == "tougaard":
+            temp_spec = tougaard_background(temp_spec, inplace=True, **kwargs)
+        elif method == "linear":
+            temp_spec = linear_background(temp_spec, inplace=True, **kwargs)
+
+        # Reemplazar intensidad solo en la máscara
+        result.intensity[mask] = temp_spec.intensity
+
+        # Copiar metadata de temp_spec a result
+        result.metadata[f"{method}_background_range"] = energy_range
+        for key, value in temp_spec.metadata.items():
+            if key == f"{method}_background":
+                # Llenar ceros fuera de la máscara
+                full_bg = np.zeros_like(intensity)
+                full_bg[mask] = value
+                result.metadata[key] = full_bg
+            else:
+                result.metadata[key] = value
+    else:
+        # Modo completo
+        if method == "shirley":
+            result = shirley_background(result, inplace=True, **kwargs)
+        elif method == "tougaard":
+            result = tougaard_background(result, inplace=True, **kwargs)
+        elif method == "linear":
+            result = linear_background(result, inplace=True, **kwargs)
+
+    return result

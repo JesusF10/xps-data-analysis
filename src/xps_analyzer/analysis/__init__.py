@@ -12,6 +12,7 @@ from xps_analyzer.analysis.background import (
     linear_background,
     shirley_background,
     tougaard_background,
+    subtract_background,
 )
 from xps_analyzer.analysis.peak_fitting import (
     FitResult,
@@ -36,6 +37,7 @@ __all__ = [
     "tougaard_background",
     "linear_background",
     "background_with_fallback",
+    "subtract_background",
     # Peak fitting
     "fit_gaussian",
     "fit_lorentzian",

@@ -559,8 +559,6 @@ for region_name, spectrum in dataset.spectra.items():
 
 ### subtract_background
 
-**Estado:** PENDIENTE
-
 ```python
 def subtract_background(
     spectrum: XPSSpectrum,
@@ -1048,7 +1046,7 @@ normalized = normalize_to_100(conc)
 
 Se implementarán las siguientes funciones para facilitar el uso desde la API de alto nivel:
 
-- **`subtract_background`**: Wrapper unificado para seleccionar `shirley`, `tougaard` o `linear` mediante un string de método.
+- **`subtract_background`**: **(IMPLEMENTADO)** Wrapper unificado para seleccionar `shirley`, `tougaard` o `linear` mediante un string de método y soportando delimitación con `energy_range`.
 - **`find_peaks`**: Detección automática de posiciones de picos usando parámetros de prominencia y distancia.
 - **`fit_peaks`**: Wrapper que automatizará la instanciación de formas (Gaussiana/Lorentziana/Voigt) y el ajuste simultáneo.
 - **`quantify`**: Función de un solo paso para sustracción de fondo, ajuste y cálculo de composición atómica.
