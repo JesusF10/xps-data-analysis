@@ -1,5 +1,4 @@
-**Versión:** 0.9.0-alpha  
-**Estado:** Fase 2 en PROGRESO (Arquitectura Pydantic Implementada)  
+**Versión:** 0.9.1-beta  
 **Última actualización:** Abril 2026
 
 Este documento describe la arquitectura técnica completa del proyecto XPS Analyzer, incluyendo decisiones de diseño, patrones de implementación, y guías para el desarrollo futuro.
@@ -38,17 +37,17 @@ XPS Analyzer sigue estos principios fundamentales:
 **Dependencias Core:**
 - `numpy` (>=1.24.0) - Arrays numéricos, operaciones vectorizadas
 - `scipy` (>=1.11.0) - Procesamiento de señales, interpolación
-- `pydantic` (>=2.5.0) - Validación de datos y modelos (Fase 2 - COMPLETADO)
+- `pydantic` (>=2.5.0) - Validación de datos y modelos
 - `matplotlib` (>=3.7.0) - Visualización científica
-- `lmfit` (>=1.2.0) - Ajuste de picos no lineal (Fase 1 - COMPLETADO)
+- `lmfit` (>=1.2.0) - Ajuste de picos no lineal
 
 **Dependencias de GUI y UI:**
-- `streamlit` (>=1.30.0) - Interfaz interactiva (Fase 2 - EN PROGRESO)
-- `plotly` (>=5.18.0) - Visualización dinámica (Fase 2 - PENDIENTE)
+- `streamlit` (>=1.30.0) - Interfaz interactiva
+- `plotly` (>=5.18.0) - Visualización dinámica (planificado)
 
 **Herramientas de Desarrollo:**
 - `ruff` - Linting + formatting
-- `pytest` - Testing framework (326+ tests)
+- `pytest` - Testing framework (355+ tests)
 - `uv` - Gestión de paquetes y entornos
 
 ---
@@ -113,8 +112,6 @@ src/xps_analyzer/
 
 ## Sistema de Validación (Pydantic)
 
-**Estado:** 100% Implementado (Fase 2)
-
 XPS Analyzer utiliza `XPSBaseModel` con la siguiente configuración:
 * `arbitrary_types_allowed = True`: Permite el uso de arrays de NumPy.
 * `validate_assignment = True`: Valida los datos incluso al reasignar atributos.
@@ -133,10 +130,10 @@ XPS Analyzer utiliza `XPSBaseModel` con la siguiente configuración:
 **Decisión:** Migración total completada en Abril 2026.
 
 **Razones:**
-- [COMPLETADO] Validación robusta en tiempo real (evita estados inconsistentes).
-- [COMPLETADO] Mensajes de error amigables para el usuario.
-- [COMPLETADO] Serialización a JSON nativa para exportación y GUI.
-- [COMPLETADO] Manejo superior de tipos complejos (arrays de NumPy).
+- Validación robusta en tiempo real (evita estados inconsistentes).
+- Mensajes de error tipados para el desarrollador.
+- Serialización a JSON nativa para exportación y estado de sesión de GUI.
+- Manejo superior de tipos complejos (arrays de NumPy).
 
 ### 2. Inmutabilidad Científica
 
