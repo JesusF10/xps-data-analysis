@@ -8,27 +8,18 @@ Software automatizado en Python para análisis de datos de Espectroscopía de Fo
 
 ---
 
-## Características
+## Funcionalidades Principales
 
-[COMPLETADO] **Disponible:**
+El proyecto está estructurado en módulos especializados con un enfoque matemático, validación estricta (Pydantic v2) e inmutabilidad de los datos científicos.
 
-- Carga de datos XPS desde formatos propietarios
-- Calibración de energía por elemento de referencia (usualmente C 1s a 284.8 eV)
-- Visualización básica de espectros
-- Base de datos de ~25 elementos comunes
-- CLI para operaciones básicas
-- Sustracción de fondo (Shirley, Tougaard, Linear)
-- Ajuste de picos (Gaussian, Lorentzian, Voigt, Pseudo-Voigt, GL)
-- Cuantificación atómica con factores RSF (Scofield, Wagner)
-- **Exportación completa a CSV, Excel y JSON**
-- **Migración total a Pydantic v2** para validación robusta
-- **Interfaz gráfica interactiva (Streamlit)** con estilo científico
-
-[EN DESARROLLO] **Próximamente:**
-
-- Integración de exportación en interfaz gráfica
-- Visualización avanzada con Plotly
-- Análisis interactivo en la GUI
+| Módulo | Funciones Principales | Características Técnicas |
+| :--- | :--- | :--- |
+| **`data_loader`** | Carga y estructuración de espectros y datasets. | Auto-detección de formato, validación dimensional de arrays (NumPy). |
+| **`preprocessing`** | Calibración del eje de energía de enlace. | Corrección por elemento de referencia (ej. Ti 2p, O 1s), operaciones inmutables. |
+| **`analysis`** | Sustracción de fondo, deconvolución de picos y cuantificación atómica. | Fondos Shirley/Tougaard/Linear; perfiles Voigt/Gaussian/Lorentzian; RSF Scofield/Wagner. |
+| **`reference_data`**| Búsqueda de líneas fotoelectrónicas y orbitales. | Base de datos JSON, patrón singleton con caché en memoria. |
+| **`export`** | Salida de datos a formatos estandarizados (CSV, Excel, JSON). | Codificador JSON personalizado para tipos NumPy, metadatos jerárquicos. |
+| **`gui` / `cli`** | Interfaces de usuario para análisis exploratorio e iterativo. | Aplicación interactiva basada en Streamlit y utilidades de terminal con Click. |
 
 ---
 
@@ -93,7 +84,7 @@ xps-data-analysis/
 ├── src/xps_analyzer/        # Código fuente
 │   ├── data_loader/         # Carga de datos
 │   ├── preprocessing/       # Calibración, normalización
-│   ├── analysis/            # Análisis core (COMPLETADO 100%)
+│   ├── analysis/            # Análisis core
 │   ├── gui/                 # Interfaz gráfica (Streamlit)
 │   ├── export/              # Exportación (CSV, Excel, JSON)
 │   ├── reference_data/      # Base de datos de elementos
@@ -105,25 +96,7 @@ xps-data-analysis/
 
 ---
 
-## Roadmap
 
-### Fase 1 - Análisis Core [100% COMPLETADO]
-
-- [x] Sustracción de fondo (Shirley, Tougaard, Linear)
-- [x] Ajuste de picos (Gaussian, Lorentzian, Voigt)
-- [x] Cuantificación atómica (RSF Scofield/Wagner)
-- [x] Exportación (CSV, Excel, JSON)
-- [x] 355 tests unitarios pasando
-
-### Fase 2 - GUI Interactiva [EN PROGRESO]
-
-- [x] Migración a Pydantic para validación (100%)
-- [x] GUI inicial con Streamlit (Estilo científico)
-- [x] Target: 85% test coverage (Alcanzado 93%)
-- [ ] Visualización avanzada con Plotly
-- [ ] Análisis interactivo en la GUI
-
----
 
 ## Contribuir
 
@@ -147,8 +120,7 @@ uv run pytest tests/
 uv run pytest tests/ --cov=src --cov-report=term-missing
 ```
 
-**Estado actual:** 93% coverage (355 tests pasando)  
-**Objetivo Fase 2:** >=85% coverage
+**Estado actual:** 93% coverage (355 tests pasando)
 
 ---
 
