@@ -1,7 +1,7 @@
 # XPS Analyzer - Referencia de API
 
 **Versión:** 0.8.0-beta  
-**Última actualización:** Marzo 2026
+**Última actualización:** Abril 2026
 
 Esta es la referencia completa de la API pública de XPS Analyzer. Incluye todas las funciones, clases y métodos disponibles para usuarios finales.
 
@@ -90,7 +90,7 @@ print(dataset.header)  # {'sample_name': 'muestra1', 'date': '2023-10-01', ...}
 
 **Ver también:**
 
-- [`load_all_data()`](#load_all_data) - Cargar múltiples archivos (Fase 1)
+- [`load_all_data()`](#load_all_data) - Cargar múltiples archivos 
 - [`XPSDataset`](#xpsdataset) - Estructura de datos retornada
 
 ---
@@ -143,7 +143,7 @@ def load_all_data(
 ) -> XPSSample
 ```
 
-**Estado:** PENDIENTE - Fase 1
+**Estado:** PENDIENTE
 
 Carga todos los archivos XPS en un directorio.
 
@@ -212,7 +212,7 @@ Representa un espectro XPS individual (survey o región de alta resolución).
 - `binding_energy` contiene solo valores positivos
 - `region_name` no está vacío
 
-**Métodos futuros (Fase 1):**
+**Métodos futuros :**
 
 ```python
 def copy(self) -> XPSSpectrum:
@@ -284,7 +284,7 @@ Representa un archivo XPS completo con múltiples espectros (survey + regiones).
 - `filename` no está vacío
 - `spectra` contiene al menos un espectro
 
-**Métodos futuros (Fase 1):**
+**Métodos futuros :**
 
 ```python
 def get_spectrum(self, region_name: str) -> XPSSpectrum | None:
@@ -355,7 +355,7 @@ Representa una muestra física con múltiples mediciones (múltiples archivos).
 - Time series (mediciones a lo largo del tiempo)
 - Análisis comparativo (diferentes condiciones de tratamiento)
 
-**Ejemplo futuro (Fase 1):**
+**Ejemplo futuro :**
 
 ```python
 from xps_analyzer import load_all_data
@@ -416,7 +416,6 @@ def get_spectrum_data(lines: list[str]) -> dict[str, XPSSpectrum]
 
 ### Namespace: `xps_analyzer.preprocessing`
 
-**Estado:** 25% completo
 
 **Importar:**
 
@@ -560,7 +559,7 @@ for region_name, spectrum in dataset.spectra.items():
 
 ### subtract_background
 
-**Estado:** PENDIENTE - Fase 1
+**Estado:** PENDIENTE
 
 ```python
 def subtract_background(
@@ -615,1010 +614,11 @@ clean = subtract_background(c1s, method="linear")
 
 ## Análisis Espectral
 
-### Namespace: `xps_analyzer.analysis`
+### Funciones Implementadas
 
-**Estado:** MÓDULO VACÍO - Fase 1
-
-**API planeada:**
-
-```python
-from xps_analyzer.analysis import (
-    find_peaks,
-    fit_peaks,
-    quantify
-)
-```
-
----
-
-### find_peaks
-
-**Estado:** PENDIENTE - Fase 1
-
-```python
-def find_peaks(
-    spectrum: XPSSpectrum,
-    threshold: float = 0.1,
-    min_distance: float = 2.0,
-    prominence: float | None = None
-) -> list[float]
-```
-
-Detecta picos en un espectro XPS automáticamente.
-
-**Parámetros:**
-
-- `spectrum` : `XPSSpectrum`  
-  Espectro a analizar
-
-- `threshold` : `float`, default `0.1`  
-  Umbral como fracción de intensidad máxima (0-1)
-
-- `min_distance` : `float`, default `2.0`  
-  Separación mínima entre picos en eV
-
-- `prominence` : `float | None`, default `None`  
-  Prominencia mínima de picos. Si `None`, usa automático.
-
-**Retorna:**
-
-- `list[float]`  
-  Lista de posiciones de picos en eV (ordenadas por intensidad descendente)
-
-**Ejemplo futuro:**
-
-```python
-from xps_analyzer.analysis import find_peaks
-
-# Detección automática
-peaks = find_peaks(spectrum, threshold=0.2)
-print(f"Encontrados {len(peaks)} picos: {peaks}")
-
-# Ajustar sensibilidad
-peaks = find_peaks(
-    spectrum,
-    threshold=0.05,      # Más sensible
-    min_distance=1.0,    # Picos más cercanos
-    prominence=100       # Mayor prominencia requerida
-)
-```
-
----
-
-### fit_peaks
-
-**Estado:** PENDIENTE - Fase 1
-
-```python
-def fit_peaks(
-    spectrum: XPSSpectrum,
-    peak_positions: list[float],
-    peak_shapes: list[str] | None = None,
-    background: str = "shirley",
-    max_iterations: int = 1000,
-    tolerance: float = 1e-6
-) -> FitResult
-```
-
-Ajusta picos gaussianos/lorentzianos/voigt a un espectro XPS.
-
-**Parámetros:**
-
-- `spectrum` : `XPSSpectrum`  
-  Espectro a ajustar
-
-- `peak_positions` : `list[float]`  
-  Posiciones iniciales de picos en eV
-
-- `peak_shapes` : `list[str] | None`, default `None`  
-  Formas de pico para cada posición: `"gaussian"`, `"lorentzian"`, `"voigt"`.  
-  Si `None`, usa `"voigt"` para todos.
-
-- `background` : `str`, default `"shirley"`  
-  Método de fondo: `"shirley"`, `"tougaard"`, `"linear"`, `"none"`
-
-- `max_iterations` : `int`, default `1000`  
-  Máximo de iteraciones para convergencia
-
-- `tolerance` : `float`, default `1e-6`  
-  Tolerancia para convergencia
-
-**Retorna:**
-
-- `FitResult`  
-  Objeto con resultados del ajuste (ver [`FitResult`](#fitresult))
-
-**Lanza:**
-
-- `ValueError` - Si `peak_positions` está vacío o tiene longitud diferente a `peak_shapes`
-- `FitError` - Si el ajuste no converge
-
-**Ejemplo futuro:**
-
-```python
-from xps_analyzer.analysis import fit_peaks
-
-# Ajuste básico
-result = fit_peaks(
-    spectrum=c1s,
-    peak_positions=[284.8, 286.5, 288.9],  # 3 picos en C 1s
-    peak_shapes=["voigt", "voigt", "voigt"]
-)
-
-print(f"χ² = {result.chi_squared:.4f}")
-print(f"Convergió: {result.success}")
-
-# Acceder a parámetros ajustados
-for i, peak in enumerate(result.peak_params):
-    print(f"Pico {i+1}:")
-    print(f"  Posición: {peak['position']:.2f} eV")
-    print(f"  Amplitud: {peak['amplitude']:.1f}")
-    print(f"  FWHM: {peak['fwhm']:.2f} eV")
-    print(f"  Área: {peak['area']:.1f}")
-```
-
----
-
-### FitResult
-
-**Estado:** PENDIENTE - Fase 1
-
-```python
-@dataclass
-class FitResult:
-    peak_params: list[dict[str, float]]
-    fitted_curve: np.ndarray
-    residuals: np.ndarray
-    chi_squared: float
-    success: bool
-    message: str
-```
-
-Resultado de ajuste de picos.
-
-**Atributos:**
-
-- **peak_params** : `list[dict[str, float]]`  
-  Parámetros ajustados para cada pico. Cada dict contiene:
-  - `position`: Posición del pico (eV)
-  - `amplitude`: Amplitud
-  - `fwhm`: Full Width at Half Maximum (eV)
-  - `area`: Área bajo el pico
-  - `gaussian_fraction`: Fracción gaussiana (solo voigt)
-
-- **fitted_curve** : `np.ndarray`  
-  Curva ajustada total (sum de todos los picos + fondo)
-
-- **residuals** : `np.ndarray`  
-  Diferencia entre datos experimentales y ajuste
-
-- **chi_squared** : `float`  
-  Bondad de ajuste (χ²)
-
-- **success** : `bool`  
-  `True` si el ajuste convergió
-
-- **message** : `str`  
-  Mensaje descriptivo del resultado
-
----
-
-### quantify
-
-**Estado:** PENDIENTE - Fase 1
-
-```python
-def quantify(
-    dataset: XPSDataset,
-    use_sensitivity_factors: bool = True,
-    normalize: bool = True,
-    reference_element: str | None = None
-) -> dict[str, float]
-```
-
-Cuantifica composición elemental a partir de un dataset XPS.
-
-**Parámetros:**
-
-- `dataset` : `XPSDataset`  
-  Dataset con espectros calibrados
-
-- `use_sensitivity_factors` : `bool`, default `True`  
-  Si `True`, aplica factores de sensibilidad atómica
-
-- `normalize` : `bool`, default `True`  
-  Si `True`, normaliza a 100% (retorna porcentajes atómicos)
-
-- `reference_element` : `str | None`, default `None`  
-  Elemento de referencia para normalización relativa
-
-**Retorna:**
-
-- `dict[str, float]`  
-  Mapeo de `symbol` → concentración (porcentaje atómico o relativo)
-
-**Ejemplo futuro:**
-
-```python
-from xps_analyzer.analysis import quantify
-
-# Cuantificación estándar
-composition = quantify(dataset, use_sensitivity_factors=True, normalize=True)
-print(composition)
-# {'C': 65.2, 'O': 28.3, 'N': 6.5}
-
-# Sin factores de sensibilidad (áreas crudas)
-raw_areas = quantify(dataset, use_sensitivity_factors=False, normalize=False)
-
-# Normalización relativa a carbono
-relative = quantify(dataset, normalize=False, reference_element="C")
-print(relative)
-# {'C': 1.0, 'O': 0.43, 'N': 0.10}  # Ratios atómicos
-```
-
----
-
-## Datos de Referencia
-
-### Namespace: `xps_analyzer.reference_data`
-
-**Estado:** 85% completo
-
-**Importar:**
-
-```python
-from xps_analyzer.reference_data import (
-    load_reference_database,
-    ReferenceDatabase,
-    ElementReference,
-    PhotoelectronLine
-)
-```
-
----
-
-### ReferenceDatabase
-
-```python
-@dataclass
-class ReferenceDatabase:
-    elements: dict[str, ElementReference]
-```
-
-Base de datos completa de elementos XPS.
-
-**Atributos:**
-
-- **elements** : `dict[str, ElementReference]`  
-  Mapeo de símbolo (ej: "C") → `ElementReference`
-
-**Métodos:**
-
-#### get_element
-
-```python
-def get_element(self, symbol: str) -> ElementReference | None
-```
-
-Obtiene elemento por símbolo (case-insensitive).
-
-**Ejemplo:**
-
-```python
-db = load_reference_database()
-
-carbon = db.get_element("C")
-print(carbon.name)  # "Carbon"
-
-# Case-insensitive
-oxygen = db.get_element("o")  # Funciona con minúscula
-print(oxygen.name)  # "Oxygen"
-```
-
-#### find_element_by_energy
-
-```python
-def find_element_by_energy(
-    self,
-    energy: float,
-    tolerance: float = 2.0
-) -> list[tuple[str, str]]
-```
-
-Encuentra elementos con líneas cerca de una energía dada.
-
-**Parámetros:**
-
-- `energy` : `float` - Energía de enlace en eV
-- `tolerance` : `float`, default `2.0` - Tolerancia de búsqueda en eV
-
-**Retorna:**
-
-- `list[tuple[str, str]]` - Lista de `(symbol, orbital)` dentro de tolerancia
-
-**Ejemplo:**
-
-```python
-db = load_reference_database()
-
-# Buscar qué elementos tienen picos cerca de 284.8 eV
-matches = db.find_element_by_energy(284.8, tolerance=1.0)
-print(matches)
-# [("C", "1s"), ("Cd", "3d5/2"), ...]
-
-# Buscar con mayor tolerancia
-matches = db.find_element_by_energy(531.0, tolerance=3.0)
-print(matches)
-# [("O", "1s"), ("Sb", "3d3/2"), ...]
-```
-
----
-
-### ElementReference
-
-```python
-@dataclass
-class ElementReference:
-    symbol: str
-    name: str
-    atomic_number: int
-    photoelectron_lines: dict[str, PhotoelectronLine]
-    common_compounds: list[dict]
-```
-
-Información de referencia de un elemento químico.
-
-**Atributos:**
-
-- **symbol** : `str` - Símbolo químico (ej: "C", "O")
-- **name** : `str` - Nombre completo (ej: "Carbon", "Oxygen")
-- **atomic_number** : `int` - Número atómico
-- **photoelectron_lines** : `dict[str, PhotoelectronLine]` - Líneas espectrales
-- **common_compounds** : `list[dict]` - Estados de oxidación comunes
-
-**Ejemplo:**
-
-```python
-db = load_reference_database()
-carbon = db.get_element("C")
-
-print(f"Símbolo: {carbon.symbol}")
-print(f"Nombre: {carbon.name}")
-print(f"Z: {carbon.atomic_number}")
-
-# Líneas fotoelectrónicas
-c1s = carbon.photoelectron_lines["1s"]
-print(f"C 1s @ {c1s.peak_position} eV")
-
-# Compuestos comunes
-for compound in carbon.common_compounds:
-    print(f"{compound['name']}: {compound['binding_energy']} eV")
-```
-
----
-
-### PhotoelectronLine
-
-```python
-@dataclass
-class PhotoelectronLine:
-    orbital: str
-    peak_position: float
-    line_width: float
-    relative_intensity: float
-```
-
-Línea fotoelectrónica individual (ej: C 1s, O 1s).
-
-**Atributos:**
-
-- **orbital** : `str` - Orbital atómico (ej: "1s", "2p3/2")
-- **peak_position** : `float` - Energía de enlace en eV
-- **line_width** : `float` - Ancho de línea natural (FWHM) en eV
-- **relative_intensity** : `float` - Intensidad relativa (0-1)
-
-**Ejemplo:**
-
-```python
-db = load_reference_database()
-carbon = db.get_element("C")
-c1s = carbon.photoelectron_lines["1s"]
-
-print(f"Orbital: {c1s.orbital}")
-print(f"Posición: {c1s.peak_position} eV")
-print(f"Ancho: {c1s.line_width} eV")
-print(f"Intensidad: {c1s.relative_intensity}")
-```
-
----
-
-## Visualización
-
-### Namespace: `xps_analyzer.visualization`
-
-**Estado:** 20% completo
-
-**Importar:**
-
-```python
-from xps_analyzer.visualization import plot_spectrum, plot_survey
-```
-
----
-
-### plot_spectrum
-
-```python
-def plot_spectrum(
-    spectrum: XPSSpectrum,
-    title: str | None = None,
-    show: bool = True
-) -> None
-```
-
-Genera plot simple de un espectro XPS.
-
-**Parámetros:**
-
-- `spectrum` : `XPSSpectrum` - Espectro a plotear
-- `title` : `str | None`, default `None` - Título custom (usa `region_name` si None)
-- `show` : `bool`, default `True` - Si `True`, llama `plt.show()`
-
-**Ejemplo:**
-
-```python
-from xps_analyzer import load_single_file
-from xps_analyzer.visualization import plot_spectrum
-
-dataset = load_single_file("data/raw/muestra1.txt")
-c1s = dataset.spectra["C 1s"]
-
-# Plot básico
-plot_spectrum(c1s)
-
-# Plot con título custom
-plot_spectrum(c1s, title="C 1s - Muestra TiO2")
-
-# Plot sin mostrar (para guardar)
-plot_spectrum(c1s, show=False)
-import matplotlib.pyplot as plt
-plt.savefig("c1s.png", dpi=300)
-plt.close()
-```
-
-**Convenciones:**
-
-- Eje X invertido (alta energía a la izquierda) - estándar XPS
-- Xlabel: "Binding Energy (eV)"
-- Ylabel: "Intensity (a.u.)"
-
----
-
-### plot_survey
-
-```python
-def plot_survey(
-    spectrum: XPSSpectrum,
-    reference_db: ReferenceDatabase | None = None,
-    annotate_peaks: bool = False,
-    title: str | None = None,
-    show: bool = True
-) -> None
-```
-
-Plotea espectro survey con identificación opcional de picos.
-
-**Parámetros:**
-
-- `spectrum` : `XPSSpectrum` - Espectro survey
-- `reference_db` : `ReferenceDatabase | None`, default `None` - Base de datos para identificación
-- `annotate_peaks` : `bool`, default `False` - Si `True`, anota picos identificados
-- `title` : `str | None`, default `None` - Título custom
-- `show` : `bool`, default `True` - Si `True`, llama `plt.show()`
-
-**Ejemplo:**
-
-```python
-from xps_analyzer import load_single_file, load_reference_database
-from xps_analyzer.visualization import plot_survey
-
-dataset = load_single_file("data/raw/muestra1.txt")
-survey = dataset.spectra["Survey"]
-db = load_reference_database()
-
-# Plot con anotaciones
-plot_survey(
-    spectrum=survey,
-    reference_db=db,
-    annotate_peaks=True,
-    title="Survey - Muestra TiO2"
-)
-```
-
----
-
-### plot_fitted_spectrum
-
-**Estado:** PENDIENTE - Fase 1
-
-```python
-def plot_fitted_spectrum(
-    spectrum: XPSSpectrum,
-    fit_result: FitResult,
-    show_components: bool = True,
-    show_residuals: bool = True,
-    show: bool = True
-) -> None
-```
-
-Plotea espectro con fit de picos.
-
-**Ejemplo futuro:**
-
-```python
-from xps_analyzer.analysis import fit_peaks
-from xps_analyzer.visualization import plot_fitted_spectrum
-
-result = fit_peaks(c1s, peak_positions=[284.8, 286.5, 288.9])
-
-plot_fitted_spectrum(
-    spectrum=c1s,
-    fit_result=result,
-    show_components=True,   # Mostrar picos individuales
-    show_residuals=True     # Panel de residuales debajo
-)
-```
-
----
-
-## Exportación
-
-### Namespace: `xps_analyzer.export`
-
-**Estado:** COMPLETADO - v0.8.0
-
-Módulo completo para exportar espectros XPS y datasets a formatos estándar (CSV, Excel, JSON) con metadata completa.
-
-**API pública:**
-
-```python
-from xps_analyzer.export import export_to_csv, export_to_excel, export_to_json
-```
-
----
-
-### export_to_csv
-
-**Estado:** COMPLETADO - v0.8.0
-
-```python
-def export_to_csv(
-    data: XPSSpectrum | XPSDataset,
-    output_path: str | Path,
-    include_metadata: bool = True,
-    decimal_places: int = 6
-) -> Path
-```
-
-Exporta espectro o dataset XPS a archivo(s) CSV.
-
-**Parámetros:**
-
-- `data` : `XPSSpectrum` o `XPSDataset`  
-  Datos a exportar. Si es XPSSpectrum, crea un archivo CSV. Si es XPSDataset, crea un directorio con múltiples archivos CSV (uno por región).
-- `output_path` : `str` o `Path`  
-  Ruta del archivo o directorio de salida.
-- `include_metadata` : `bool`, default `True`  
-  Si True, genera archivos `.metadata.csv` adicionales con metadata.
-- `decimal_places` : `int`, default `6`  
-  Número de decimales para valores numéricos.
-
-**Retorna:**
-
-- `Path`  
-  Ruta del archivo o directorio creado.
-
-**Lanza:**
-
-- `TypeError` - Si data no es XPSSpectrum ni XPSDataset
-
-**Ejemplo:**
-
-```python
-from xps_analyzer import load_single_file
-from xps_analyzer.export import export_to_csv
-
-dataset = load_single_file("muestra1.txt")
-spectrum = dataset.get_spectrum("C 1s")
-
-# Exportar espectro individual
-export_to_csv(spectrum, "output/c1s.csv", include_metadata=True)
-# Crea: output/c1s.csv + output/c1s.metadata.csv
-
-# Exportar dataset completo
-export_to_csv(dataset, "output/dataset_export/", include_metadata=True)
-# Crea: output/dataset_export/C_1s.csv, O_1s.csv, dataset_metadata.csv, ...
-
-# Controlar precisión
-export_to_csv(spectrum, "output/high_prec.csv", decimal_places=10)
-```
-
-**Estructura CSV - Espectro:**
-
-```csv
-binding_energy,intensity
-280.0,145.234567
-280.2,148.123456
-...
-```
-
-**Estructura CSV - Metadata:**
-
-```csv
-key,value
-region_name,C 1s
-sweeps,10
-dwell_time,0.1
-pass_energy,20.0
-```
-
----
-
-### export_to_excel
-
-**Estado:** COMPLETADO - v0.8.0
-
-```python
-def export_to_excel(
-    data: XPSSpectrum | XPSDataset,
-    output_path: str | Path,
-    include_metadata: bool = True,
-    decimal_places: int = 6
-) -> Path
-```
-
-Exporta espectro o dataset XPS a archivo Excel (.xlsx).
-
-Crea un archivo Excel con múltiples hojas:
-
-- Para `XPSSpectrum`: hoja "Data" con datos + hoja "Metadata" opcional
-- Para `XPSDataset`: una hoja por espectro + hojas "Dataset_Metadata" y "Spectra_Metadata"
-
-**Parámetros:**
-
-- `data` : `XPSSpectrum` o `XPSDataset`  
-  Datos a exportar.
-- `output_path` : `str` o `Path`  
-  Ruta del archivo Excel de salida (debe terminar en .xlsx).
-- `include_metadata` : `bool`, default `True`  
-  Si True, incluye hojas con metadata.
-- `decimal_places` : `int`, default `6`  
-  Número de decimales para valores numéricos.
-
-**Retorna:**
-
-- `Path`  
-  Ruta del archivo Excel creado.
-
-**Lanza:**
-
-- `TypeError` - Si data no es XPSSpectrum ni XPSDataset
-- `ValueError` - Si output_path no termina en .xlsx
-
-**Ejemplo:**
-
-```python
-from xps_analyzer.export import export_to_excel
-
-# Exportar espectro individual
-export_to_excel(spectrum, "output/c1s.xlsx", include_metadata=True)
-# Hojas: "Data", "Metadata"
-
-# Exportar dataset completo
-export_to_excel(dataset, "output/muestra1.xlsx", include_metadata=True)
-# Hojas: "C_1s", "O_1s", "N_1s", "Dataset_Metadata", "Spectra_Metadata"
-```
-
-**Estructura Excel - Dataset:**
-
-- **Hoja "C_1s"**: Columnas `binding_energy`, `intensity`
-- **Hoja "O_1s"**: Columnas `binding_energy`, `intensity`
-- **Hoja "Dataset_Metadata"**: Columnas `key`, `value` (sample_name, date, instrument, etc.)
-- **Hoja "Spectra_Metadata"**: Columnas `region`, `key`, `value`
-
-**Notas:**
-
-- Requiere librería `openpyxl` instalada (incluida en dependencias)
-- Nombres de hoja limitados a 31 caracteres (restricción Excel)
-- Caracteres especiales en nombres de región se reemplazan por "\_"
-
----
-
-### export_to_json
-
-**Estado:** COMPLETADO - v0.8.0
-
-```python
-def export_to_json(
-    data: XPSSpectrum | XPSDataset,
-    output_path: str | Path,
-    include_metadata: bool = True,
-    indent: int = 2
-) -> Path
-```
-
-Exporta espectro o dataset XPS a archivo JSON con estructura jerárquica.
-
-**Parámetros:**
-
-- `data` : `XPSSpectrum` o `XPSDataset`  
-  Datos a exportar.
-- `output_path` : `str` o `Path`  
-  Ruta del archivo JSON de salida.
-- `include_metadata` : `bool`, default `True`  
-  Si True, incluye metadata en el JSON.
-- `indent` : `int`, default `2`  
-  Nivel de indentación para formato legible. Use `None` para compacto.
-
-**Retorna:**
-
-- `Path`  
-  Ruta del archivo JSON creado.
-
-**Lanza:**
-
-- `TypeError` - Si data no es XPSSpectrum ni XPSDataset
-
-**Ejemplo:**
-
-```python
-from xps_analyzer.export import export_to_json
-
-# Exportar con formato legible
-export_to_json(dataset, "output/muestra1.json", indent=2)
-
-# Exportar compacto (sin indentación)
-export_to_json(dataset, "output/compact.json", indent=None)
-
-# Exportar sin metadata
-export_to_json(spectrum, "output/data_only.json", include_metadata=False)
-```
-
-**Estructura JSON - XPSSpectrum:**
-
-```json
-{
-  "region_name": "C 1s",
-  "binding_energy": [280.0, 280.2, 280.4, ...],
-  "intensity": [145.23, 148.12, 150.45, ...],
-  "metadata": {
-    "sweeps": 10,
-    "dwell_time": 0.1,
-    "pass_energy": 20.0
-  }
-}
-```
-
-**Estructura JSON - XPSDataset:**
-
-```json
-{
-  "filename": "muestra1_multiplex.txt",
-  "header": {
-    "sample_name": "Test Sample",
-    "date": "2026-03-01",
-    "instrument": "Thermo K-Alpha"
-  },
-  "spectra": {
-    "C 1s": {
-      "region_name": "C 1s",
-      "binding_energy": [...],
-      "intensity": [...],
-      "metadata": {...}
-    },
-    "O 1s": {...}
-  }
-}
-```
-
-**Notas:**
-
-- Arrays NumPy se convierten automáticamente a listas
-- Valores `NaN` e `Inf` se convierten a `null`
-- Usa `NumpyEncoder` personalizado para manejar tipos NumPy
-
----
-
-### NumpyEncoder
-
-**Estado:** COMPLETADO - v0.8.0
-
-```python
-class NumpyEncoder(json.JSONEncoder)
-```
-
-Encoder JSON personalizado para manejar tipos NumPy.
-
-**Convierte:**
-
-- `np.ndarray` → `list` (con NaN/Inf → null)
-- `np.integer` → `int`
-- `np.floating` → `float` (con NaN/Inf → null)
-- `np.bool_` → `bool`
-
-**Uso:**
-
-```python
-import json
-import numpy as np
-from xps_analyzer.export.exporters import NumpyEncoder
-
-data = {
-    "array": np.array([1.0, 2.0, np.nan, 4.0]),
-    "float": np.float64(3.14),
-    "int": np.int32(42)
-}
-
-with open("output.json", "w") as f:
-    json.dump(data, f, cls=NumpyEncoder)
-
-# Resultado:
-# {"array": [1.0, 2.0, null, 4.0], "float": 3.14, "int": 42}
-```
-
----
-
-## CLI
-
-### Namespace: `xps_analyzer.cli`
-
-**Estado:** 40% completo
-
-**Entry point:** `xps-analyzer` (instalado con paquete)
-
----
-
-### Comando: analyze
-
-```bash
-xps-analyzer analyze <data_dir> [options]
-```
-
-Analiza archivos XPS en un directorio.
-
-**Argumentos:**
-
-- `data_dir` : Path al directorio con archivos XPS
-
-**Opciones:**
-
-- `--output-dir PATH` : Directorio de salida (default: `data/results/`)
-- `--reference-element TEXT` : Elemento de referencia para calibración (default: `C`)
-- `--format TEXT` : Formato de exportación: `csv`, `excel`, `json` (default: `csv`)
-
-**Ejemplo:**
-
-```bash
-# Análisis básico
-xps-analyzer analyze data/raw/samples/
-
-# Con opciones
-xps-analyzer analyze data/raw/samples/ \
-    --output-dir results/muestra1/ \
-    --reference-element Au \
-    --format excel
-```
-
----
-
-### Comando: show-element
-
-```bash
-xps-analyzer show-element <symbol>
-```
-
-Muestra información de un elemento de la base de datos.
-
-**Argumentos:**
-
-- `symbol` : Símbolo químico (ej: `C`, `O`, `Au`)
-
-**Ejemplo:**
-
-```bash
-# Ver información de carbono
-xps-analyzer show-element C
-
-# Output:
-# Element: Carbon (C)
-# Atomic Number: 6
-# Photoelectron Lines:
-#   1s: 284.8 eV (width: 1.0 eV)
-# Common Compounds:
-#   Graphite: 284.5 eV
-#   C-O: 286.5 eV
-#   C=O: 288.0 eV
-#   O-C=O: 289.0 eV
-```
-
----
-
-### Comando: calibrate
-
-**Estado:** PENDIENTE - Fase 1
-
-```bash
-xps-analyzer calibrate <file> --element <symbol> [options]
-```
-
-Calibra un archivo XPS.
-
-**Ejemplo futuro:**
-
-```bash
-xps-analyzer calibrate data/raw/muestra1.txt --element C --output calibrated.txt
-```
-
----
-
-## Apéndices
-
-### A. Convenciones de Energía
-
-- **Binding Energy (BE):** Energía de enlace en eV (relativa al nivel de Fermi)
-- **Kinetic Energy (KE):** Energía cinética del fotoelectrón = hν - BE - Φ
-- **Rango típico:** 0-1486 eV (para fuente Al Kα)
-- **Dirección de eje:** Alta energía a la izquierda (convención XPS)
-
-### B. Elementos de Referencia Comunes
-
-| Elemento | Línea | Energía (eV) | Uso                            |
-| -------- | ----- | ------------ | ------------------------------ |
-| C        | 1s    | 284.8        | Carbono adventicio (más común) |
-| Au       | 4f7/2 | 84.0         | Muestras conductoras           |
-| Cu       | 2p3/2 | 932.7        | Muestras sobre cobre           |
-| Ag       | 3d5/2 | 368.3        | Muestras sobre plata           |
-
-### C. Factores de Sensibilidad Típicos
-
-| Elemento | Línea | Factor RSF |
-| -------- | ----- | ---------- |
-| C        | 1s    | 0.278      |
-| O        | 1s    | 0.711      |
-| N        | 1s    | 0.477      |
-| Si       | 2p    | 0.328      |
-| Ti       | 2p    | 2.001      |
-
-_Nota: Valores para espectrómetro Kratos con fuente Al Kα_
-
----
-
-## Referencias
-
-### Documentos Relacionados
-
-- `README.md` - Quick start guide
-- `ARCHITECTURE.md` - Arquitectura técnica detallada
-- `DEVELOPMENT.md` - Guía de desarrollo
-- `TESTING.md` - Estrategia de testing
-
-### Recursos Externos
-
-- **NIST XPS Database** - https://srdata.nist.gov/xps/
-
----
-
-**Última actualización:** Febrero 2026  
-**Próxima revisión:** Después de completar Fase 1  
-**Mantenedor:** Jesus Flores Lacarra (jss.263.fsc@gmail.com)
-
----
-
-## ACTUALIZACIÓN FASE 1 - Módulo de Análisis Completo
 
 ### Namespace: `xps_analyzer.analysis`
 
-**Estado:** COMPLETADO - v0.7.0-beta (75% Fase 1)
 
 API completa implementada:
 
@@ -2042,3 +1042,754 @@ conc = {"C 1s": 65.1, "O 1s": 34.2}  # Suma = 99.3%
 normalized = normalize_to_100(conc)
 # {'C 1s': 65.57, 'O 1s': 34.43}  # Suma = 100.0%
 ```
+
+
+### Funciones Wrapper (PENDIENTE)
+
+Se implementarán las siguientes funciones para facilitar el uso desde la API de alto nivel:
+
+- **`subtract_background`**: Wrapper unificado para seleccionar `shirley`, `tougaard` o `linear` mediante un string de método.
+- **`find_peaks`**: Detección automática de posiciones de picos usando parámetros de prominencia y distancia.
+- **`fit_peaks`**: Wrapper que automatizará la instanciación de formas (Gaussiana/Lorentziana/Voigt) y el ajuste simultáneo.
+- **`quantify`**: Función de un solo paso para sustracción de fondo, ajuste y cálculo de composición atómica.
+
+## Datos de Referencia
+
+### Namespace: `xps_analyzer.reference_data`
+
+
+**Importar:**
+
+```python
+from xps_analyzer.reference_data import (
+    load_reference_database,
+    ReferenceDatabase,
+    ElementReference,
+    PhotoelectronLine
+)
+```
+
+---
+
+### ReferenceDatabase
+
+```python
+@dataclass
+class ReferenceDatabase:
+    elements: dict[str, ElementReference]
+```
+
+Base de datos completa de elementos XPS.
+
+**Atributos:**
+
+- **elements** : `dict[str, ElementReference]`  
+  Mapeo de símbolo (ej: "C") → `ElementReference`
+
+**Métodos:**
+
+#### get_element
+
+```python
+def get_element(self, symbol: str) -> ElementReference | None
+```
+
+Obtiene elemento por símbolo (case-insensitive).
+
+**Ejemplo:**
+
+```python
+db = load_reference_database()
+
+carbon = db.get_element("C")
+print(carbon.name)  # "Carbon"
+
+# Case-insensitive
+oxygen = db.get_element("o")  # Funciona con minúscula
+print(oxygen.name)  # "Oxygen"
+```
+
+#### find_element_by_energy
+
+```python
+def find_element_by_energy(
+    self,
+    energy: float,
+    tolerance: float = 2.0
+) -> list[tuple[str, str]]
+```
+
+Encuentra elementos con líneas cerca de una energía dada.
+
+**Parámetros:**
+
+- `energy` : `float` - Energía de enlace en eV
+- `tolerance` : `float`, default `2.0` - Tolerancia de búsqueda en eV
+
+**Retorna:**
+
+- `list[tuple[str, str]]` - Lista de `(symbol, orbital)` dentro de tolerancia
+
+**Ejemplo:**
+
+```python
+db = load_reference_database()
+
+# Buscar qué elementos tienen picos cerca de 284.8 eV
+matches = db.find_element_by_energy(284.8, tolerance=1.0)
+print(matches)
+# [("C", "1s"), ("Cd", "3d5/2"), ...]
+
+# Buscar con mayor tolerancia
+matches = db.find_element_by_energy(531.0, tolerance=3.0)
+print(matches)
+# [("O", "1s"), ("Sb", "3d3/2"), ...]
+```
+
+---
+
+### ElementReference
+
+```python
+@dataclass
+class ElementReference:
+    symbol: str
+    name: str
+    atomic_number: int
+    photoelectron_lines: dict[str, PhotoelectronLine]
+    common_compounds: list[dict]
+```
+
+Información de referencia de un elemento químico.
+
+**Atributos:**
+
+- **symbol** : `str` - Símbolo químico (ej: "C", "O")
+- **name** : `str` - Nombre completo (ej: "Carbon", "Oxygen")
+- **atomic_number** : `int` - Número atómico
+- **photoelectron_lines** : `dict[str, PhotoelectronLine]` - Líneas espectrales
+- **common_compounds** : `list[dict]` - Estados de oxidación comunes
+
+**Ejemplo:**
+
+```python
+db = load_reference_database()
+carbon = db.get_element("C")
+
+print(f"Símbolo: {carbon.symbol}")
+print(f"Nombre: {carbon.name}")
+print(f"Z: {carbon.atomic_number}")
+
+# Líneas fotoelectrónicas
+c1s = carbon.photoelectron_lines["1s"]
+print(f"C 1s @ {c1s.peak_position} eV")
+
+# Compuestos comunes
+for compound in carbon.common_compounds:
+    print(f"{compound['name']}: {compound['binding_energy']} eV")
+```
+
+---
+
+### PhotoelectronLine
+
+```python
+@dataclass
+class PhotoelectronLine:
+    orbital: str
+    peak_position: float
+    line_width: float
+    relative_intensity: float
+```
+
+Línea fotoelectrónica individual (ej: C 1s, O 1s).
+
+**Atributos:**
+
+- **orbital** : `str` - Orbital atómico (ej: "1s", "2p3/2")
+- **peak_position** : `float` - Energía de enlace en eV
+- **line_width** : `float` - Ancho de línea natural (FWHM) en eV
+- **relative_intensity** : `float` - Intensidad relativa (0-1)
+
+**Ejemplo:**
+
+```python
+db = load_reference_database()
+carbon = db.get_element("C")
+c1s = carbon.photoelectron_lines["1s"]
+
+print(f"Orbital: {c1s.orbital}")
+print(f"Posición: {c1s.peak_position} eV")
+print(f"Ancho: {c1s.line_width} eV")
+print(f"Intensidad: {c1s.relative_intensity}")
+```
+
+---
+
+## Visualización
+
+### Namespace: `xps_analyzer.visualization`
+
+
+**Importar:**
+
+```python
+from xps_analyzer.visualization import plot_spectrum, plot_survey_spectrum
+```
+
+---
+
+### plot_spectrum
+
+```python
+def plot_spectrum(
+    spectrum: XPSSpectrum,
+    title: str | None = None,
+    show: bool = True
+) -> None
+```
+
+Genera plot simple de un espectro XPS.
+
+**Parámetros:**
+
+- `spectrum` : `XPSSpectrum` - Espectro a plotear
+- `title` : `str | None`, default `None` - Título custom (usa `region_name` si None)
+- `show` : `bool`, default `True` - Si `True`, llama `plt.show()`
+
+**Ejemplo:**
+
+```python
+from xps_analyzer import load_single_file
+from xps_analyzer.visualization import plot_spectrum
+
+dataset = load_single_file("data/raw/muestra1.txt")
+c1s = dataset.spectra["C 1s"]
+
+# Plot básico
+plot_spectrum(c1s)
+
+# Plot con título custom
+plot_spectrum(c1s, title="C 1s - Muestra TiO2")
+
+# Plot sin mostrar (para guardar)
+plot_spectrum(c1s, show=False)
+import matplotlib.pyplot as plt
+plt.savefig("c1s.png", dpi=300)
+plt.close()
+```
+
+**Convenciones:**
+
+- Eje X invertido (alta energía a la izquierda) - estándar XPS
+- Xlabel: "Binding Energy (eV)"
+- Ylabel: "Intensity (a.u.)"
+
+---
+
+### plot_survey_spectrum
+
+```python
+def plot_survey_spectrum(
+    spectrum: XPSSpectrum,
+    reference_db: ReferenceDatabase | None = None,
+    annotate_peaks: bool = False,
+    title: str | None = None,
+    show: bool = True
+) -> None
+```
+
+Plotea espectro survey con identificación opcional de picos.
+
+**Parámetros:**
+
+- `spectrum` : `XPSSpectrum` - Espectro survey
+- `reference_db` : `ReferenceDatabase | None`, default `None` - Base de datos para identificación
+- `annotate_peaks` : `bool`, default `False` - Si `True`, anota picos identificados
+- `title` : `str | None`, default `None` - Título custom
+- `show` : `bool`, default `True` - Si `True`, llama `plt.show()`
+
+**Ejemplo:**
+
+```python
+from xps_analyzer import load_single_file, load_reference_database
+from xps_analyzer.visualization import plot_survey_spectrum
+
+dataset = load_single_file("data/raw/muestra1.txt")
+survey = dataset.spectra["Survey"]
+db = load_reference_database()
+
+# Plot con anotaciones
+plot_survey_spectrum(
+    spectrum=survey,
+    reference_db=db,
+    annotate_peaks=True,
+    title="Survey - Muestra TiO2"
+)
+```
+
+---
+
+### plot_fitted_spectrum
+
+**Estado:** PENDIENTE
+
+```python
+def plot_fitted_spectrum(
+    spectrum: XPSSpectrum,
+    fit_result: FitResult,
+    show_components: bool = True,
+    show_residuals: bool = True,
+    show: bool = True
+) -> None
+```
+
+Plotea espectro con fit de picos.
+
+**Ejemplo futuro:**
+
+```python
+from xps_analyzer.analysis import fit_peaks
+from xps_analyzer.visualization import plot_fitted_spectrum
+
+result = fit_peaks(c1s, peak_positions=[284.8, 286.5, 288.9])
+
+plot_fitted_spectrum(
+    spectrum=c1s,
+    fit_result=result,
+    show_components=True,   # Mostrar picos individuales
+    show_residuals=True     # Panel de residuales debajo
+)
+```
+
+---
+
+## Exportación
+
+### Namespace: `xps_analyzer.export`
+
+
+Módulo completo para exportar espectros XPS y datasets a formatos estándar (CSV, Excel, JSON) con metadata completa.
+
+**API pública:**
+
+```python
+from xps_analyzer.export import export_to_csv, export_to_excel, export_to_json
+```
+
+---
+
+### export_to_csv
+
+
+```python
+def export_to_csv(
+    data: XPSSpectrum | XPSDataset,
+    output_path: str | Path,
+    include_metadata: bool = True,
+    decimal_places: int = 6
+) -> Path
+```
+
+Exporta espectro o dataset XPS a archivo(s) CSV.
+
+**Parámetros:**
+
+- `data` : `XPSSpectrum` o `XPSDataset`  
+  Datos a exportar. Si es XPSSpectrum, crea un archivo CSV. Si es XPSDataset, crea un directorio con múltiples archivos CSV (uno por región).
+- `output_path` : `str` o `Path`  
+  Ruta del archivo o directorio de salida.
+- `include_metadata` : `bool`, default `True`  
+  Si True, genera archivos `.metadata.csv` adicionales con metadata.
+- `decimal_places` : `int`, default `6`  
+  Número de decimales para valores numéricos.
+
+**Retorna:**
+
+- `Path`  
+  Ruta del archivo o directorio creado.
+
+**Lanza:**
+
+- `TypeError` - Si data no es XPSSpectrum ni XPSDataset
+
+**Ejemplo:**
+
+```python
+from xps_analyzer import load_single_file
+from xps_analyzer.export import export_to_csv
+
+dataset = load_single_file("muestra1.txt")
+spectrum = dataset.get_spectrum("C 1s")
+
+# Exportar espectro individual
+export_to_csv(spectrum, "output/c1s.csv", include_metadata=True)
+# Crea: output/c1s.csv + output/c1s.metadata.csv
+
+# Exportar dataset completo
+export_to_csv(dataset, "output/dataset_export/", include_metadata=True)
+# Crea: output/dataset_export/C_1s.csv, O_1s.csv, dataset_metadata.csv, ...
+
+# Controlar precisión
+export_to_csv(spectrum, "output/high_prec.csv", decimal_places=10)
+```
+
+**Estructura CSV - Espectro:**
+
+```csv
+binding_energy,intensity
+280.0,145.234567
+280.2,148.123456
+...
+```
+
+**Estructura CSV - Metadata:**
+
+```csv
+key,value
+region_name,C 1s
+sweeps,10
+dwell_time,0.1
+pass_energy,20.0
+```
+
+---
+
+### export_to_excel
+
+
+```python
+def export_to_excel(
+    data: XPSSpectrum | XPSDataset,
+    output_path: str | Path,
+    include_metadata: bool = True,
+    decimal_places: int = 6
+) -> Path
+```
+
+Exporta espectro o dataset XPS a archivo Excel (.xlsx).
+
+Crea un archivo Excel con múltiples hojas:
+
+- Para `XPSSpectrum`: hoja "Data" con datos + hoja "Metadata" opcional
+- Para `XPSDataset`: una hoja por espectro + hojas "Dataset_Metadata" y "Spectra_Metadata"
+
+**Parámetros:**
+
+- `data` : `XPSSpectrum` o `XPSDataset`  
+  Datos a exportar.
+- `output_path` : `str` o `Path`  
+  Ruta del archivo Excel de salida (debe terminar en .xlsx).
+- `include_metadata` : `bool`, default `True`  
+  Si True, incluye hojas con metadata.
+- `decimal_places` : `int`, default `6`  
+  Número de decimales para valores numéricos.
+
+**Retorna:**
+
+- `Path`  
+  Ruta del archivo Excel creado.
+
+**Lanza:**
+
+- `TypeError` - Si data no es XPSSpectrum ni XPSDataset
+- `ValueError` - Si output_path no termina en .xlsx
+
+**Ejemplo:**
+
+```python
+from xps_analyzer.export import export_to_excel
+
+# Exportar espectro individual
+export_to_excel(spectrum, "output/c1s.xlsx", include_metadata=True)
+# Hojas: "Data", "Metadata"
+
+# Exportar dataset completo
+export_to_excel(dataset, "output/muestra1.xlsx", include_metadata=True)
+# Hojas: "C_1s", "O_1s", "N_1s", "Dataset_Metadata", "Spectra_Metadata"
+```
+
+**Estructura Excel - Dataset:**
+
+- **Hoja "C_1s"**: Columnas `binding_energy`, `intensity`
+- **Hoja "O_1s"**: Columnas `binding_energy`, `intensity`
+- **Hoja "Dataset_Metadata"**: Columnas `key`, `value` (sample_name, date, instrument, etc.)
+- **Hoja "Spectra_Metadata"**: Columnas `region`, `key`, `value`
+
+**Notas:**
+
+- Requiere librería `openpyxl` instalada (incluida en dependencias)
+- Nombres de hoja limitados a 31 caracteres (restricción Excel)
+- Caracteres especiales en nombres de región se reemplazan por "\_"
+
+---
+
+### export_to_json
+
+
+```python
+def export_to_json(
+    data: XPSSpectrum | XPSDataset,
+    output_path: str | Path,
+    include_metadata: bool = True,
+    indent: int = 2
+) -> Path
+```
+
+Exporta espectro o dataset XPS a archivo JSON con estructura jerárquica.
+
+**Parámetros:**
+
+- `data` : `XPSSpectrum` o `XPSDataset`  
+  Datos a exportar.
+- `output_path` : `str` o `Path`  
+  Ruta del archivo JSON de salida.
+- `include_metadata` : `bool`, default `True`  
+  Si True, incluye metadata en el JSON.
+- `indent` : `int`, default `2`  
+  Nivel de indentación para formato legible. Use `None` para compacto.
+
+**Retorna:**
+
+- `Path`  
+  Ruta del archivo JSON creado.
+
+**Lanza:**
+
+- `TypeError` - Si data no es XPSSpectrum ni XPSDataset
+
+**Ejemplo:**
+
+```python
+from xps_analyzer.export import export_to_json
+
+# Exportar con formato legible
+export_to_json(dataset, "output/muestra1.json", indent=2)
+
+# Exportar compacto (sin indentación)
+export_to_json(dataset, "output/compact.json", indent=None)
+
+# Exportar sin metadata
+export_to_json(spectrum, "output/data_only.json", include_metadata=False)
+```
+
+**Estructura JSON - XPSSpectrum:**
+
+```json
+{
+  "region_name": "C 1s",
+  "binding_energy": [280.0, 280.2, 280.4, ...],
+  "intensity": [145.23, 148.12, 150.45, ...],
+  "metadata": {
+    "sweeps": 10,
+    "dwell_time": 0.1,
+    "pass_energy": 20.0
+  }
+}
+```
+
+**Estructura JSON - XPSDataset:**
+
+```json
+{
+  "filename": "muestra1_multiplex.txt",
+  "header": {
+    "sample_name": "Test Sample",
+    "date": "2026-03-01",
+    "instrument": "Thermo K-Alpha"
+  },
+  "spectra": {
+    "C 1s": {
+      "region_name": "C 1s",
+      "binding_energy": [...],
+      "intensity": [...],
+      "metadata": {...}
+    },
+    "O 1s": {...}
+  }
+}
+```
+
+**Notas:**
+
+- Arrays NumPy se convierten automáticamente a listas
+- Valores `NaN` e `Inf` se convierten a `null`
+- Usa `NumpyEncoder` personalizado para manejar tipos NumPy
+
+---
+
+### NumpyEncoder
+
+
+```python
+class NumpyEncoder(json.JSONEncoder)
+```
+
+Encoder JSON personalizado para manejar tipos NumPy.
+
+**Convierte:**
+
+- `np.ndarray` → `list` (con NaN/Inf → null)
+- `np.integer` → `int`
+- `np.floating` → `float` (con NaN/Inf → null)
+- `np.bool_` → `bool`
+
+**Uso:**
+
+```python
+import json
+import numpy as np
+from xps_analyzer.export.exporters import NumpyEncoder
+
+data = {
+    "array": np.array([1.0, 2.0, np.nan, 4.0]),
+    "float": np.float64(3.14),
+    "int": np.int32(42)
+}
+
+with open("output.json", "w") as f:
+    json.dump(data, f, cls=NumpyEncoder)
+
+# Resultado:
+# {"array": [1.0, 2.0, null, 4.0], "float": 3.14, "int": 42}
+```
+
+---
+
+## CLI
+
+### Namespace: `xps_analyzer.cli`
+
+
+**Entry point:** `xps-analyzer` (instalado con paquete)
+
+---
+
+### Comando: analyze
+
+```bash
+xps-analyzer analyze <data_dir> [options]
+```
+
+Analiza archivos XPS en un directorio.
+
+**Argumentos:**
+
+- `data_dir` : Path al directorio con archivos XPS
+
+**Opciones:**
+
+- `--output-dir PATH` : Directorio de salida (default: `data/results/`)
+- `--reference-element TEXT` : Elemento de referencia para calibración (default: `C`)
+- `--format TEXT` : Formato de exportación: `csv`, `excel`, `json` (default: `csv`)
+
+**Ejemplo:**
+
+```bash
+# Análisis básico
+xps-analyzer analyze data/raw/samples/
+
+# Con opciones
+xps-analyzer analyze data/raw/samples/ \
+    --output-dir results/muestra1/ \
+    --reference-element Au \
+    --format excel
+```
+
+---
+
+### Comando: show-element
+
+```bash
+xps-analyzer show-element <symbol>
+```
+
+Muestra información de un elemento de la base de datos.
+
+**Argumentos:**
+
+- `symbol` : Símbolo químico (ej: `C`, `O`, `Au`)
+
+**Ejemplo:**
+
+```bash
+# Ver información de carbono
+xps-analyzer show-element C
+
+# Output:
+# Element: Carbon (C)
+# Atomic Number: 6
+# Photoelectron Lines:
+#   1s: 284.8 eV (width: 1.0 eV)
+# Common Compounds:
+#   Graphite: 284.5 eV
+#   C-O: 286.5 eV
+#   C=O: 288.0 eV
+#   O-C=O: 289.0 eV
+```
+
+---
+
+### Comando: calibrate
+
+**Estado:** PENDIENTE
+
+```bash
+xps-analyzer calibrate <file> --element <symbol> [options]
+```
+
+Calibra un archivo XPS y guarda el resultado. Se implementará usando la función `calibrate_dataset` internamente.
+
+## Apéndices
+
+### A. Convenciones de Energía
+
+- **Binding Energy (BE):** Energía de enlace en eV (relativa al nivel de Fermi)
+- **Kinetic Energy (KE):** Energía cinética del fotoelectrón = hν - BE - Φ
+- **Rango típico:** 0-1486 eV (para fuente Al Kα)
+- **Dirección de eje:** Alta energía a la izquierda (convención XPS)
+
+### B. Elementos de Referencia Comunes
+
+| Elemento | Línea | Energía (eV) | Uso                            |
+| -------- | ----- | ------------ | ------------------------------ |
+| C        | 1s    | 284.8        | Carbono adventicio (más común) |
+| Au       | 4f7/2 | 84.0         | Muestras conductoras           |
+| Cu       | 2p3/2 | 932.7        | Muestras sobre cobre           |
+| Ag       | 3d5/2 | 368.3        | Muestras sobre plata           |
+
+### C. Factores de Sensibilidad Típicos
+
+| Elemento | Línea | Factor RSF |
+| -------- | ----- | ---------- |
+| C        | 1s    | 0.278      |
+| O        | 1s    | 0.711      |
+| N        | 1s    | 0.477      |
+| Si       | 2p    | 0.328      |
+| Ti       | 2p    | 2.001      |
+
+_Nota: Valores para espectrómetro Kratos con fuente Al Kα_
+
+---
+
+## Referencias
+
+### Documentos Relacionados
+
+- `README.md` - Quick start guide
+- `ARCHITECTURE.md` - Arquitectura técnica detallada
+- `DEVELOPMENT.md` - Guía de desarrollo
+- `TESTING.md` - Estrategia de testing
+
+### Recursos Externos
+
+- **NIST XPS Database** - https://srdata.nist.gov/xps/
+
+---
+
+**Última actualización:** Abril 2026  
+**Próxima revisión:** Después de completar   
+**Mantenedor:** Jesus Flores Lacarra (jss.263.fsc@gmail.com)
+
+---
+
