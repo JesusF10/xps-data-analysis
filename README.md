@@ -6,9 +6,6 @@
 
 Software automatizado en Python para análisis de datos de Espectroscopía de Fotoelectrones de Rayos X (XPS).
 
-**Estado:** Beta v0.8.0-beta - Fase 2 EN PROGRESO  
-**Fase:** 2 (Pydantic + GUI Interactiva) - 60% completado
-
 ---
 
 ## Características
@@ -29,9 +26,9 @@ Software automatizado en Python para análisis de datos de Espectroscopía de Fo
 
 [EN DESARROLLO] **Próximamente:**
 
+- Integración de exportación en interfaz gráfica
 - Visualización avanzada con Plotly
-- Análisis interactivo en tiempo real en la GUI
-- Reportes automáticos en PDF
+- Análisis interactivo en la GUI
 
 ---
 
@@ -55,7 +52,7 @@ uv run xps-analyzer --version
 
 ## Uso Básico
 
-### Interfaz Gráfica (GUI) - ¡Nuevo!
+### Interfaz Gráfica (GUI)
 
 La forma más sencilla de usar XPS Analyzer es a través de su interfaz interactiva:
 
@@ -132,9 +129,9 @@ xps-data-analysis/
 
 **Prioridades actuales:**
 
-1. **Alta:** Mejoras en la interactividad de la GUI (Streamlit).
-2. **Media:** Visualización avanzada con Plotly.
-3. **Baja:** Documentación de API avanzada.
+1. Mejoras en la interactividad de la GUI.
+2. Visualización avanzada.
+3. Documentación de API avanzada.
 
 **Lee:** [CONTRIBUTING.md](CONTRIBUTING.md) antes de contribuir.
 
