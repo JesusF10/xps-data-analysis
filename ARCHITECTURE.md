@@ -1,7 +1,7 @@
-**Versión:** 0.9.1-beta  
 **Última actualización:** Abril 2026
 
-Este documento describe la arquitectura técnica completa del proyecto XPS Analyzer, incluyendo decisiones de diseño, patrones de implementación, y guías para el desarrollo futuro.
+Este documento describe la arquitectura técnica completa del proyecto XPS Analyzer,
+incluyendo decisiones de diseño, patrones de implementación, y guías para el desarrollo futuro.
 
 ---
 
@@ -30,11 +30,12 @@ XPS Analyzer sigue estos principios fundamentales:
 2. **Separación de responsabilidades** - Cada módulo tiene una función clara y bien definida
 3. **Validación robusta en runtime** - Uso de Pydantic para garantizar la integridad física de los datos espectrales
 4. **Configuración explícita** - Todos los parámetros tienen valores por defecto documentados
-5. **Extensibilidad** - Arquitectura preparada para plugins 
+5. **Extensibilidad** - Arquitectura preparada para plugins
 
 ### Stack Tecnológico
 
 **Dependencias Core:**
+
 - `numpy` (>=1.24.0) - Arrays numéricos, operaciones vectorizadas
 - `scipy` (>=1.11.0) - Procesamiento de señales, interpolación
 - `pydantic` (>=2.5.0) - Validación de datos y modelos
@@ -42,10 +43,12 @@ XPS Analyzer sigue estos principios fundamentales:
 - `lmfit` (>=1.2.0) - Ajuste de picos no lineal
 
 **Dependencias de GUI y UI:**
+
 - `streamlit` (>=1.30.0) - Interfaz interactiva
 - `plotly` (>=5.18.0) - Visualización dinámica (planificado)
 
 **Herramientas de Desarrollo:**
+
 - `ruff` - Linting + formatting
 - `pytest` - Testing framework (355+ tests)
 - `uv` - Gestión de paquetes y entornos
@@ -66,7 +69,7 @@ El sistema utiliza **Pydantic v2** para todos sus modelos de datos, heredando de
 class XPSSpectrum(XPSBaseModel):
     """
     Representa un espectro XPS individual.
-    
+
     Responsabilidades:
     - Almacenar arrays de energía e intensidad (NumPy)
     - Validar automáticamente consistencia de datos
@@ -76,7 +79,7 @@ class XPSSpectrum(XPSBaseModel):
     binding_energy: np.ndarray
     intensity: np.ndarray
     metadata: dict[str, Any] = Field(default_factory=dict)
-    
+
     @model_validator(mode='after')
     def validate_arrays(self):
         """Validación automática de longitudes y valores positivos."""
@@ -113,10 +116,12 @@ src/xps_analyzer/
 ## Sistema de Validación (Pydantic)
 
 XPS Analyzer utiliza `XPSBaseModel` con la siguiente configuración:
-* `arbitrary_types_allowed = True`: Permite el uso de arrays de NumPy.
-* `validate_assignment = True`: Valida los datos incluso al reasignar atributos.
+
+- `arbitrary_types_allowed = True`: Permite el uso de arrays de NumPy.
+- `validate_assignment = True`: Valida los datos incluso al reasignar atributos.
 
 **Validadores Críticos:**
+
 1. **Coincidencia de Longitud:** `binding_energy` e `intensity` deben tener el mismo tamaño.
 2. **Energías Positivas:** No se permiten energías negativas o cero en el eje X.
 3. **Inmutabilidad:** Se promueve el uso de `.model_copy(deep=True)` para evitar efectos secundarios en arrays de NumPy compartidos.
@@ -130,6 +135,7 @@ XPS Analyzer utiliza `XPSBaseModel` con la siguiente configuración:
 **Decisión:** Migración total completada en Abril 2026.
 
 **Razones:**
+
 - Validación robusta en tiempo real (evita estados inconsistentes).
 - Mensajes de error tipados para el desarrollador.
 - Serialización a JSON nativa para exportación y estado de sesión de GUI.
@@ -139,10 +145,11 @@ XPS Analyzer utiliza `XPSBaseModel` con la siguiente configuración:
 
 **Decisión:** Se rechaza la mutación directa de datos espectrales.
 
-**Razón:** Para mantener la trazabilidad de los datos científicos, cada paso del pipeline (calibración -> fondo -> ajuste) genera un nuevo objeto espectral. Esto evita errores comunes donde se "pierde" el dato original durante una sesión de análisis interactiva.
+**Razón:** Para mantener la trazabilidad de los datos científicos, cada paso del
+pipeline (calibración -> fondo -> ajuste) genera un nuevo objeto espectral.
+Esto evita errores comunes donde se "pierde" el dato original durante una sesión de análisis interactiva.
 
 ---
 
 **Última actualización:** Abril 2026  
-**Próxima revisión:** Lanzamiento v1.0.0  
 **Mantenedor:** Jesus Flores Lacarra (jss.263.fsc@gmail.com)
