@@ -13,7 +13,7 @@ Software automatizado en Python para análisis de datos de Espectroscopía de Fo
 [COMPLETADO] **Disponible:**
 
 - Carga de datos XPS desde formatos propietarios
-- Calibración de energía por elemento de referencia
+- Calibración de energía por elemento de referencia (usualmente C 1s a 284.8 eV)
 - Visualización básica de espectros
 - Base de datos de ~25 elementos comunes
 - CLI para operaciones básicas
@@ -115,13 +115,13 @@ xps-data-analysis/
 - [x] Exportación (CSV, Excel, JSON)
 - [x] 355 tests unitarios pasando
 
-### Fase 2 - Pydantic + GUI Interactiva [EN PROGRESO]
+### Fase 2 - GUI Interactiva [EN PROGRESO]
 
 - [x] Migración a Pydantic para validación (100%)
 - [x] GUI inicial con Streamlit (Estilo científico)
-- [ ] Visualización avanzada con Plotly
-- [ ] Análisis interactivo en tiempo real
 - [x] Target: 85% test coverage (Alcanzado 93%)
+- [ ] Visualización avanzada con Plotly
+- [ ] Análisis interactivo en la GUI
 
 ---
 
