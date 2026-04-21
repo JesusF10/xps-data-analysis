@@ -6,6 +6,7 @@ from pathlib import Path
 
 from xps_analyzer.data_loader import load_single_file
 from xps_analyzer.reference_data import load_reference_database
+from xps_analyzer.preprocessing import calibrate_sample
 
 import click
 

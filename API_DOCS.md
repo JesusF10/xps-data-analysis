@@ -90,7 +90,7 @@ print(dataset.header)  # {'sample_name': 'muestra1', 'date': '2023-10-01', ...}
 
 **Ver también:**
 
-- [`load_all_data()`](#load_all_data) - Cargar múltiples archivos 
+- [`load_all_data()`](#load_all_data) - Cargar múltiples archivos
 - [`XPSDataset`](#xpsdataset) - Estructura de datos retornada
 
 ---
@@ -416,7 +416,6 @@ def get_spectrum_data(lines: list[str]) -> dict[str, XPSSpectrum]
 
 ### Namespace: `xps_analyzer.preprocessing`
 
-
 **Importar:**
 
 ```python
@@ -614,9 +613,7 @@ clean = subtract_background(c1s, method="linear")
 
 ### Funciones Implementadas
 
-
 ### Namespace: `xps_analyzer.analysis`
-
 
 API completa implementada:
 
@@ -1041,7 +1038,6 @@ normalized = normalize_to_100(conc)
 # {'C 1s': 65.57, 'O 1s': 34.43}  # Suma = 100.0%
 ```
 
-
 ### Funciones Wrapper (PENDIENTE)
 
 Se implementarán las siguientes funciones para facilitar el uso desde la API de alto nivel:
@@ -1054,7 +1050,6 @@ Se implementarán las siguientes funciones para facilitar el uso desde la API de
 ## Datos de Referencia
 
 ### Namespace: `xps_analyzer.reference_data`
-
 
 **Importar:**
 
@@ -1228,7 +1223,6 @@ print(f"Intensidad: {c1s.relative_intensity}")
 
 ### Namespace: `xps_analyzer.visualization`
 
-
 **Importar:**
 
 ```python
@@ -1366,7 +1360,6 @@ plot_fitted_spectrum(
 
 ### Namespace: `xps_analyzer.export`
 
-
 Módulo completo para exportar espectros XPS y datasets a formatos estándar (CSV, Excel, JSON) con metadata completa.
 
 **API pública:**
@@ -1378,7 +1371,6 @@ from xps_analyzer.export import export_to_csv, export_to_excel, export_to_json
 ---
 
 ### export_to_csv
-
 
 ```python
 def export_to_csv(
@@ -1455,7 +1447,6 @@ pass_energy,20.0
 
 ### export_to_excel
 
-
 ```python
 def export_to_excel(
     data: XPSSpectrum | XPSDataset,
@@ -1523,7 +1514,6 @@ export_to_excel(dataset, "output/muestra1.xlsx", include_metadata=True)
 ---
 
 ### export_to_json
-
 
 ```python
 def export_to_json(
@@ -1618,7 +1608,6 @@ export_to_json(spectrum, "output/data_only.json", include_metadata=False)
 
 ### NumpyEncoder
 
-
 ```python
 class NumpyEncoder(json.JSONEncoder)
 ```
@@ -1657,7 +1646,6 @@ with open("output.json", "w") as f:
 ## CLI
 
 ### Namespace: `xps_analyzer.cli`
-
 
 **Entry point:** `xps-analyzer` (instalado con paquete)
 
@@ -1730,8 +1718,6 @@ xps-analyzer show-element C
 
 ### Comando: calibrate
 
-**Estado:** PENDIENTE
-
 ```bash
 xps-analyzer calibrate <file> --element <symbol> [options]
 ```
@@ -1786,8 +1772,7 @@ _Nota: Valores para espectrómetro Kratos con fuente Al Kα_
 ---
 
 **Última actualización:** Abril 2026  
-**Próxima revisión:** Después de completar   
+**Próxima revisión:** Después de completar  
 **Mantenedor:** Jesus Flores Lacarra (jss.263.fsc@gmail.com)
 
 ---
-
