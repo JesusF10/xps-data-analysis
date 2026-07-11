@@ -33,12 +33,6 @@ jobs:
       - name: Install dependencies
         run: uv sync --group docs
 
-      - name: Generate technical plots
-        run: uv run python portfolio_publish/xps-analyzer/generate_technical_plots.py
-
-      - name: Copy generated plots to docs assets
-        run: cp portfolio_publish/xps-analyzer/assets/*.svg docs/assets/
-
       - name: Build site
         run: uv run mkdocs build
 
