@@ -1,0 +1,141 @@
+site_name: XPS Analyzer
+site_description: A Python scientific toolkit for automated X-ray Photoelectron Spectroscopy (XPS) data analysis
+site_url: https://JesusF10.github.io/xps-data-analysis/
+repo_url: https://github.com/JesusF10/xps-data-analysis
+repo_name: JesusF10/xps-data-analysis
+edit_uri: blob/main/docs/
+
+copyright: Copyright &copy; 2025 Jesus Flores Lacarra
+
+theme:
+  name: material
+  language: en
+  logo: assets/logo.svg
+  favicon: assets/logo.svg
+  icon:
+    repo: fontawesome/brands/github
+  palette:
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
+  features:
+    - navigation.instant
+    - navigation.instant.progress
+    - navigation.tracking
+    - navigation.tabs
+    - navigation.tabs.sticky
+    - navigation.sections
+    - navigation.path
+    - navigation.indexes
+    - toc.follow
+    - content.tabs.link
+    - content.code.copy
+    - content.code.select
+    - content.code.annotate
+    - content.tooltips
+
+extra_css:
+  - stylesheets/extra.css
+
+markdown_extensions:
+  - admonition
+  - pymdownx.details
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
+  - pymdownx.tabbed:
+      alternate_style: true
+  - pymdownx.highlight:
+      anchor_linenums: true
+      line_spans: __span
+      pygments_lang_class: true
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
+  - pymdownx.keys
+  - pymdownx.emoji:
+      emoji_index: !!python/name:material.extensions.emoji.twemoji
+      emoji_generator: !!python/name:material.extensions.emoji.to_svg
+  - pymdownx.arithmatex:
+      generic: true
+  - pymdownx.magiclink
+  - pymdownx.mark
+  - pymdownx.tasklist:
+      custom_checkbox: true
+  - attr_list
+  - md_in_html
+  - tables
+  - footnotes
+
+plugins:
+  - search
+  - mkdocstrings:
+      default_handler: python
+      handlers:
+        python:
+          paths: [src]
+          options:
+            show_source: true
+            show_root_heading: true
+            show_root_full_path: false
+            show_category_heading: true
+            show_if_no_docstring: false
+            members_order: source
+            separate_signature: true
+            show_signature_annotations: true
+            line_length: 88
+            docstring_style: google
+            merge_init_into_class: true
+
+
+extra:
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/JesusF10/xps-data-analysis
+    - icon: fontawesome/solid/envelope
+      link: mailto:jss.263.fsc@gmail.com
+
+extra_javascript:
+  - javascripts/mathjax.js
+  - https://unpkg.com/mathjax@3/es5/tex-mml-chtml.js
+
+nav:
+  - Home: index.md
+  - Getting Started:
+    - Installation: installation.md
+    - Quick Start: getting-started.md
+  - User Guide:
+    - guide/index.md
+    - Data Loading: guide/data-loader.md
+    - Energy Calibration: guide/preprocessing.md
+    - Background Subtraction: guide/background.md
+    - Peak Fitting: guide/peak-fitting.md
+    - Atomic Quantification: guide/quantification.md
+    - Data Export: guide/export.md
+  - Gallery: gallery.md
+  - Architecture: architecture.md
+  - API Reference:
+    - api/index.md
+    - Models: api/models.md
+    - Data Loader: api/data-loader.md
+    - Preprocessing: api/preprocessing.md
+    - Background Subtraction: api/background.md
+    - Peak Fitting: api/peak-fitting.md
+    - Quantification: api/quantification.md
+    - Reference Data: api/reference-data.md
+    - Export: api/export.md
+    - Visualization: api/visualization.md
+    - CLI: api/cli.md
+  - Contributing: contributing.md

@@ -211,7 +211,6 @@ __marimo__/
 
 # Optional directories
 /config
-/docs
 /research
 portfolio_publish/
 PUBLISH_PROJECT_MISSION.md
